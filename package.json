@@ -34,6 +34,7 @@
     "pinia": "^2.1.7",
     "postcss-custom-properties": "^13.3.6",
     "sweetalert2": "^11.7.32",
+    "use-nigeria-location": "^1.0.0",
     "uuid": "^9.0.1",
     "vue3-apexcharts": "^1.5.3",
     "vue3-datepicker": "^0.4.0",

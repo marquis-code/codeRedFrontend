@@ -1,42 +1,96 @@
-<template>
-    <div @click="handleNavigation" class="bg-blue-100 border-2 border-blue-500 rounded-lg p-4 w-60 cursor-pointer">
-      <div class="mb-2 w-60 space-y-4">
-        <div class="">
-            <span :class="statusClass" class="text-xs">{{ hospital.status }}</span>
-        </div>
-        <div class="">
-            <h3 class="text-blue-700 max-w-[200px] font-semibold text-sm">{{ hospital.name }}</h3>
-        </div>
-      </div>
-      <p class="text-gray-700 text-sm">{{ hospital.location }}</p>
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-  const router  = useRouter()
-  const props = defineProps({
-    hospital: {
-        type: Object,
-        required: true
-      }
-  })
+<!-- <template>
+  <div class="border border-blue-300 rounded-lg p-4 bg-blue-50 w-64 flex flex-col items-start m-2">
+    <div :class="statusClass" class="text-white text-xs px-2 py-1 rounded-full mb-2">{{ hospital.status }}</div>
+    <h2 class="text-blue-700 text-sm font-semibold mb-1">{{ hospital.name }}</h2>
+    <p class="text-gray-600 text-sm mb-2">{{ hospital.location }}</p>
+    <p class="text-gray-800 text-sm">Bed spaces: {{ hospital.bedSpaces }}</p>
+  </div>
+</template>
 
-  const statusClass = computed(() => {
-        return props.hospital.status === 'Busy'
-          ? 'bg-blue-600 text-white rounded-full px-2 py-1' : props.hospital.status === 'Unavailable' ? 'bg-red-600 text-white rounded-full px-2 py-1'
-          : 'bg-green-600 text-white rounded-full px-2 py-1';
-      });
+<script setup lang="ts">
+interface Hospital {
+  id: number;
+  name: string;
+  location: string;
+  status: string;
+  bedSpaces: number;
+}
 
-      const handleNavigation = () => {
-        router.push('/clinic-details')
-      }
-  </script>
-  
-  <style scoped>
-  .status {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
+const props = defineProps<{ hospital: Hospital }>()
+
+const statusClass = computed(() => {
+  switch (props.hospital.status) {
+    case 'Available':
+      return 'bg-green-500';
+    case 'Busy':
+      return 'bg-blue-500';
+    case 'Unavailable':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-500';
   }
-  </style>
-  
+})
+</script>
+
+<style scoped>
+/* Add your custom styles here */
+</style> -->
+
+<template>
+  <div @click="goToHospital" class="border border-blue-300 rounded-lg p-4 bg-blue-50 w-64 flex flex-col items-start m-2 cursor-pointer">
+    <div :class="statusClass" class="text-white text-xs px-2 py-1 rounded-full mb-2">{{ hospital.status }}</div>
+    <h2 class="text-blue-700 font-semibold mb-1">{{ hospital.name }}</h2>
+    <p class="text-gray-600 text-sm mb-2">{{ hospital.location }}</p>
+    <p class="text-gray-800 text-sm">Bed spaces: {{ hospital.bedSpaces }}</p>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+
+interface Hospital {
+  id: number;
+  name: string;
+  location: string;
+  status: string;
+  bedSpaces: number;
+  lat: number;
+  lon: number;
+}
+
+const props = defineProps<{ hospital: Hospital }>()
+
+const router = useRouter()
+
+const goToHospital = () => {
+  router.push({
+    path: '/hospital/details',
+    query: {
+      id: props.hospital.id,
+      name: props.hospital.name,
+      location: props.hospital.location,
+      status: props.hospital.status,
+      bedSpaces: props.hospital.bedSpaces,
+      lat: props.hospital.lat,
+      lon: props.hospital.lon,
+    }
+  })
+}
+
+const statusClass = computed(() => {
+  switch (props.hospital.status) {
+    case 'Available':
+      return 'bg-green-500';
+    case 'Busy':
+      return 'bg-blue-500';
+    case 'Unavailable':
+      return 'bg-red-500';
+    default:
+      return 'bg-gray-500';
+  }
+})
+</script>
+
+<style scoped>
+/* Add your custom styles here */
+</style>

@@ -3,7 +3,7 @@
    <Header />
     <HeroSection />
     <SearchBar id="search" class="mb-3" />
-    <HospitalsList class="my-20" />
+    <HospitalsList class="" />
     <Services id="features" />
     <HotLine id="hotlines" />
     <ContactUs />
