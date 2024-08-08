@@ -13,7 +13,30 @@ export default {
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
     },
   },
-  modules: ["@nuxtjs/tailwindcss"],
+//   modules: ["@nuxtjs/tailwindcss", ['@nuxtjs/google-fonts', {
+//     families: {
+//       Roboto: true,
+//       Inter: [400, 700],
+//       'Josefin+Sans': true,
+//       Lato: [100, 300],
+//       Raleway: {
+//         wght: [100, 400],
+//         ital: [100]
+//       },
+//       Inter: '200..700',
+//       'Crimson Pro': {
+//         wght: '200..900',
+//         ital: '200..700',
+//       }
+//     }
+// }],],
+modules: ["@nuxtjs/tailwindcss", '@nuxtjs/google-fonts'],
+googleFonts: {
+  families: {
+    Roboto: true, // Replace 'Roboto' with any available Google Font
+  },
+  display: 'swap', // Optional: Controls how the font is displayed
+},
   plugins: ["~/plugins/aos.client.ts"],
   css: ["/assets/css/main.css", 'leaflet/dist/leaflet.css'],
   tailwindcss: {

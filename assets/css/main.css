@@ -16,3 +16,7 @@
 .dark .bg-custom {
   background-color: #1a202c; /* Dark mode background */
 }
+/* Apply the font globally */
+body {
+  font-family: 'Roboto', sans-serif;
+}
