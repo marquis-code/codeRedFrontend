@@ -313,10 +313,11 @@
   
               <div class="mt-10 flex justify-between w-full gap-x-6">
                 <button
+                 :disabled="loading"
                   type="button"
                   v-if="activeStep > 0"
                   @click="handlePrevious"
-                  class="bg-gray-300 w-full text-black px-4 py-3.5 text-sm rounded-md hover:bg-gray-400"
+                  class="bg-gray-300 w-full disabled:cursor-not-allowed disabled:opacity-25 text-black px-4 py-3.5 text-sm rounded-md hover:bg-gray-400"
                 >
                   Go Back
                 </button>
