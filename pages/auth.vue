@@ -96,4 +96,4 @@ const navigateToLogin = () => {
 if (isLoggedIn) {
     router.push('/dashboard')
 }
-</script>
+</script>@/composables/modules/auth/login

@@ -77,3 +77,4 @@ watch(processing, (val) => {
   emit("processLogin", val);
 })
 </script>
+@/composables/modules/auth/login

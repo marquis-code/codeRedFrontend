@@ -458,4 +458,4 @@ useKeyboardShortcut(() => {
   background-color: #0ba9b9;
   color: white
 }
-</style>
+</style>@/composables/modules/auth/login
