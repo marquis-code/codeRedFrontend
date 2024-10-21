@@ -38,7 +38,7 @@ googleFonts: {
   display: 'swap', // Optional: Controls how the font is displayed
 },
   plugins: ["~/plugins/aos.client.ts"],
-  css: ["/assets/css/main.css", 'leaflet/dist/leaflet.css'],
+  css: ["/assets/css/main.css", 'leaflet/dist/leaflet.css', '@/assets/css/custom.css'],
   tailwindcss: {
     cssPath: "@/assets/css/main.css",
   },
