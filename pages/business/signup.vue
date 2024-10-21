@@ -51,7 +51,6 @@
                         type="text"
                         id="hospital/clinic"
                         class="input-field"
-                        placeholder="Enter hospital/clinic name"
                       />
                     </div>
                     <div>
@@ -61,7 +60,6 @@
                         type="text"
                         id="contact-information"
                         class="input-field"
-                        placeholder="Enter contact information"
                       />
                     </div>
                     <div class="md:col-span-2">
@@ -71,7 +69,6 @@
                         type="text"
                         id="address"
                         class="input-field"
-                        placeholder="Enter Address"
                       />
                     </div>
                     <div class="md:col-span-2">
@@ -82,7 +79,6 @@
                           type="url"
                           id="website"
                           class="input-field"
-                          placeholder="Enter hospital website"
                         />
                       </div>
                     </div>
@@ -95,7 +91,6 @@
                           type="text"
                           id="operatingHours"
                           class="input-field"
-                          placeholder="Enter operating hours"
                         />
                       </div>
                     </div>
@@ -114,7 +109,6 @@
                         type="text"
                         id="businessName"
                         class="input-field"
-                        placeholder="Enter business name"
                       />
                     </div>
                     <div>
@@ -123,8 +117,6 @@
                         v-model="payload.availableSpecialties"
                         type="text"
                         id="industry"
-                        class="input-field"
-                        placeholder="Enter industry"
                       />
                     </div>
                     <div>
@@ -134,7 +126,6 @@
                         type="text"
                         id="industry"
                         class="input-field"
-                        placeholder="Enter industry"
                       />
                     </div>
                     <div>
@@ -144,7 +135,6 @@
                         type="text"
                         id="industry"
                         class="input-field"
-                        placeholder="Enter industry"
                       />
                     </div>
                     <div>
@@ -154,7 +144,6 @@
                         type="text"
                         id="industry"
                         class="input-field"
-                        placeholder="Enter industry"
                       />
                     </div>
                   </div>
@@ -172,7 +161,6 @@
                         type="text"
                         id="emergency-contact"
                         class="input-field"
-                        placeholder="Enter password"
                       />
                     </div>
                     <div>
@@ -182,7 +170,6 @@
                         type="text"
                         id="emergency-dept"
                         class="input-field"
-                        placeholder="Confirm password"
                       />
                     </div>
   
@@ -193,7 +180,6 @@
                         type="text"
                         id="doc-on-duty"
                         class="input-field"
-                        placeholder="Confirm password"
                       />
                     </div>
                   </div>
@@ -211,7 +197,6 @@
                         type="text"
                         id="branchName"
                         class="input-field"
-                        placeholder="Enter branch name"
                       />
                     </div>
   
@@ -222,7 +207,6 @@
                         type="text"
                         id="branchName"
                         class="input-field"
-                        placeholder="Enter branch name"
                       />
                     </div>
                   </div>
@@ -240,7 +224,6 @@
                         type="text"
                         id="workShifts"
                         class="input-field"
-                        placeholder="Enter work shifts"
                       />
                     </div>
                   </div>
@@ -258,7 +241,6 @@
                         type="text"
                         id="importStaff"
                         class="input-field"
-                        placeholder="Enter staff details"
                       />
                     </div>
   
@@ -269,7 +251,6 @@
                         type="text"
                         id="importStaff"
                         class="input-field"
-                        placeholder="Enter staff details"
                       />
                     </div>
                   </div>
@@ -287,7 +268,6 @@
                         type="text"
                         id="importStaff"
                         class="input-field"
-                        placeholder="Enter staff details"
                       />
                     </div>
   
@@ -298,7 +278,6 @@
                         type="text"
                         id="importStaff"
                         class="input-field"
-                        placeholder="Enter staff details"
                       />
                     </div>
                   </div>

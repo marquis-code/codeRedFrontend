@@ -22,11 +22,11 @@
               <div class="mx-auto max-w-7xl px-6 pb-32 pt-36 sm:pt-60 lg:px-8 lg:pt-32">
                 <div class="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
                   <div class="relative w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
-                    <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Reliable employee transport for your company..</h1>
-                    <p class="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">Cupidatat minim id magna ipsum sint dolor qui. Sunt sit in quis cupidatat mollit aute velit. Et labore commodo nulla aliqua proident mollit ullamco exercitation tempor. Sint aliqua anim nulla sunt mollit id pariatur in voluptate cillum.</p>
+                    <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Empowering Clinics and Hospitals with Real-Time Emergency Solutions</h1>
+                    <p class="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">CODE-RED helps healthcare providers optimize patient care by providing instant access to bed availability, emergency transport, and first aid resources — making emergency response faster and more efficient.</p>
                     <div class="mt-10 flex items-center gap-x-6">
                       <NuxtLink to="/business/signup" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</NuxtLink>
-                      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Live demo <span aria-hidden="true">→</span></a>
+                      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Request a Demo <span aria-hidden="true">→</span></a>
                     </div>
                   </div>
                   <div class="mt-14 flex justify-end gap-8 sm:-mt-44 sm:justify-start sm:pl-20 lg:mt-0 lg:pl-0">
@@ -204,29 +204,30 @@
         <div class="mx-auto max-w-4xl px-6 lg:max-w-7xl lg:px-8 xl:grid xl:grid-flow-col-dense xl:grid-cols-2 xl:gap-x-8">
           <div class="relative pb-64 pt-12 sm:pb-64 sm:pt-24 xl:col-start-1 xl:pb-24">
             <h2 class="text-base font-semibold text-indigo-300">Metrics</h2>
-            <p class="mt-3 text-pretty text-3xl font-bold tracking-tight text-white">Shuttlers Business performance
+            <p class="mt-3 text-pretty text-3xl font-bold tracking-tight text-white">Proven Results for Healthcare Facilities
             </p>
             <p class="mt-5 text-lg text-gray-300">Experience streamlined operations, increased efficiency, and elevated customer satisfaction with our innovative transportation solutions.</p>
             <div class="mt-12 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2">
               <p>
-                <span class="block text-2xl font-bold text-white">8K+</span>
-                <span class="mt-1 block text-base text-gray-300"><span class="font-medium text-white">Staff moved
+                <span class="block text-2xl font-bold text-white">10K+</span>
+                <span class="mt-1 block text-base text-gray-300"><span class="font-medium text-white">Successful Patient Transfers:
 
-                </span> We’ve moved 10k+ staffs across 100+ different routes.</span>
+                </span>CODE-RED has facilitated the seamless transfer of over 10,000 patients to hospitals and clinics nationwide, helping improve emergency care delivery</span>
               </p>
               <p>
-                <span class="block text-2xl font-bold text-white">25K+</span>
-                <span class="mt-1 block text-base text-gray-300"><span class="font-medium text-white">Business Clients</span>Our clients have about 10k+ staff that use our Shuttles.</span>
+                <span class="block text-2xl font-bold text-white">23M+</span>
+                <span class="mt-1 block text-base text-gray-300"><span class="font-medium text-white">Real-Time Bed Updates:
+                </span>Our platform provides accurate and real-time bed availability updates across thousands of hospitals and clinics.</span>
               </p>
               <p>
                 <span class="block text-2xl font-bold text-white">98%</span>
-                <span class="mt-1 block text-base text-gray-300"><span class="font-medium text-white">Trips Taken</span> We have covered a lot of miles and taken 3M+ trips.</span>
+                <span class="mt-1 block text-base text-gray-300"><span class="font-medium text-white">Satisfaction Rate</span>Healthcare facilities that partner with CODE-RED have reported improved operational efficiency and greater patient satisfaction.</span>
               </p>
               <p>
-                <span class="block text-2xl font-bold text-white">12M+</span>
-                <span class="mt-1 block text-base text-gray-300"><span class="font-medium text-white">Vehicles
+                <span class="block text-2xl font-bold text-white">15M+</span>
+                <span class="mt-1 block text-base text-gray-300"><span class="font-medium text-white">Patients Served:
 
-                </span>We have vehicle partners that supply fleet of vehicles.</span>
+                </span>Our solutions help clinics and hospitals connect with patients when they need urgent care the most, ensuring smoother, faster service.</span>
               </p>
             </div>
           </div>
@@ -243,18 +244,18 @@
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
           <div class="mx-auto max-w-xl text-center">
             <h2 class="text-lg font-semibold leading-8 tracking-tight text-indigo-600">Testimonials</h2>
-            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Don’t just take our word for it</p>
+            <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Trusted by Clinics and Hospitals Across the Nation</p>
           </div>
           <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 grid-rows-1 gap-8 text-sm leading-6 text-gray-900 sm:mt-20 sm:grid-cols-2 xl:mx-0 xl:max-w-none xl:grid-flow-col xl:grid-cols-4">
             <figure class="rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 sm:col-span-2 xl:col-start-2 xl:row-end-1">
               <blockquote class="p-6 text-lg font-semibold leading-7 tracking-tight text-gray-900 sm:p-12 sm:text-xl sm:leading-8">
-                <p>“Integer id nunc sit semper purus. Bibendum at lacus ut arcu blandit montes vitae auctor libero. Hac condimentum dignissim nibh vulputate ut nunc. Amet nibh orci mi venenatis blandit vel et proin. Non hendrerit in vel ac diam.”</p>
+                <p>“With CODE-RED, we’ve dramatically reduced our patient intake time during emergencies. The real-time bed availability feature helps us manage our resources effectively..”</p>
               </blockquote>
               <figcaption class="flex flex-wrap items-center gap-x-4 gap-y-4 border-t border-gray-900/10 px-6 py-4 sm:flex-nowrap">
                 <img class="h-10 w-10 flex-none rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=1024&h=1024&q=80" alt="">
                 <div class="flex-auto">
-                  <div class="font-semibold">Brenna Goyette</div>
-                  <div class="text-gray-600">@brennagoyette</div>
+                  <div class="font-semibold">Dr. Adebola Johnson,</div>
+                  <div class="text-gray-600">@Chief Medical Director at SafeCare Hospital</div>
                 </div>
                 <img class="h-10 w-auto flex-none" src="https://tailwindui.com/plus/img/logos/savvycal-logo-gray-900.svg" alt="">
               </figcaption>
@@ -263,13 +264,13 @@
               <div class="space-y-8 xl:row-span-2">
                 <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
                   <blockquote class="text-gray-900">
-                    <p>“Laborum quis quam. Dolorum et ut quod quia. Voluptas numquam delectus nihil. Aut enim doloremque et ipsam.”</p>
+                    <p>“"CODE-RED has revolutionized how we coordinate with ambulance services. We can now provide timely care and ensure our patients receive the treatment they need without delays.”</p>
                   </blockquote>
                   <figcaption class="mt-6 flex items-center gap-x-4">
                     <img class="h-10 w-10 rounded-full bg-gray-50" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
                     <div>
-                      <div class="font-semibold">Leslie Alexander</div>
-                      <div class="text-gray-600">@lesliealexander</div>
+                      <div class="font-semibold">Dr. Chisom Nwosu,</div>
+                      <div class="text-gray-600">@Medical Director at CityMed Clinics</div>
                     </div>
                   </figcaption>
                 </figure>
@@ -334,14 +335,14 @@
       <div class="bg-white">
         <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
           <div class="mx-auto max-w-4xl divide-y divide-gray-900/10">
-            <h2 class="text-2xl font-bold leading-10 tracking-tight text-gray-900">FAQs</h2>
+            <h2 class="text-2xl font-bold leading-10 tracking-tight text-gray-900">Frequently Asked Questions</h2>
             <p>Everything you need to know about the Shuttlers Daily product. Can’t find the answer you’re looking for? Please chat to our friendly team.</p>
             <dl class="mt-10 space-y-6 divide-y divide-gray-900/10">
               <div class="pt-6">
                 <dt>
                   <!-- Expand/collapse question button -->
                   <button type="button" class="flex w-full items-start justify-between text-left text-gray-900" aria-controls="faq-0" aria-expanded="false">
-                    <span class="text-base font-semibold leading-7">What&#039;s the best thing about Switzerland?</span>
+                    <span class="text-base font-semibold leading-7">How does CODE-RED integrate with our hospital system?</span>
                     <span class="ml-6 flex h-7 items-center">
                       <!--
                         Icon when question is collapsed.
@@ -363,10 +364,40 @@
                   </button>
                 </dt>
                 <dd class="mt-2 pr-12" id="faq-0">
-                  <p class="text-base leading-7 text-gray-600">I don&#039;t know, but the flag is a big plus. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.</p>
+                  <p class="text-base leading-7 text-gray-600">CODE-RED can be easily integrated with your existing systems, allowing for seamless real-time updates on bed availability, patient data, and ambulance coordination..</p>
                 </dd>
               </div>
       
+
+              <div class="pt-6">
+                <dt>
+                  <!-- Expand/collapse question button -->
+                  <button type="button" class="flex w-full items-start justify-between text-left text-gray-900" aria-controls="faq-0" aria-expanded="false">
+                    <span class="text-base font-semibold leading-7">How can CODE-RED help improve emergency care at our clinic or hospital?</span>
+                    <span class="ml-6 flex h-7 items-center">
+                      <!--
+                        Icon when question is collapsed.
+      
+                        Item expanded: "hidden", Item collapsed: ""
+                      -->
+                      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                      </svg>
+                      <!--
+                        Icon when question is expanded.
+      
+                        Item expanded: "", Item collapsed: "hidden"
+                      -->
+                      <svg class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+                      </svg>
+                    </span>
+                  </button>
+                </dt>
+                <dd class="mt-2 pr-12" id="faq-0">
+                  <p class="text-base leading-7 text-gray-600">By providing up-to-the-minute bed availability and instant ambulance connections, CODE-RED optimizes patient intake, reduces wait times, and ensures better outcomes</p>
+                </dd>
+              </div>
               <!-- More questions... -->
             </dl>
           </div>
@@ -377,7 +408,7 @@
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
           <div class="mx-auto max-w-2xl text-center">
             <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Other solutions</h2>
-            <p class="mt-2 text-lg leading-8 text-gray-600">Explore other solutions we offer.</p>
+            <p class="mt-2 text-lg leading-8 text-gray-600">Expand Your Healthcare Services with CODE-RED.</p>
           </div>
           <div class="mx-auto mt-16 grid max-w-2xl auto-rows-fr grid-cols-1 gap-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
             <article class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pb-8 pt-80 sm:pt-48 lg:pt-80">
@@ -400,10 +431,10 @@
               <h3 class="mt-3 text-lg font-semibold leading-6 text-white">
                 <a href="#">
                   <span class="absolute inset-0"></span>
-                  Daily Shuttle
+                  Daily Shuttle for Staff
                 </a>
               </h3>
-              <p>Experience the efficiency and convenience of Scheduled Mass-Transit, your dependable solution for...</p>
+              <p>Ensure your staff arrives on time and safely with our mass-transit shuttle services, tailored for healthcare employees..</p>
             </article>
             <article class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pb-8 pt-80 sm:pt-48 lg:pt-80">
               <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover">
@@ -425,10 +456,10 @@
               <h3 class="mt-3 text-lg font-semibold leading-6 text-white">
                 <a href="#">
                   <span class="absolute inset-0"></span>
-                  Vehicle Rental
+                  Fleet Management for Ambulances
                 </a>
               </h3>
-              <p>Unlock the freedom to go anywhere, anytime with our Vehicle Rental service. Discover a wide range...</p>
+              <p>Manage your ambulance fleet effectively with real-time tracking and maintenance scheduling to ensure reliable service during emergencies</p>
             </article>
             <article class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl bg-gray-900 px-8 pb-8 pt-80 sm:pt-48 lg:pt-80">
               <img src="https://images.unsplash.com/photo-1496128858413-b36217c2ce36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3603&q=80" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover">
@@ -450,10 +481,10 @@
               <h3 class="mt-3 text-lg font-semibold leading-6 text-white">
                 <a href="#">
                   <span class="absolute inset-0"></span>
-                  EventGo
+                  Health Facility Partnerships
                 </a>
               </h3>
-              <p>Elevate your event experience with our convenient vehicle booking service. Whether you need trans...</p>
+              <p>Expand your reach by collaborating with other healthcare facilities through our network, improving patient care coordination across regions.</p>
             </article>
       
             <!-- More posts... -->
