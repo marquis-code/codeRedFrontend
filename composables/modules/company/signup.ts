@@ -9,7 +9,6 @@ export const useCreateCompany = () => {
   const loading = ref(false);
   const payload = ref({
     uuid: uuidv4(), // Generate a UUID when payload is initialized
-    username: "",
     password: "",
     hospitalName: "",
     contactInformation: "",

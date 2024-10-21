@@ -117,6 +117,7 @@
                         v-model="payload.availableSpecialties"
                         type="text"
                         id="industry"
+                        class="input-field"
                       />
                     </div>
                     <div>
@@ -283,6 +284,32 @@
                   </div>
                 </div>
               </transition>
+
+              <transition name="slide-fade" mode="out-in">
+                <div v-if="activeStep === 7" key="step-8">
+    
+                  <div class="space-y-4">
+                    <div>
+                      <label for="importStaff" class="input-label">Password</label>
+                      <input
+                        v-model="payload.password"
+                        type="password"
+                        id="password"
+                        class="input-field"
+                      />
+                    </div>
+  
+                    <div>
+                      <label for="importStaff" class="input-label">Confirm Password</label>
+                      <input
+                        type="password"
+                        id="confirm-password"
+                        class="input-field"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </transition>
   
               <div class="mt-10 flex justify-between w-full gap-x-6">
                 <button
@@ -340,7 +367,8 @@ const steps = [
   'Insurance and Payment',
   'Response Time',
   'Partnership and Communication Channels',
-  'Special Facilities or Capabilities'
+  'Special Facilities or Capabilities',
+  'Security Information'
 ];
 
 onMounted(() => {
