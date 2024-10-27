@@ -17,20 +17,9 @@
               class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
             >
               <span class="sr-only">Open main menu</span>
-              <svg
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
-              </svg>
+              <svg width="27" height="20" viewBox="0 0 27 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.5834 1.25H25.1667M1.83337 10H25.1667H6.20837M1.83337 18.75H16.4167" stroke="#CC1100" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </button>
           </div>
           <div class="hidden lg:flex lg:gap-x-12">

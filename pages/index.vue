@@ -11,24 +11,41 @@
         >
           <div class="mx-auto max-w-2xl lg:mx-0">
             <h1 data-aos="flip-left"
-              class="mt-24 text-4xl font-bold tracking-tight text-gray-900 sm:mt-10 sm:text-6xl"
+              class="mt-24 font-black text-5xl  tracking-tight text-gray-900 sm:mt-10 sm:text-6xl"
             >
-              Need help <span class="text-[#CC1100]">locating</span> bed spaces?
+              Need help locating<span class="text-[#CC1100]"> BedSpaces?</span>
             </h1>
-            <p data-aos="flip-left" class="mt-6 text-lg leading-8 text-gray-600">
-              CODE-RED provides up-to-the-minute information on hospital bed
-              availability, emergency hotline access, and essential first aid
-              tips to streamline emergency response and save lives.
+
+            <img data-aos="fade-down"
+            class="aspect-[3/2] lg:hidden w-full my-6 bg-gray-50 object-cover lg:absolute lg:inset-0 lg:aspect-auto lg:h-full"
+            src="@/assets/img/saving-lives.png"
+            alt=""
+          />
+            <p data-aos="flip-left" class="mt-6 text-lg font-light leading-8 text-gray-800">
+              Get real-time updates on hospital bed availability, essential first aid tips, and access to ambulance services when you need them most.
             </p>
-            <div class="mt-10 flex items-center gap-x-6">
-              <a data-aos="flip-left"
+            <!-- <div class="mt-10 flex items-center gap-x-6">
+              <button data-aos="flip-left"
                 href="#search"
-                class="rounded-md bg-[#CC1100] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
-                >Find a bed-space</a
+                class="rounded-md bg-[#CC1100] text-base px-3.5 py-3.5 w-full font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
+                >CHECK BED AVAILABILITY</button
               >
-              <!-- <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
-                >Learn more <span aria-hidden="true">→</span></a
-              > -->
+            </div> -->
+            <div class="relative mt-10">
+              <!-- Button -->
+              <button
+              class="bg-[#CC1100] text-base px-3.5 py-3.5 w-full font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
+              >
+                CHECK BED AVAILABILITY
+              </button>
+          
+              <!-- Beep circle at the top right -->
+              <span
+                class="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-red-400 animate-ping"
+              ></span>
+              <span
+                class="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-red-600"
+              ></span>
             </div>
           </div>
         </div>
@@ -36,13 +53,15 @@
           class="relative lg:col-span-5 lg:-mr-8 xl:absolute xl:inset-0 xl:left-1/2 xl:mr-0"
         >
           <img data-aos="fade-down"
-            class="aspect-[3/2] w-full bg-gray-50 object-cover lg:absolute lg:inset-0 lg:aspect-auto lg:h-full"
+            class="aspect-[3/2] hidden lg:block w-full bg-gray-50 object-cover lg:absolute lg:inset-0 lg:aspect-auto lg:h-full"
             src="@/assets/img/saving-lives.png"
             alt=""
           />
         </div>
       </div>
     </div>
+
+    <AdvancedFilter />
 
     <!-- <div class="p-6 max-w-7xl mx-auto">
       <div class="flex justify-between">
@@ -80,12 +99,27 @@
         <button class="text-gray-500 hover:text-gray-700">View All ></button>
       </div>
     </div> -->
-
-  <div class="pt-10" id="search" data-aos="flip-left" >
+  <!-- <div class="pt-10" id="search" data-aos="flip-left" >
     <SearchBar v-if="!loading" :address="address" id="search" class="mb-3" />
     <HospitalsList class="" />
-  </div>
+  </div> -->
 
+  <div class="flex items-start space-x-4 p-4 max-w-7xl mx-auto">
+    <!-- Icon -->
+    <span class="material-icons text-red-600 text-2xl">
+      <svg width="21" height="29" viewBox="0 0 21 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.77143 27.4143C5.77143 28.2079 6.42071 28.8571 7.21429 28.8571H12.9857C13.7793 28.8571 14.4286 28.2079 14.4286 27.4143V25.9714H5.77143V27.4143ZM10.1 0C4.53057 0 0 4.53057 0 10.1C0 13.534 1.717 16.5496 4.32857 18.382V21.6429C4.32857 22.4364 4.97786 23.0857 5.77143 23.0857H14.4286C15.2221 23.0857 15.8714 22.4364 15.8714 21.6429V18.382C18.483 16.5496 20.2 13.534 20.2 10.1C20.2 4.53057 15.6694 0 10.1 0ZM12.9857 16.8814V20.2H7.21429V16.8814C5.02114 15.3376 2.88571 13.7504 2.88571 10.1C2.88571 6.11771 6.11771 2.88571 10.1 2.88571C14.0823 2.88571 17.3143 6.11771 17.3143 10.1C17.3143 13.6927 15.1356 15.3664 12.9857 16.8814Z" fill="#CC1100"/>
+        </svg>
+        
+    </span>
+
+    <!-- Text -->
+    <p class="text-gray-800 leading-relaxed">
+      Click on a hospital color box indicator above to get map directions,
+      access the emergency hotlines, and get short illustrative videos during emergencies!
+    </p>
+  </div>
+  
     <div class="flex flex-col items-center justify-center bg-[#FFF9F9CC] p-5">
       <div class="text-center">
         <div class="flex justify-center items-center">
@@ -99,12 +133,8 @@
           Transforming Emergency Healthcare in Nigeria
         </h1>
         <div data-aos="flip-left" class="bg-white py-6 lg:py-10 lg:px-10">
-          <p class="text-gray-700 mb-6 lg:max-w-xl font-light leading-relaxed">
-            At CODE-RED, our mission is to revolutionize emergency healthcare in
-            Nigeria with real-time hospital bed space updates. Inspired by
-            personal experiences and thorough research, we aim to bridge the gap
-            between patients and healthcare facilities, ensuring timely and
-            efficient care.
+          <p class="text-gray-700 mb-6 text-lg font-light lg:max-w-xl font-light leading-relaxed">
+            Our mission is to revolutionize emergency healthcare in Nigeria with real-time hospital bed updates, bridging the gap between patients and care facilities.
           </p>
           <button data-aos="flip-left"
             class="text-[#CC1100] border-[#CC1100] border text-sm lg:text-base font-bold py-3.5 px-4"
