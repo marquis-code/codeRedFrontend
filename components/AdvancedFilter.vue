@@ -9,7 +9,8 @@
             
         <input
           type="text"
-          v-model="address" @input="onInput" 
+          v-model="address"
+           @input="onInput" 
           placeholder="Search hospitals..."
           class="flex-grow outline-none text-gray-500 py-5 bg-white"
         />
@@ -153,39 +154,123 @@ const { latitude, longitude, error, address, loading } = useUserLocation();
   })
 
   
-  const fetchHealthFacilities = async () => {
-    if (address.value.length > 2) {
-      loading.value = true
-      try {
-        const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-          params: {
-            q: `hospital in ${address.value}`,
-            format: 'json',
-            addressdetails: 1,
-            extratags: 1
-          }
-        })
-        hospitals.value = response.data.map((facility: any) => ({
+  // const fetchHealthFacilities = async () => {
+  //   if (address.value.length > 2) {
+  //     loading.value = true
+  //     try {
+  //       const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+  //         params: {
+  //           q: `hospital in ${address.value}`,
+  //           format: 'json',
+  //           addressdetails: 1,
+  //           extratags: 1
+  //         }
+  //       })
+  //       hospitals.value = response.data.map((facility: any) => ({
+  //         id: facility.place_id,
+  //         name: facility.display_name,
+  //         location: facility.address.city || facility.address.town || facility.address.village || facility.address.suburb || '',
+  //         bedSpaces: Math.floor(Math.random() * 100), // Random number for bed spaces (since API doesn't provide this info)
+  //         status: ['Available', 'Busy', 'Unavailable'][Math.floor(Math.random() * 3)] // Random status
+  //       }))
+  //       searched.value = true
+  //     } catch (error) {
+  //       console.error('Error fetching health facilities:', error)
+  //       hospitals.value = []
+  //       searched.value = true
+  //     } finally {
+  //       fetching.value = false
+  //     }
+  //   } else {
+  //     hospitals.value = []
+  //     searched.value = false
+  //     fetching.value = false
+  //   }
+  // }
+
+  // import axios from 'axios'
+
+// const fetchHealthFacilities = async () => {
+//   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+//   if (address.value.length > 2) {
+//     loading.value = true
+//     try {
+//       const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
+//         params: {
+//           query: `hospital near ${address.value}`,
+//           key: apiKey, // Replace with your actual API key
+//           type: 'hospital'
+//         }
+//       })
+
+//       hospitals.value = response.data.results.map((facility) => ({
+//         id: facility.place_id,
+//         name: facility.name,
+//         location: facility.formatted_address,
+//         bedSpaces: Math.floor(Math.random() * 100), // Placeholder for bed spaces
+//         status: ['Available', 'Busy', 'Unavailable'][Math.floor(Math.random() * 3)] // Random status
+//       }))
+//       searched.value = true
+//     } catch (error) {
+//       console.error('Error fetching health facilities:', error)
+//       hospitals.value = []
+//       searched.value = true
+//     } finally {
+//       loading.value = false
+//     }
+//   } else {
+//     hospitals.value = []
+//     searched.value = false
+//     loading.value = false
+//   }
+// }
+
+// import axios from 'axios'
+
+const fetchHealthFacilities = async () => {
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+  if (address.value.length > 2) {
+    loading.value = true
+    try {
+      // Fetching data from Google Places API
+      const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
+        params: {
+          query: `hospital near ${address.value}`,
+          key: apiKey,
+          type: 'hospital' // Ensures we're only searching for hospital types
+        }
+      })
+
+      // Check if there are results
+      if (response.data.results && response.data.results.length > 0) {
+        hospitals.value = response.data.results.map((facility) => ({
           id: facility.place_id,
-          name: facility.display_name,
-          location: facility.address.city || facility.address.town || facility.address.village || facility.address.suburb || '',
-          bedSpaces: Math.floor(Math.random() * 100), // Random number for bed spaces (since API doesn't provide this info)
+          name: facility.name,
+          location: facility.formatted_address,
+          bedSpaces: Math.floor(Math.random() * 100), // Placeholder for bed spaces
           status: ['Available', 'Busy', 'Unavailable'][Math.floor(Math.random() * 3)] // Random status
         }))
         searched.value = true
-      } catch (error) {
-        console.error('Error fetching health facilities:', error)
+      } else {
+        console.warn('No health facilities found for the specified address.')
         hospitals.value = []
-        searched.value = true
-      } finally {
-        fetching.value = false
+        searched.value = false
       }
-    } else {
+    } catch (error) {
+      console.error('Error fetching health facilities:', error)
       hospitals.value = []
-      searched.value = false
-      fetching.value = false
+      searched.value = true
+    } finally {
+      loading.value = false
     }
+  } else {
+    // Resetting the state if the address length is insufficient
+    hospitals.value = []
+    searched.value = false
+    loading.value = false
   }
+}
+
 
   
   const onInput = () => {
@@ -256,6 +341,39 @@ const { latitude, longitude, error, address, loading } = useUserLocation();
       hospitalType: []
     }
   }
+
+
+  const getCurrentLocation = async () => {
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+    loading.value = true
+    error.value = ''
+  
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+      })
+  
+      const { latitude, longitude } = position.coords
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
+      )
+      const data = await response.json()
+  
+      if (data.results[0]) {
+        address.value = data.results[0].formatted_address
+        // await fetchHospitals(data.results[0].formatted_address)
+      }
+    } catch (err) {
+      error.value = 'Failed to get location details'
+    } finally {
+      loading.value = false
+    }
+  }
+
+    // Lifecycle
+    onMounted(() => {
+    getCurrentLocation()
+  })
   </script>
   
   <style scoped>
