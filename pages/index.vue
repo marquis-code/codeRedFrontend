@@ -7,7 +7,7 @@
     <div class="relative bg-white">
       <div class="mx-auto max-w-7xl lg:grid lg:grid-cols-12 lg:gap-x-8">
         <div
-          class="px-6 pb-24 pt-10 sm:pb-32 lg:col-span-7 lg:px-0 lg:pb-56 lg:pt-48 xl:col-span-6"
+          class="px-6 pb-24 sm:pb-32 lg:col-span-7 lg:px-0 lg:pb-56 xl:col-span-6"
         >
           <div class="mx-auto max-w-2xl lg:mx-0">
             <h1 data-aos="flip-left"
@@ -21,17 +21,11 @@
             src="@/assets/img/saving-lives.png"
             alt=""
           />
-            <p data-aos="flip-left" class="mt-6 text-lg font-light leading-8 text-gray-800">
+            <p data-aos="flip-left" class="mt-2 text-lg font-light leading-snug text-gray-800">
               Get real-time updates on hospital bed availability, essential first aid tips, and access to ambulance services when you need them most.
             </p>
-            <!-- <div class="mt-10 flex items-center gap-x-6">
-              <button data-aos="flip-left"
-                href="#search"
-                class="rounded-md bg-[#CC1100] text-base px-3.5 py-3.5 w-full font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
-                >CHECK BED AVAILABILITY</button
-              >
-            </div> -->
-            <div class="relative mt-10">
+
+            <div class="relative mt-4">
               <!-- Button -->
               <button
               class="bg-[#CC1100] text-base px-3.5 py-3.5 w-full font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
