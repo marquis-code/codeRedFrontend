@@ -20,3 +20,8 @@
 body {
   font-family: 'Roboto', sans-serif;
 }
+
+body {
+@apply font-sans; /* Applies Gorditas font globally */
+}
+

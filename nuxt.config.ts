@@ -33,9 +33,9 @@ export default {
 modules: ["@nuxtjs/tailwindcss", '@nuxtjs/google-fonts'],
 googleFonts: {
   families: {
-    Roboto: true, // Replace 'Roboto' with any available Google Font
+    Gorditas: true, // Loads Gorditas font
   },
-  display: 'swap', // Optional: Controls how the font is displayed
+  display: 'swap', // Adds display swap for faster loading
 },
   plugins: ["~/plugins/aos.client.ts"],
   css: ["/assets/css/main.css", 'leaflet/dist/leaflet.css', '@/assets/css/custom.css'],

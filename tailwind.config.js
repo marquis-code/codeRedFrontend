@@ -11,6 +11,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        gorditas: ['Gorditas', 'sans-serif'], // Custom font family
+      },
       colors: {
         gray: {
           25:  "#fafafa",
