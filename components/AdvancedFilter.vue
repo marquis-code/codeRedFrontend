@@ -154,39 +154,39 @@ const { latitude, longitude, error, address, loading } = useUserLocation();
   })
 
   
-  // const fetchHealthFacilities = async () => {
-  //   if (address.value.length > 2) {
-  //     loading.value = true
-  //     try {
-  //       const response = await axios.get('https://nominatim.openstreetmap.org/search', {
-  //         params: {
-  //           q: `hospital in ${address.value}`,
-  //           format: 'json',
-  //           addressdetails: 1,
-  //           extratags: 1
-  //         }
-  //       })
-  //       hospitals.value = response.data.map((facility: any) => ({
-  //         id: facility.place_id,
-  //         name: facility.display_name,
-  //         location: facility.address.city || facility.address.town || facility.address.village || facility.address.suburb || '',
-  //         bedSpaces: Math.floor(Math.random() * 100), // Random number for bed spaces (since API doesn't provide this info)
-  //         status: ['Available', 'Busy', 'Unavailable'][Math.floor(Math.random() * 3)] // Random status
-  //       }))
-  //       searched.value = true
-  //     } catch (error) {
-  //       console.error('Error fetching health facilities:', error)
-  //       hospitals.value = []
-  //       searched.value = true
-  //     } finally {
-  //       fetching.value = false
-  //     }
-  //   } else {
-  //     hospitals.value = []
-  //     searched.value = false
-  //     fetching.value = false
-  //   }
-  // }
+   const fetchHealthFacilities = async () => {
+     if (address.value.length > 2) {
+       loading.value = true
+       try {
+         const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+           params: {
+             q: `hospital in ${address.value}`,
+             format: 'json',
+             addressdetails: 1,
+             extratags: 1
+           }
+         })
+         hospitals.value = response.data.map((facility: any) => ({
+           id: facility.place_id,
+           name: facility.display_name,
+           location: facility.address.city || facility.address.town || facility.address.village || facility.address.suburb || '',
+           bedSpaces: Math.floor(Math.random() * 100), // Random number for bed spaces (since API doesn't provide this info)
+           status: ['Available', 'Busy', 'Unavailable'][Math.floor(Math.random() * 3)] // Random status
+         }))
+         searched.value = true
+       } catch (error) {
+         console.error('Error fetching health facilities:', error)
+         hospitals.value = []
+         searched.value = true
+       } finally {
+         fetching.value = false
+       }
+     } else {
+       hospitals.value = []
+       searched.value = false
+       fetching.value = false
+     }
+   }
 
   // import axios from 'axios'
 
@@ -226,51 +226,6 @@ const { latitude, longitude, error, address, loading } = useUserLocation();
 // }
 
 // import axios from 'axios'
-
-const fetchHealthFacilities = async () => {
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-  if (address.value.length > 2) {
-    loading.value = true
-    try {
-      // Fetching data from Google Places API
-      const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
-        params: {
-          query: `hospital near ${address.value}`,
-          key: apiKey,
-          type: 'hospital' // Ensures we're only searching for hospital types
-        }
-      })
-
-      // Check if there are results
-      if (response.data.results && response.data.results.length > 0) {
-        hospitals.value = response.data.results.map((facility) => ({
-          id: facility.place_id,
-          name: facility.name,
-          location: facility.formatted_address,
-          bedSpaces: Math.floor(Math.random() * 100), // Placeholder for bed spaces
-          status: ['Available', 'Busy', 'Unavailable'][Math.floor(Math.random() * 3)] // Random status
-        }))
-        searched.value = true
-      } else {
-        console.warn('No health facilities found for the specified address.')
-        hospitals.value = []
-        searched.value = false
-      }
-    } catch (error) {
-      console.error('Error fetching health facilities:', error)
-      hospitals.value = []
-      searched.value = true
-    } finally {
-      loading.value = false
-    }
-  } else {
-    // Resetting the state if the address length is insufficient
-    hospitals.value = []
-    searched.value = false
-    loading.value = false
-  }
-}
-
 
   
   const onInput = () => {
