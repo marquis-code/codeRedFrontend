@@ -13,7 +13,7 @@
             <h1 data-aos="flip-left"
               class="mt-24 font-black text-5xl  tracking-tight text-gray-900 sm:mt-10 sm:text-6xl"
             >
-              Need help locating<span class="text-[#CC1100]"> BedSpaces?</span>
+              Need help locating<span class="text-[#CC1100]"> Bed Spaces?</span>
             </h1>
 
             <img data-aos="fade-down"
@@ -21,17 +21,17 @@
             src="@/assets/img/saving-lives.png"
             alt=""
           />
-            <p data-aos="flip-left" class="mt-2 text-lg font-light leading-snug text-gray-800">
+            <p data-aos="flip-left" class="mt-2 font-light leading-snug text-gray-800">
               Get real-time updates on hospital bed availability, essential first aid tips, and access to ambulance services when you need them most.
             </p>
 
             <div class="relative mt-4">
               <!-- Button -->
-              <button
-              class="bg-[#CC1100] text-base px-3.5 py-3.5 w-full font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
+              <a href="#filter"
+              class="bg-[#CC1100] text-base block text-center px-3.5 py-5 w-full rounded-sm font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
               >
                 CHECK BED AVAILABILITY
-              </button>
+              </a>
           
               <!-- Beep circle at the top right -->
               <span
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <AdvancedFilter />
+    <AdvancedFilter id="filter" />
 
     <!-- <div class="p-6 max-w-7xl mx-auto">
       <div class="flex justify-between">
