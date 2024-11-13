@@ -35,7 +35,7 @@
           
               <!-- Beep circle at the top right -->
               <span
-                class="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-red-400 animate-ping"
+                class="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full  bg-red-400 animate-ping"
               ></span>
               <span
                 class="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-red-600"
@@ -55,7 +55,9 @@
       </div>
     </div>
 
-    <AdvancedFilter id="filter" />
+    <MapFunctional />
+
+    <!-- <AdvancedFilter id="filter" /> -->
 
     <!-- <div class="p-6 max-w-7xl mx-auto">
       <div class="flex justify-between">

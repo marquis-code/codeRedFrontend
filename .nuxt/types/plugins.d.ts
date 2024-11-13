@@ -15,6 +15,7 @@ type NuxtAppInjections =
   InjectionType<typeof import("../../node_modules/nuxt/dist/app/plugins/chunk-reload.client").default> &
   InjectionType<typeof import("../../plugins/aos.client").default> &
   InjectionType<typeof import("../../plugins/apex-charts").default> &
+  InjectionType<typeof import("../../plugins/googleMaps.client").default> &
   InjectionType<typeof import("../../plugins/tawk-messenger.client").default> &
   InjectionType<typeof import("../../plugins/vue3-toastify").default>
 

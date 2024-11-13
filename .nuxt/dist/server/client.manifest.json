@@ -6,26 +6,19 @@
     "file": "HospitalInfo.0a48f831.css",
     "src": "HospitalInfo.css"
   },
-  "HospitalsList.css": {
-    "resourceType": "style",
-    "prefetch": true,
-    "preload": true,
-    "file": "HospitalsList.055366d7.css",
-    "src": "HospitalsList.css"
-  },
-  "_Header.vue.e348d15d.js": {
+  "_Header.vue.3570f605.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "Header.vue.e348d15d.js",
+    "file": "Header.vue.3570f605.js",
     "imports": [
-      "_nuxt-link.53fc4741.js",
-      "_logo.a5400792.js",
+      "_nuxt-link.a1226848.js",
+      "_logo.708d8e0f.js",
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
-  "_HospitalInfo.3dad5a6a.js": {
+  "_HospitalInfo.bf067998.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
@@ -34,13 +27,13 @@
       "HospitalInfo.0a48f831.css"
     ],
     "dynamicImports": [
-      "_leaflet-src.2e9b9c29.js"
+      "_leaflet-src.d0c18066.js"
     ],
-    "file": "HospitalInfo.3dad5a6a.js",
+    "file": "HospitalInfo.bf067998.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
       "_axios.4d564c32.js",
-      "_logo.a5400792.js"
+      "_logo.708d8e0f.js"
     ]
   },
   "HospitalInfo.0a48f831.css": {
@@ -49,43 +42,25 @@
     "prefetch": true,
     "preload": true
   },
-  "_HospitalsList.66b89b61.js": {
+  "_MapViews.80c2ebb8.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "assets": [
-      "location-search.d4ce3d58.svg"
-    ],
-    "css": [
-      "HospitalsList.055366d7.css"
-    ],
-    "file": "HospitalsList.66b89b61.js",
+    "file": "MapViews.80c2ebb8.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
-  "HospitalsList.055366d7.css": {
-    "file": "HospitalsList.055366d7.css",
-    "resourceType": "style",
-    "prefetch": true,
-    "preload": true
-  },
-  "location-search.d4ce3d58.svg": {
-    "file": "location-search.d4ce3d58.svg",
-    "resourceType": "image",
-    "prefetch": true,
-    "mimeType": "image/svg+xml"
-  },
-  "_NavigationBar.vue.4d8bd1ec.js": {
+  "_NavigationBar.vue.9a269f97.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "NavigationBar.vue.4d8bd1ec.js",
+    "file": "NavigationBar.vue.9a269f97.js",
     "imports": [
-      "_nuxt-link.53fc4741.js",
-      "_logo.a5400792.js",
+      "_nuxt-link.a1226848.js",
+      "_logo.708d8e0f.js",
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
@@ -96,18 +71,37 @@
     "preload": true,
     "file": "axios.4d564c32.js"
   },
-  "_leaflet-src.2e9b9c29.js": {
+  "_leaflet-src.d0c18066.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "leaflet-src.2e9b9c29.js",
+    "file": "leaflet-src.d0c18066.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "isDynamicEntry": true
   },
-  "_logo-white.d529fef6.js": {
+  "_location-search.ac641fa0.js": {
+    "resourceType": "script",
+    "module": true,
+    "prefetch": true,
+    "preload": true,
+    "assets": [
+      "location-search.d4ce3d58.svg"
+    ],
+    "file": "location-search.ac641fa0.js",
+    "imports": [
+      "node_modules/nuxt/dist/app/entry.js"
+    ]
+  },
+  "location-search.d4ce3d58.svg": {
+    "file": "location-search.d4ce3d58.svg",
+    "resourceType": "image",
+    "prefetch": true,
+    "mimeType": "image/svg+xml"
+  },
+  "_logo-white.fecad176.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
@@ -115,7 +109,7 @@
     "assets": [
       "logo-white.c3810445.png"
     ],
-    "file": "logo-white.d529fef6.js",
+    "file": "logo-white.fecad176.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
@@ -126,7 +120,7 @@
     "prefetch": true,
     "mimeType": "image/png"
   },
-  "_logo.a5400792.js": {
+  "_logo.708d8e0f.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
@@ -134,7 +128,7 @@
     "assets": [
       "logo.0079c411.png"
     ],
-    "file": "logo.a5400792.js",
+    "file": "logo.708d8e0f.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
@@ -145,22 +139,22 @@
     "prefetch": true,
     "mimeType": "image/png"
   },
-  "_nuxt-link.53fc4741.js": {
+  "_nuxt-link.a1226848.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "nuxt-link.53fc4741.js",
+    "file": "nuxt-link.a1226848.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
-  "_vue.f36acd1f.9ad07727.js": {
+  "_vue.f36acd1f.9fa20452.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "vue.f36acd1f.9ad07727.js",
+    "file": "vue.f36acd1f.9fa20452.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
@@ -310,7 +304,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "authentication.53e147c6.js",
+    "file": "authentication.a9f71c8d.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ],
@@ -322,7 +316,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "default.1b11f114.js",
+    "file": "default.673de72a.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ],
@@ -334,7 +328,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "auth.c2d8c3cd.js",
+    "file": "auth.660a56bf.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ],
@@ -346,7 +340,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "redirect.65ab99c7.js",
+    "file": "redirect.228f9293.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ],
@@ -374,10 +368,10 @@
     "css": [
       "error-404.95c28eb4.css"
     ],
-    "file": "error-404.f89a7a26.js",
+    "file": "error-404.f2f8f6ab.js",
     "imports": [
-      "_nuxt-link.53fc4741.js",
-      "_vue.f36acd1f.9ad07727.js",
+      "_nuxt-link.a1226848.js",
+      "_vue.f36acd1f.9fa20452.js",
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "isDynamicEntry": true,
@@ -404,9 +398,9 @@
     "css": [
       "error-500.e798523c.css"
     ],
-    "file": "error-500.d8e166ca.js",
+    "file": "error-500.a342a64a.js",
     "imports": [
-      "_vue.f36acd1f.9ad07727.js",
+      "_vue.f36acd1f.9fa20452.js",
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "isDynamicEntry": true,
@@ -422,7 +416,7 @@
     "resourceType": "style",
     "prefetch": true,
     "preload": true,
-    "file": "entry.0f3770d3.css",
+    "file": "entry.02716605.css",
     "src": "node_modules/nuxt/dist/app/entry.css"
   },
   "node_modules/nuxt/dist/app/entry.js": {
@@ -435,7 +429,7 @@
       "Gorditas-400-1.c8e411b9.woff2"
     ],
     "css": [
-      "entry.0f3770d3.css"
+      "entry.02716605.css"
     ],
     "dynamicImports": [
       "middleware/auth.ts",
@@ -445,12 +439,12 @@
       "node_modules/@nuxt/ui-templates/dist/templates/error-404.vue",
       "node_modules/@nuxt/ui-templates/dist/templates/error-500.vue"
     ],
-    "file": "entry.f8348d88.js",
+    "file": "entry.bb974c8b.js",
     "isEntry": true,
     "src": "node_modules/nuxt/dist/app/entry.js"
   },
-  "entry.0f3770d3.css": {
-    "file": "entry.0f3770d3.css",
+  "entry.02716605.css": {
+    "file": "entry.02716605.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -481,12 +475,12 @@
     "css": [
       "blogs.90ba965f.css"
     ],
-    "file": "blogs.e53e31b6.js",
+    "file": "blogs.7f3a50b9.js",
     "imports": [
-      "_Header.vue.e348d15d.js",
+      "_Header.vue.3570f605.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_nuxt-link.53fc4741.js",
-      "_logo.a5400792.js"
+      "_nuxt-link.a1226848.js",
+      "_logo.708d8e0f.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/blogs.vue"
@@ -502,12 +496,12 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "index.b6a9246a.js",
+    "file": "index.11a647bd.js",
     "imports": [
-      "_NavigationBar.vue.4d8bd1ec.js",
-      "_nuxt-link.53fc4741.js",
+      "_NavigationBar.vue.9a269f97.js",
+      "_nuxt-link.a1226848.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_logo.a5400792.js"
+      "_logo.708d8e0f.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/business/index.vue"
@@ -527,10 +521,10 @@
     "css": [
       "signup.2412e648.css"
     ],
-    "file": "signup.37e33c79.js",
+    "file": "signup.f31ff314.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_logo-white.d529fef6.js",
+      "_logo-white.fecad176.js",
       "_axios.4d564c32.js"
     ],
     "isDynamicEntry": true,
@@ -547,12 +541,12 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "clinic-details.c5dddae3.js",
+    "file": "clinic-details.36547eb5.js",
     "imports": [
-      "_HospitalInfo.3dad5a6a.js",
+      "_HospitalInfo.bf067998.js",
       "node_modules/nuxt/dist/app/entry.js",
       "_axios.4d564c32.js",
-      "_logo.a5400792.js"
+      "_logo.708d8e0f.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/clinic-details.vue"
@@ -562,12 +556,12 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "details.dddc1822.js",
+    "file": "details.6aca9d0a.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_HospitalInfo.3dad5a6a.js",
+      "_HospitalInfo.bf067998.js",
       "_axios.4d564c32.js",
-      "_logo.a5400792.js"
+      "_logo.708d8e0f.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/hospital/details.vue"
@@ -576,7 +570,7 @@
     "resourceType": "style",
     "prefetch": true,
     "preload": true,
-    "file": "index.15d53dee.css",
+    "file": "index.a3f2f6ed.css",
     "src": "pages/index.css"
   },
   "pages/index.vue": {
@@ -595,23 +589,23 @@
       "coo.df9719b5.jpeg"
     ],
     "css": [
-      "index.15d53dee.css"
+      "index.a3f2f6ed.css"
     ],
-    "file": "index.d32ea253.js",
+    "file": "index.55b88eeb.js",
     "imports": [
-      "_NavigationBar.vue.4d8bd1ec.js",
-      "_HospitalsList.66b89b61.js",
+      "_NavigationBar.vue.9a269f97.js",
+      "_MapViews.80c2ebb8.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_axios.4d564c32.js",
-      "_logo-white.d529fef6.js",
-      "_nuxt-link.53fc4741.js",
-      "_logo.a5400792.js"
+      "_location-search.ac641fa0.js",
+      "_logo-white.fecad176.js",
+      "_nuxt-link.a1226848.js",
+      "_logo.708d8e0f.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/index.vue"
   },
-  "index.15d53dee.css": {
-    "file": "index.15d53dee.css",
+  "index.a3f2f6ed.css": {
+    "file": "index.a3f2f6ed.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -664,40 +658,25 @@
     "prefetch": true,
     "mimeType": "image/jpeg"
   },
-  "pages/location.css": {
-    "resourceType": "style",
-    "prefetch": true,
-    "preload": true,
-    "file": "location.6000bb8d.css",
-    "src": "pages/location.css"
-  },
   "pages/location.vue": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "css": [
-      "location.6000bb8d.css"
-    ],
-    "file": "location.f79398ba.js",
+    "file": "location.985208b8.js",
     "imports": [
-      "node_modules/nuxt/dist/app/entry.js"
+      "node_modules/nuxt/dist/app/entry.js",
+      "_MapViews.80c2ebb8.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/location.vue"
-  },
-  "location.6000bb8d.css": {
-    "file": "location.6000bb8d.css",
-    "resourceType": "style",
-    "prefetch": true,
-    "preload": true
   },
   "pages/location2.vue": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "location2.075c5f9e.js",
+    "file": "location2.60e9955f.js",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ],
@@ -708,7 +687,7 @@
     "resourceType": "style",
     "prefetch": true,
     "preload": true,
-    "file": "old-index.3f03e7b6.css",
+    "file": "old-index.b6c2c1b5.css",
     "src": "pages/old-index.css"
   },
   "pages/old-index.vue": {
@@ -727,23 +706,23 @@
       "feat4.f8925478.svg"
     ],
     "css": [
-      "old-index.3f03e7b6.css"
+      "old-index.b6c2c1b5.css"
     ],
-    "file": "old-index.98433d8b.js",
+    "file": "old-index.796d476b.js",
     "imports": [
-      "_Header.vue.e348d15d.js",
+      "_Header.vue.3570f605.js",
       "node_modules/nuxt/dist/app/entry.js",
       "_axios.4d564c32.js",
-      "_HospitalsList.66b89b61.js",
-      "_logo-white.d529fef6.js",
-      "_nuxt-link.53fc4741.js",
-      "_logo.a5400792.js"
+      "_location-search.ac641fa0.js",
+      "_logo-white.fecad176.js",
+      "_nuxt-link.a1226848.js",
+      "_logo.708d8e0f.js"
     ],
     "isDynamicEntry": true,
     "src": "pages/old-index.vue"
   },
-  "old-index.3f03e7b6.css": {
-    "file": "old-index.3f03e7b6.css",
+  "old-index.b6c2c1b5.css": {
+    "file": "old-index.b6c2c1b5.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true

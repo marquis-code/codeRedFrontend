@@ -1,7 +1,7 @@
 <template>
   <transition name="modal">
     <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center" v-if="isOpen">
-      <div class="bg-white p-4 rounded-lg max-w-sm w-full mx-4">
+      <div class="bg-white p-4 rounded-lg max-w-2xl w-full mx-4">
         <slot></slot>
         <button @click="close" class="absolute top-0 right-0 mt-2 mr-2 text-gray-600 hover:text-gray-900">
           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
