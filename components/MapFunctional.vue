@@ -11,7 +11,6 @@
           v-model="location"
           placeholder="Search hospitals..."
          class="flex-grow outline-none text-gray-500 py-5 bg-white"
-          readonly
         />
         <button @click="openFilterModal" class="text-gray-500">
             <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
