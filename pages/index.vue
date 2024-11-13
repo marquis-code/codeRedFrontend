@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <MapFunctional />
+    <MapFunctional id="filter" />
 
     <!-- <AdvancedFilter id="filter" /> -->
 

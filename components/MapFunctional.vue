@@ -342,12 +342,7 @@
       alert('Geolocation is not supported by this browser.')
     }
   }
-  
-//   // Function to apply filters from the modal
-//   const applyFilters = (filters) => {
-//     hospitals.value = hospitals.value.filter(hospital => filters.availability.includes(hospital.availability))
-//     closeFilterModal()
-//   }
+
   
   // Function to open map view
   const selectHospital = (hospital) => {
