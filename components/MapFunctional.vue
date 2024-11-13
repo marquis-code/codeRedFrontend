@@ -278,6 +278,8 @@
                 hospitals.value = results.map((hospital) => ({
                   ...hospital,
                   availability: mockAvailability(), // Mocking availability status
+                  latitude: hospital.geometry.location.lat(), // Extract latitude
+                  longitude: hospital.geometry.location.lng() // Extract longitude
                 }))
                 console.log("Hospitals found:", hospitals.value) // Debug log
               } else {
@@ -313,6 +315,7 @@
           const lng = position.coords.longitude
           userLocation.value = { lat, lng }
           console.log("User coordinates:", userLocation.value) // Debug log
+          localStorage.setItem('userLocation', JSON.stringify(userLocation.value))
   
           // Step 2: Load Google Maps SDK
           const google = await $loadGoogleMaps()
@@ -346,8 +349,21 @@
   
   // Function to open map view
   const selectHospital = (hospital) => {
+    console.log(hospital, 'here')
     selectedHospital.value = hospital
+    localStorage.setItem('selectedHospital', JSON.stringify(selectedHospital.value))
     showMap.value = true
+//       router.push({
+//     path: '/hospital/details',
+//     query: {
+//       id: hospital.place_id,
+//       name: hospital.name,
+//       location: hospital.vicinity,
+//       status: hospital.avaailability,
+//       lat: hospital.latitude,
+//       lon: hospital.longitude
+//     }
+//   })
   }
   
   // Fetch hospitals based on user’s current location on mount
@@ -391,6 +407,24 @@
     }
   }
 
+  const router = useRouter()
+
+
+//   const goToHospital = (hospital: any) => {
+//     console.log(hospital, 'hospital hew')
+// //   router.push({
+// //     path: '/hospital/details',
+// //     query: {
+// //       id: props.hospital.id,
+// //       name: props.hospital.name,
+// //       location: props.hospital.location,
+// //       status: props.hospital.status,
+// //       bedSpaces: props.hospital.bedSpaces,
+// //       lat: props.hospital.lat,
+// //       lon: props.hospital.lon,
+// //     }
+// //   })
+// }
   
   
   </script>
