@@ -46,7 +46,8 @@ export const useCreateCompany = () => {
           toastType: "success",
           duration: 3000
         });
-        router.push('/business/signup')
+        window.location.href = '/business/signup/success'
+        router.push('/business/signup/success')
       } else {
         showToast({
           title: "Error",

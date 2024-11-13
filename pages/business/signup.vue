@@ -326,7 +326,9 @@
                   type="submit"
                   class="bg-black w-full disabled:cursor-not-allowed disabled:opacity-25 text-white px-4 py-3.5 text-sm rounded-md"
                 >
-                  {{ activeStep === steps.length - 1 ? 'Submit' : 'Continue' }}
+                  <span v-if="!loading">{{ activeStep === steps.length - 1 ? 'Submit' : 'Continue' }}</span>
+
+                  {{loading ? 'processing...' : 'Submit'}}
                 </button>
               </div>
             </form>
