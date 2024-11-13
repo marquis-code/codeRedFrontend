@@ -349,20 +349,20 @@
   // Function to open map view
   const selectHospital = (hospital) => {
     console.log(hospital, 'here')
+    localStorage.setItem('selectedHospital', JSON.stringify(hospital))
     selectedHospital.value = hospital
-    localStorage.setItem('selectedHospital', JSON.stringify(selectedHospital.value))
     showMap.value = true
-//       router.push({
-//     path: '/hospital/details',
-//     query: {
-//       id: hospital.place_id,
-//       name: hospital.name,
-//       location: hospital.vicinity,
-//       status: hospital.avaailability,
-//       lat: hospital.latitude,
-//       lon: hospital.longitude
-//     }
-//   })
+      router.push({
+    path: '/hospital/details',
+    query: {
+      id: hospital.place_id,
+      name: hospital.name,
+      location: hospital.vicinity,
+      status: hospital.avaailability,
+      lat: hospital.latitude,
+      lon: hospital.longitude
+    }
+  })
   }
   
   // Fetch hospitals based on user’s current location on mount

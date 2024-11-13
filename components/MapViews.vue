@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div class="relative w-full h-screen">
       <button @click="$emit('close')" class="absolute top-4 left-4 z-10 text-white bg-gray-800 p-2 rounded-full">
         <i class="fa fa-arrow-left"></i>
@@ -45,6 +45,98 @@
       {
         origin: props.userLocation,
         destination: { lat: props.hospital.geometry.location.lat(), lng: props.hospital.geometry.location.lng() },
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setDirections(result)
+        } else {
+          console.error('Error fetching directions', result)
+        }
+      }
+    )
+  })
+  </script>
+  
+  <style scoped>
+  /* Additional styling for full-screen map */
+  </style>
+   -->
+
+   
+   <template>
+    <div class="relative w-full h-screen">
+      <button @click="$emit('close')" class="absolute top-4 left-4 z-10 text-white bg-gray-800 p-2 rounded-full">
+        <i class="fa fa-arrow-left"></i>
+      </button>
+      <div id="map" class="w-full h-full"></div>
+    </div>
+  </template>
+  
+  <script lang="ts" setup>
+  import { onMounted } from 'vue'
+  import { useNuxtApp } from '#app'
+  
+  // Define types for user location and selected hospital
+  interface Location {
+    lat: number
+    lng: number
+  }
+  
+  interface Hospital {
+    name: string
+    latitude: number
+    longitude: number
+  }
+  
+  let userLocation: Location | null = null
+  let selectedHospital: Hospital | null = null
+  
+  const { $loadGoogleMaps } = useNuxtApp()
+  
+  onMounted(async () => {
+    // Retrieve and parse values from local storage
+    const userLocationData = localStorage.getItem('userLocation')
+    const selectedHospitalData = localStorage.getItem('selectedHospital')
+  
+    if (userLocationData && selectedHospitalData) {
+      userLocation = JSON.parse(userLocationData)
+      selectedHospital = JSON.parse(selectedHospitalData)
+    }
+  
+    if (!userLocation || !selectedHospital) {
+      console.error("Missing user location or hospital data from local storage")
+      return
+    }
+  
+    const google = await $loadGoogleMaps()
+    const map = new google.maps.Map(document.getElementById('map'), {
+      center: userLocation,
+      zoom: 14,
+    })
+  
+    // Add markers for user location and hospital
+    const userMarker = new google.maps.Marker({
+      position: userLocation,
+      map: map,
+      title: 'Your Location',
+    })
+  
+    const hospitalMarker = new google.maps.Marker({
+      position: { lat: selectedHospital.latitude, lng: selectedHospital.longitude },
+      map: map,
+      title: selectedHospital.name,
+    })
+  
+    // Display directions from user location to hospital
+    const directionsService = new google.maps.DirectionsService()
+    const directionsRenderer = new google.maps.DirectionsRenderer()
+    directionsRenderer.setMap(map)
+  
+    directionsService.route(
+      {
+        origin: userLocation,
+        destination: { lat: selectedHospital.latitude, lng: selectedHospital.longitude },
         travelMode: google.maps.TravelMode.DRIVING,
       },
       (result, status) => {

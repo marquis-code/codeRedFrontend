@@ -11,10 +11,12 @@
       </div>
       <div>
         <div class="border border-red-500 rounded-lg py-6 p-5 bg-white shadow">
-          <span class="bg-red-500 text-white text-sm px-2 py-1 rounded-full px-6">{{ hospital.status }}</span>
+          <span class="bg-red-500 text-white text-sm px-2 py-1 rounded-full px-6">{{ selectedHospitalData.availability }}</span>
           <div class="flex justify-between items-center mt-4">
+            <!-- <span class="text-[5px]">{{selectedHospitalData}}</span> -->
             <h1 class="text-lg lg:text-3xl font-semibold">
-              {{ hospital.name }}
+              <!-- {{ hospital.name }} {{ selectedHospital }} -->
+              {{selectedHospitalData.name}}
             </h1>
             <!-- <span class="bg-red-500 text-white text-sm px-2 py-1 rounded-full px-6">{{ hospital.status }}</span> -->
           </div>
@@ -96,6 +98,28 @@ const props = defineProps({
     default: ''
   }
 })
+
+const userLocationData = localStorage.getItem('userLocation')
+const selectedHospitalData = JSON.parse(localStorage.getItem('selectedHospital'))
+
+const userLocation = ref({})
+const selectedHospital = ref({})
+
+onMounted(() => {
+    // Retrieve and parse values from local storage
+    const userLocationData = localStorage.getItem('userLocation')
+    const selectedHospitalData = localStorage.getItem('selectedHospital')
+  
+    if (userLocationData && selectedHospitalData) {
+      userLocation.value = JSON.parse(userLocationData)
+      selectedHospital.value = JSON.parse(selectedHospitalData)
+    }
+  
+    if (!userLocation.value || !selectedHospital.value) {
+      console.error("Missing user location or hospital data from local storage")
+      return
+    }
+  })
 </script>
 
 <style scoped>
