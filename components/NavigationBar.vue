@@ -59,7 +59,7 @@
                 <span class="sr-only">Your Company</span>
                 <img
                   class="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                  src="@/assets/img/logo.png"
                   alt=""
                 />
               </a>
@@ -90,28 +90,33 @@
                 <div class="space-y-2 py-6">
                   <a
                     href="#"
+                    @click="isMobile = false"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >Home</a
                   >
                   <a
                     href="#"
+                    @click="isMobile = false"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >Find ambulances</a
                   >
-                  <a
-                    href="#"
+                  <NuxtLink
+                   @click="isMobile = false"
+                    to="/business"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                    >First aid tips</a
+                    >CODE-RED For Business</NuxtLink
                   >
                   <a
                     href="#"
+                    @click="isMobile = false"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                    >Company</a
+                    >About CODE-RED</a
                   >
                 </div>
                 <div class="py-6">
                   <a
                     href="#"
+                    @click="isMobile = false"
                     class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >Log in</a
                   >

@@ -484,6 +484,8 @@ onMounted(() => {
 </template>
 
 <script lang="ts" setup>
+import { useCustomToast } from '@/composables/core/useCustomToast'
+const { showToast } = useCustomToast();
 import { ref, onMounted, computed } from 'vue'
 import { useNuxtApp } from '#app'
 
@@ -603,12 +605,22 @@ const getUserLocation = () => {
         })
       },
       (error) => {
-        alert('Could not get current location. Please enter your location manually.')
+        showToast({
+            title: "Error",
+            message: "Could not get current location. Please enter your location manually.",
+            toastType: "error",
+            duration: 3000
+          });
         loading.value = false
       }
     )
   } else {
-    alert('Geolocation is not supported by this browser.')
+    showToast({
+            title: "Error",
+            message: "Geolocation is not supported by this browser",
+            toastType: "error",
+            duration: 3000
+          });
   }
 }
 

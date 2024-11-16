@@ -100,7 +100,7 @@
     <HospitalsList class="" />
   </div> -->
 
-  <div class="flex items-start space-x-4 p-4 max-w-7xl mx-auto">
+  <div class="flex items-start space-x-4 p-4 px-10 max-w-7xl mx-auto">
     <!-- Icon -->
     <span class="material-icons text-red-600 text-2xl">
       <svg width="21" height="29" viewBox="0 0 21 29" fill="none" xmlns="http://www.w3.org/2000/svg">
