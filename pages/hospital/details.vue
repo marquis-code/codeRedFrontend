@@ -64,8 +64,6 @@ onMounted(() => {
       <MapViews :hospital="selectedHospitalData" :userLocation="userLocation" />
       <!-- <MapView :hospital="hospital" :userLocation="userLocation" /> -->
     </div>
-    {{ selectedHospitalData }}
-    {{ distance }}
     <div class="w-full lg:w-1/2 lg:h-full order-2 lg:order-1 flex-1">
       <HospitalInfo :hospital="selectedHospitalData" :distance="distance" :estimatedTime="estimatedTime" />
     </div>

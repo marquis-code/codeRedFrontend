@@ -60,6 +60,12 @@
               </svg>
             </button>
           </div>
+          <!-- <div>
+            <h2>Distance and ETA</h2>
+            <p>Distance: {{ result.distance }} km</p>
+            <p>ETA (Walking): {{ result.etaWalking }} minutes</p>
+            <p>ETA (Driving): {{ result.etaDriving }} minutes</p>
+          </div> -->
         </div>
         <div class="space-y-2 pt-6">
           <div class="flex items-center gap-x-2" v-for="itm in ['Stay Calm in emergency situations', 'Call for Help', 'Ensure Personal safety']" :key="itm">
@@ -83,6 +89,9 @@
 </template>
 
 <script setup lang="ts">
+import { useDistanceETA } from '@/composables/core/useDistanceETA';
+
+const { calculateDistanceAndETA } = useDistanceETA();
 const router = useRouter()
 const props = defineProps({
   hospital: {
@@ -99,11 +108,21 @@ const props = defineProps({
   }
 })
 
+
 const userLocationData = localStorage.getItem('userLocation')
 const selectedHospitalData = JSON.parse(localStorage.getItem('selectedHospital'))
 
-const userLocation = ref({})
+const userLocation = ref({}) as any
 const selectedHospital = ref({})
+
+const userLocations = ref({ lat: 7.3775355, lng: 3.9470396 });
+const selectedLocation = ref({ latitude: 7.377550700000002, longitude: 3.9470624 });
+
+const result = ref({ distance: '', etaWalking: 0, etaDriving: 0 });
+
+onMounted(() => {
+  result.value = calculateDistanceAndETA(userLocations.value, selectedLocation.value);
+});
 
 onMounted(() => {
     // Retrieve and parse values from local storage
