@@ -21,7 +21,7 @@
           class="w-full max-w-xs md:max-w-md"
         />
       </div>
-        <p class="text-gray-600 font-light lg:text-lg leading-tight lg:leading-loose">
+        <p class="text-gray-600 font-light lg:text-lg leading-tight lg:leading-7">
           Get real-time updates on hospital bed availability, essential first aid tips, and access to ambulance services when you need them most.
         </p>
     <!-- <button>

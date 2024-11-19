@@ -23,15 +23,15 @@
             </button>
           </div>
           <div class="hidden lg:flex lg:gap-x-12">
-            <NuxtLink href="#" class="text-sm font-semibold leading-6 text-gray-900"
+            <NuxtLink href="/" class="text-sm font-semibold leading-6 text-gray-900"
               >Home</NuxtLink
             >
             <NuxtLink href="#" class="text-sm font-semibold leading-6 text-gray-900"
               >Find ambulances</NuxtLink
             >
-            <!-- <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
-              >First aid tips</a
-            > -->
+            <NuxtLink href="/blogs" class="text-sm font-semibold leading-6 text-gray-900"
+              >First aid tips</NuxtLink
+            >
             <NuxtLink to="/business" class="text-sm font-semibold leading-6 text-gray-900"
             >CODE-RED For Business</NuxtLink
           >

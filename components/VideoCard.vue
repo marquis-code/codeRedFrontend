@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white border-2 border-gray-200 rounded-lg p-4 w-80 flex-shrink-0">
+    <div class="bg-white border-[0.5px] border-gray-200 rounded-lg p-3 w-80 flex-shrink-0">
       <div class="relative">
         <iframe
           :src="video.url"
@@ -14,7 +14,7 @@
       </div>
       <div class="mt-4 space-y-3 lg:space-y-0">
         <h3 class="text-red-600 font-semibold text-sm lg:text-base">{{ video.title }}</h3>
-        <p class="text-gray-500 text-sm lg:text-base">{{ video.description }}</p>
+        <p class="text-gray-500 text-xs lg:text-base">{{ video.description }}</p>
       </div>
     </div>
   </template>

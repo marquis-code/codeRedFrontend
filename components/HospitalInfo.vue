@@ -1,6 +1,6 @@
 <template>
   <div class="lg:p-4 flex flex-col justify-center h-full">
-    <div class="p-6 lg:p-10 flex flex-col justify-between h-full bg-white space-y-10 lg:space-y-0">
+    <div class="p-3 lg:p-10 flex flex-col justify-between h-full bg-white space-y-10 lg:space-y-0">
       <div class="flex items-center">
         <button @click="router.back()" class="text-2xl">←</button>
         <div class="flex-grow text-center text-2xl font-bold">
@@ -10,7 +10,7 @@
         </div>
       </div>
       <div>
-        <div class="border border-red-500 rounded-lg py-6 p-5 bg-white shadow">
+        <div class="border-[0.5px] border-red-500 rounded-lg py-6 p-5 bg-[#FFF9F9CC] shadow">
           <span class="bg-red-500 text-white text-sm px-2 py-1 rounded-full px-6">{{ selectedHospitalData.availability }}</span>
           <div class="flex justify-between items-center mt-4">
             <!-- <span class="text-[5px]">{{selectedHospitalData}}</span> -->
@@ -23,41 +23,39 @@
           <div class="mt-2 text-gray-500">{{ hospital.location }}</div>
         </div>
         <div class="lg:flex justify-between mt-4 gap-x-6 space-y-6 lg:space-y-0">
-          <div class="flex-1 text-center border border-red-500 bg-white shadow rounded-lg py-6 p-5">
+          <div class="flex-1 text-center border-[0.5px] border-red-500 bg-[#FFF9F9CC] shadow rounded-lg py-6 p-5">
             <div class="flex justify-start items-start flex-col">
               <span class="block text-gray-600 text-sm">From your location</span>
               <h2 class="text-lg font-medium">Estimated Time of Arrival</h2>
               <div class="flex items-center">
-                <span class="text-4xl lg:text-6xl custom-font">44</span>
-                <span class="ml-2 text-sm lg:text-lg text-gray-500">mins</span>
+                <span class="text-4xl lg:text-6xl text-[#CC1100] custom-font">44</span>
+                <span class="ml-2 text-sm lg:text-lg text-[#CC1100] text-[#CC1100]">mins</span>
               </div>
             </div>
           </div>
-          <div class="flex-1 text-center border border-red-500 bg-white shadow rounded-lg py-6 p-5">
+          <div class="flex-1 text-center border-[0.5px] bg-[#FFF9F9CC] border-red-500 bg-white shadow rounded-lg py-6 p-5">
             <div class="flex justify-start items-start flex-col">
               <span class="block text-gray-600 text-sm">From your location</span>
               <h2 class="text-lg font-medium">Distance</h2>
               <div class="flex items-center">
-                <span class="text-4xl lg:text-6xl custom-font">{{ distance.toFixed(2) }}</span>
-                <span class="ml-2 text-sm lg:text-lg text-gray-500">km</span>
+                <span class="text-4xl lg:text-6xl text-[#CC1100] custom-font">{{ distance.toFixed(2) }}</span>
+                <span class="ml-2 text-sm lg:text-lg text-[#CC1100] text-[#CC1100]">km</span>
               </div>
             </div>
           </div>
-          <div class="border border-red-500 rounded-lg py-6 p-5 bg-white shadow">
-            <button class="text-2xl flex justify-center items-center">
-              <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_308_179)">
-                  <path
-                    d="M20.7589 20.76C17.2009 24.327 13.0789 27.732 11.4454 26.1C9.10993 23.76 7.66993 21.7305 2.51893 25.8675C-2.63207 30.0045 1.32493 32.7645 3.58693 35.0265C6.19693 37.6365 15.9259 35.163 25.5469 25.5465C35.1679 15.93 37.6369 6.19954 35.0269 3.58654C32.7589 1.32904 30.0064 -2.62196 25.8694 2.52004C21.7324 7.66204 23.7649 9.10504 26.0989 11.439C27.7309 13.08 24.3259 17.2005 20.7589 20.76Z"
-                    fill="#CC1100"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_308_179)">
-                    <rect width="36" height="36" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
+          <div class="border-[0.5px] border-red-500 rounded-lg py-6 p-5 bg-[#CC1100] shadow">
+            <button class="text-2xl text-white gap-x-3 flex justify-center items-center bg-[#CC1100]">
+              <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_431_175)">
+<path d="M8.55083 13.9371C10.4108 17.5925 13.4075 20.5762 17.0629 22.4492L19.9046 19.6075C20.2533 19.2587 20.77 19.1425 21.2221 19.2975C22.6688 19.7754 24.2317 20.0338 25.8333 20.0338C26.5437 20.0338 27.125 20.615 27.125 21.3254V25.8333C27.125 26.5437 26.5437 27.125 25.8333 27.125C13.7046 27.125 3.875 17.2954 3.875 5.16667C3.875 4.45625 4.45625 3.875 5.16667 3.875H9.6875C10.3979 3.875 10.9792 4.45625 10.9792 5.16667C10.9792 6.78125 11.2375 8.33125 11.7154 9.77792C11.8575 10.23 11.7542 10.7337 11.3925 11.0954L8.55083 13.9371Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_431_175">
+<rect width="31" height="31" fill="white"/>
+</clipPath>
+</defs>
+</svg>
+ CALL EMERGENCY
             </button>
           </div>
           <!-- <div>
@@ -67,7 +65,7 @@
             <p>ETA (Driving): {{ result.etaDriving }} minutes</p>
           </div> -->
         </div>
-        <div class="space-y-2 pt-6">
+        <!-- <div class="space-y-2 pt-6">
           <div class="flex items-center gap-x-2" v-for="itm in ['Stay Calm in emergency situations', 'Call for Help', 'Ensure Personal safety']" :key="itm">
             <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -77,10 +75,10 @@
             </svg>
             <p class="text-[#717171] font-medium">{{itm}}</p>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="pb-10 lg:pb-0 w-full">
-        <button class="bg-red-500 text-white py-4 mt-4 w-full lg:text-base text-sm rounded-lg">
+        <button @click="toggleMap" class="bg-[#CC1100] text-white py-4 mt-4 w-full lg:text-base text-sm rounded-lg">
           GET DIRECTION →
         </button>
       </div>
@@ -108,6 +106,11 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['directions'])
+
+const toggleMap = () => {
+  emit('directions')
+}
 
 const userLocationData = localStorage.getItem('userLocation')
 const selectedHospitalData = JSON.parse(localStorage.getItem('selectedHospital'))
