@@ -4,8 +4,57 @@
       <NavigationBar :isMobile="isMobile" @close="isMobile = false" @open="isMobile = true" />
     </section>
 
-    <div class="relative bg-white">
-      <div class="mx-auto max-w-7xl lg:grid lg:grid-cols-12 lg:gap-x-8">
+    <div class="flex flex-col md:flex-row items-center container mx-auto justify-between p-8 bg-white pt-20">
+      <div class="text-left md:max-w-lg space-y-4">
+        <!-- <h1 class="text-5xl md:text-5xl font-bold">
+          Need help <span class="text-[#CC1100]">locating</span> bed Spaces?
+        </h1> -->
+        <h1 data-aos="flip-left"
+              class="font-black text-5xl  tracking-tight text-gray-900 sm:mt-10 sm:text-6xl"
+            >
+              Need help locating<span class="text-[#CC1100]"> Bed Spaces?</span>
+            </h1>
+        <div class="relative mt-8 md:mt-0 lg:hidden">
+        <img
+          src="@/assets/img/animation.png"
+          alt="Superhero"
+          class="w-full max-w-xs md:max-w-md"
+        />
+      </div>
+        <p class="text-gray-600 text-xl font-light lg:text-lg leading-tight lg:leading-loose">
+          Get real-time updates on hospital bed availability, essential first aid tips, and access to ambulance services when you need them most.
+        </p>
+    <!-- <button>
+      
+    </button> -->
+        <div class="relative mt-4 w-full">
+              <a href="#filter"
+              class="bg-[#CC1100] lg:w-1/2 text-base block text-center px-3.5 py-3.5 rounded-sm font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
+              >
+                CHECK BED AVAILABILITY
+              </a>
+          
+              <span
+                class="absolute -top-1.5 right-0 lg:left-60  h-4 w-4 rounded-full  bg-red-400 animate-ping"
+              ></span>
+              <span
+                class="absolute -top-1.5 right-0 lg:left-60  h-4 w-4 rounded-full bg-red-600"
+              ></span>
+            </div>
+      </div>
+  
+      <!-- Image Section -->
+      <div class="relative mt-8 md:mt-0 hidden lg:block">
+        <img
+          src="@/assets/img/animation.png"
+          alt="Superhero"
+          class="w-full max-w-xs md:max-w-md"
+        />
+      </div>
+    </div>
+
+    <!-- <div class="relative bg-white">
+      <div class="mx-auto max-w-7xl lg:grid lg:grid-cols-12 lg:gap-x-20">
         <div
           class="px-6 pb-24 sm:pb-32 lg:col-span-7 lg:px-0 lg:pb-56 xl:col-span-6"
         >
@@ -26,14 +75,12 @@
             </p>
 
             <div class="relative mt-4">
-              <!-- Button -->
               <a href="#filter"
               class="bg-[#CC1100] text-base block text-center px-3.5 py-5 w-full rounded-sm font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
               >
                 CHECK BED AVAILABILITY
               </a>
           
-              <!-- Beep circle at the top right -->
               <span
                 class="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full  bg-red-400 animate-ping"
               ></span>
@@ -47,58 +94,15 @@
           class="relative lg:col-span-5 lg:-mr-8 xl:absolute xl:inset-0 xl:left-1/2 xl:mr-0"
         >
           <img data-aos="fade-down"
-            class="aspect-[3/2] hidden lg:block w-full bg-gray-50 object-cover lg:absolute lg:inset-0 lg:aspect-auto lg:h-full"
-            src="@/assets/img/saving-lives.png"
+            class="aspect-[3/2] hidden lg:block w-full bg-gray-50 object-cover lg:absolute lg:inset-0 lg:aspect-auto"
+            src="@/assets/img/animation.png"
             alt=""
           />
         </div>
-      </div>
-    </div>
-
-    <MapFunctional id="filter" />
-
-    <!-- <AdvancedFilter id="filter" /> -->
-
-    <!-- <div class="p-6 max-w-7xl mx-auto">
-      <div class="flex justify-between">
-        <div class="text-lg font-light text-gray-600 mb-4">
-          Hospitals are filtered based on your location
-        </div>
-        <div class="relative mb-6 w-4/12">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Search hospitals..."
-            class="w-full outline-none p-4 pl-10 bg-[#F5F5F5] rounded-md border border-gray-300"
-          />
-          <img
-            src="@/assets/icons/red-search.svg"
-            alt=""
-            class="absolute left-1 top-2.5"
-          />
-        </div>
-      </div>
-      <div class="space-y-3">
-        <div
-          v-for="hospital in filteredHospitals"
-          :key="hospital.name"
-          :class="`p-4 rounded-md flex shadow justify-between items-center ${hospital.statusColor}`"
-        >
-          {{ hospital.name }}
-          <span
-            :class="`py-1 px-3 rounded-full text-xs ${hospital.textColor}`"
-            >{{ hospital.status }}</span
-          >
-        </div>
-      </div>
-      <div class="mt-4 flex justify-end items-end">
-        <button class="text-gray-500 hover:text-gray-700">View All ></button>
       </div>
     </div> -->
-  <!-- <div class="pt-10" id="search" data-aos="flip-left" >
-    <SearchBar v-if="!loading" :address="address" id="search" class="mb-3" />
-    <HospitalsList class="" />
-  </div> -->
+
+    <MapFunctional id="filter" />
 
   <div class="flex items-start space-x-4 p-4 px-10 max-w-7xl mx-auto">
     <!-- Icon -->

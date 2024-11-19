@@ -14,15 +14,15 @@ export const useCreateCompany = () => {
     contactInformation: "",
     address: "",
     website: "",
-    operatingHours: "",
+    operatingHours: [],
     facilityType: "",
-    availableSpecialties: "",
+    availableSpecialties: [],
     emergencyServices: "",
     capacity: "",
     emergencyEquipment: "",
     emergencyContactNumber: "",
     emergencyDepartment: "",
-    doctorOnDutyContact: "",
+    doctorOnDutyContact: [],
     acceptedInsuranceProviders: "",
     emergencyPaymentPolicies: "",
     expectedResponseTime: "",
@@ -30,6 +30,8 @@ export const useCreateCompany = () => {
     communicationProtocols: "",
     airAmbulance: "",
     telemedicineServices: "",
+    latitude: "",
+    longitude: ""
   });
 
   const createCompany = async () => {
