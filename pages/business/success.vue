@@ -11,7 +11,7 @@
             <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">Congratulations!</h3>
             <p class="text-gray-600 my-2">Thank you for signing up with CODERED.</p>
             <div class="py-10 text-center">
-                <a href="https://code-red-business-dashboard.vercel.app/" class="px-12 bg-indigo-600 bg-[#cc1100] rounded-sm hover:bg-[#cc1100] text-white font-semibold py-3">
+                <a href="https://code-red-business-dashboard.vercel.app/" class="px-12 bg-[#cc1100] rounded-sm hover:bg-[#cc1100] text-white font-semibold py-3">
                    Proceed to login
                </a>
             </div>

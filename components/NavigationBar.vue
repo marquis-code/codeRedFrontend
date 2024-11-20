@@ -88,39 +88,36 @@
             <div class="mt-6 flow-root">
               <div class="-my-6 divide-y divide-gray-500/10">
                 <div class="space-y-2 py-6">
-                  <a
-                    href="#"
+                  <NuxtLink
+                    to="/"
                     @click="isMobile = false"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                    >Home</a
+                    >Home</NuxtLink
                   >
-                  <a
-                    href="#"
-                    @click="isMobile = false"
-                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                    >Find ambulances</a
-                  >
+                  <NuxtLink href="/blogs"  class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+              >First aid tips</NuxtLink
+            >
                   <NuxtLink
                    @click="isMobile = false"
                     to="/business"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >CODE-RED For Business</NuxtLink
                   >
-                  <a
-                    href="#"
+                  <NuxtLink
+                    to="/"
                     @click="isMobile = false"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                    >About CODE-RED</a
+                    >About CODE-RED</NuxtLink
                   >
                 </div>
-                <div class="py-6">
-                  <a
-                    href="#"
+                <!-- <div class="py-6">
+                  <NuxtLink
+                    to="/"
                     @click="isMobile = false"
                     class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                    >Log in</a
+                    >Log in</NuxtLink
                   >
-                </div>
+                </div> -->
               </div>
             </div>
           </div>

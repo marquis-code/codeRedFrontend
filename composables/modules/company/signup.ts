@@ -19,12 +19,12 @@ export const useCreateCompany = () => {
     availableSpecialties: [],
     emergencyServices: "",
     capacity: "",
-    emergencyEquipment: "",
+    emergencyEquipment: [],
     emergencyContactNumber: "",
     emergencyDepartment: "",
     doctorOnDutyContact: [],
-    acceptedInsuranceProviders: "",
-    emergencyPaymentPolicies: "",
+    acceptedInsuranceProviders: [],
+    emergencyPaymentPolicies: [],
     expectedResponseTime: "",
     dedicatedPointOfContact: "",
     communicationProtocols: "",
@@ -48,7 +48,7 @@ export const useCreateCompany = () => {
           toastType: "success",
           duration: 3000
         });
-        window.location.href = '/business/signup/success'
+        window.location.href = '/business/success'
         router.push('/business/signup/success')
       } else {
         showToast({

@@ -25,8 +25,8 @@
                     <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">Empowering Clinics and Hospitals with Real-Time Emergency Solutions</h1>
                     <p class="mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">CODE-RED helps healthcare providers optimize patient care by providing instant access to bed availability, emergency transport, and first aid resources — making emergency response faster and more efficient.</p>
                     <div class="mt-10 flex items-center gap-x-6">
-                      <NuxtLink to="/business/signup" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Get started</NuxtLink>
-                      <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Request a Demo <span aria-hidden="true">→</span></a>
+                      <NuxtLink to="/business/signup" class="rounded-md bg-[#CC1100] px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm">Get started</NuxtLink>
+                      <!-- <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Request a Demo <span aria-hidden="true">→</span></a> -->
                     </div>
                   </div>
                   <div class="mt-14 flex justify-end gap-8 sm:-mt-44 sm:justify-start sm:pl-20 lg:mt-0 lg:pl-0">
@@ -266,8 +266,8 @@
       <div class="bg-white">
         <div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
           <div class="mx-auto max-w-4xl divide-y divide-gray-900/10">
-            <h2 class="text-2xl font-bold leading-10 tracking-tight text-gray-900">Frequently Asked Questions</h2>
-            <p>Everything you need to know about the Shuttlers Daily product. Can’t find the answer you’re looking for? Please chat to our friendly team.</p>
+            <h2 class="text-2xl font-bold leading-10 tracking-tight text-gray-900 pb-3">Frequently Asked Questions</h2>
+            <!-- <p>Everything you need to know about the Shuttlers Daily product. Can’t find the answer you’re looking for? Please chat to our friendly team.</p> -->
             <dl class="mt-10 space-y-6 divide-y divide-gray-900/10">
               <div class="pt-6">
                 <dt>
@@ -335,7 +335,7 @@
         </div>
       </div>
 
-      <div class="bg-white py-24 sm:py-32">
+      <!-- <div class="bg-white py-24 sm:py-32">
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
           <div class="mx-auto max-w-2xl text-center">
             <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Other solutions</h2>
@@ -418,10 +418,9 @@
               <p>Expand your reach by collaborating with other healthcare facilities through our network, improving patient care coordination across regions.</p>
             </article>
       
-            <!-- More posts... -->
           </div>
         </div>
-      </div>
+      </div> -->
       
  </main>
 </template>

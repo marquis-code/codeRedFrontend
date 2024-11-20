@@ -5,7 +5,7 @@
       </section>
   
     
-      <MapFunctional id="filter" />
+      <ViewAll id="filter" />
         
     </main>
   </template>

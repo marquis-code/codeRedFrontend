@@ -1,11 +1,11 @@
 <template>
     <div class="">
       <div class="md:col-span-2">
-    <div class="flex justify-between items-center">
-        <label for="operatingHours" class="input-label">Operating Hours (24/7 or specific hours)</label>
+    <div class="lg:flex justify-between items-center">
+        <label for="operatingHours" class="input-label pb-3 lg:pb-0">Operating Hours (24/7 or specific hours)</label>
         <div
           @click="showModal = true"
-          class="mt-6 py-2.5  text-xs bg-black max-w-xs cursor-pointer text-white px-4 py-2 rounded-md"
+          class="mt-6 py-2.5 inline lg:block  text-xs bg-black max-w-xs cursor-pointer text-white px-4 py-2 rounded-md"
         >
           Add Operating Hours
         </div>
@@ -17,14 +17,14 @@
         v-if="showModal"
         class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
       >
-        <div class="bg-white rounded-lg space-y-4 w-full max-w-lg">
+        <div class="bg-white m-2 rounded-lg space-y-4 w-full max-w-lg">
           <h2 class="text-lg font-semibold px-6 py-4 mb-4 border-b-[0.5px] border-gray-100">Add Operating Hours</h2>
           <div class="mb-6 px-6 ">
             <label for="day" class="block text-sm mb-2 font-semibold">Day</label>
             <select
               id="day"
               v-model="newOperatingHour.day"
-              class="input-field"
+              class="input-field text-sm py-0"
             >
               <option value="" disabled>Select Day</option>
               <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
@@ -94,7 +94,7 @@
     </ul>
   </div>
 
-  <div v-else class="border-[0.5px] flex mt-3 flex-col text-gray-500 justify-center items-center text-sm rounded-lg py-6 border-gray-100">
+  <div v-else class="border-[0.5px] flex mt-3 mt-8 flex-col text-gray-500 justify-center items-center text-sm rounded-lg py-6 border-gray-100">
     <img src="@/assets/icons/illustration.svg" alt="No operating hours illustration" />
     <p>No Operating Hours added.</p>
   </div>

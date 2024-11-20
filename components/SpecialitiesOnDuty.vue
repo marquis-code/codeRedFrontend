@@ -1,7 +1,7 @@
 <template>
     <div class="mt-4">
       <!-- Input Label -->
-      <label for="doc-on-duty" class="input-label">Doctor on Duty</label>
+      <!-- <label for="doc-on-duty" class="input-label">Doctor on Duty</label> -->
   
       <!-- Add Doctor Form -->
       <div class="mt-1 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -126,6 +126,42 @@
       alert("Please fill out all fields before adding a doctor.");
     }
   };
+
+  // Define available options
+const options = ref([
+  { name: "Ambulances", value: false },
+  { name: "Defibrillators", value: false },
+  { name: "Ventilators", value: false },
+]);
+
+// Track selected options
+const selectedOptions = computed(() =>
+  options.value.filter(option => option.value).map(option => option.name)
+);
+
+// Track user inputs for selected options
+const selectedOptionsDetails = ref<Record<string, string>>({});
+
+// Add new keys when options are selected
+watch(
+  selectedOptions,
+  newSelectedOptions => {
+    // Add entries for new selected options
+    newSelectedOptions.forEach(option => {
+      if (!selectedOptionsDetails.value[option]) {
+        selectedOptionsDetails.value[option] = "";
+      }
+    });
+
+    // Remove entries for unselected options
+    Object.keys(selectedOptionsDetails.value).forEach(option => {
+      if (!newSelectedOptions.includes(option)) {
+        delete selectedOptionsDetails.value[option];
+      }
+    });
+  },
+  { deep: true }
+);
   
   // Edit an existing doctor
   const editDoctor = (index: number) => {

@@ -6,7 +6,7 @@
         </div>
       </div>
       <div class="flex justify-center items-center mt-10">
-        <div class="max-w-6xl rounded-lg w-full p-8 lg:flex lg:space-x-8">
+        <div class="max-w-6xl rounded-lg w-full p-3 lg:p-8 lg:flex lg:space-x-8">
 
           <div class="lg:w-1/3 w-full hidden lg:block border-r border-gray-200 pr-8">
             <div class="border-b pb-3 border-gray-100">
@@ -21,10 +21,7 @@
                 Already have an account?
                 <a href="#" class="text-green-500 font-semibold">Login</a>
               </p>
-            </div>
-
-            {{ payload }}
-  
+            </div>  
 
             <ul class="mt-6 space-y-4">
               <li v-for="(step, index) in steps" :key="index" class="flex items-center space-x-2">
@@ -158,12 +155,9 @@
                     </div>
                     <div>
                       <label for="industry" class="input-label">On-Call Specialties and Emergency Equipment (Ambulances, defibrillators, etc.)</label>
-                      <input
-                        v-model="payload.emergencyEquipment"
-                        type="text"
-                        id="industry"
-                        class="input-field"
-                      />
+  
+                      <EquipmentSelector @update="handleUpdate" />
+
                     </div>
                   </div>
                 </div>
@@ -194,12 +188,12 @@
   
                     <div>
                       <label for="doc-on-duty" class="input-label">Doctor on Duty Contact (if applicable)</label>
-                      <input
+                      <!-- <input
                         v-model="payload.doctorOnDutyContact"
                         type="text"
                         id="doc-on-duty"
                         class="input-field"
-                      />
+                      /> -->
                       <SpecialitiesOnDuty @doctors="handleDoctors" />
                     </div>
                   </div>
@@ -212,22 +206,78 @@
                   <div class="space-y-4">
                     <div>
                       <label for="branchName" class="input-label">Accepted Insurance Providers</label>
-                      <input
+                      <!-- <input
                         v-model="payload.acceptedInsuranceProviders"
                         type="text"
                         id="branchName"
                         class="input-field"
-                      />
+                      /> -->
+                      <select
+                        id="insuranceProviders"
+                        v-model="payload.acceptedInsuranceProviders"
+                        multiple
+                        class="mt-1 input-field block w-full border border-gray-300 rounded-md p-2"
+                      >
+                        <option
+                          v-for="provider in insuranceProvidersInNigeria"
+                          :key="provider.value"
+                          :value="provider.value"
+                        >
+                          {{ provider.label }}
+                        </option>
+                      </select>
                     </div>
   
                     <div>
                       <label for="branchName" class="input-label">Emergency Payment Policies (Cash, Insurance, Credit, etc.)</label>
-                      <input
+                      <!-- <input
                         v-model="payload.emergencyPaymentPolicies"
                         type="text"
                         id="branchName"
                         class="input-field"
-                      />
+                      /> -->
+                      <div class="space-y-2">
+      <div>
+        <input 
+          type="checkbox" 
+          id="policy_cash" 
+          value="Cash" 
+          v-model="payload.emergencyPaymentPolicies"
+          class="mr-2"
+        />
+        <label for="policy_cash">Cash</label>
+      </div>
+      <div>
+        <input 
+          type="checkbox" 
+          id="policy_insurance" 
+          value="Insurance" 
+          v-model="payload.emergencyPaymentPolicies"
+          class="mr-2"
+        />
+        <label for="policy_insurance">Insurance</label>
+      </div>
+      <div>
+        <input 
+          type="checkbox" 
+          id="policy_credit" 
+          value="Credit" 
+         v-model="payload.emergencyPaymentPolicies"
+          class="mr-2"
+        />
+        <label for="policy_credit">Credit</label>
+      </div>
+      <div>
+        <input 
+          type="checkbox" 
+          id="policy_other" 
+          value="Other" 
+          v-model="payload.emergencyPaymentPolicies"
+          class="mr-2"
+        />
+        <label for="policy_other">Other</label>
+      </div>
+    </div>
                     </div>
                   </div>
                 </div>
@@ -239,12 +289,69 @@
                   <div class="grid grid-cols-1 gap-6">
                     <div>
                       <label for="workShifts" class="input-label">Expected Response Time (how fast the hospital can respond to emergencies)</label>
-                      <input
+                      <!-- <input
                         v-model="payload.expectedResponseTime"
                         type="text"
                         id="workShifts"
                         class="input-field"
-                      />
+                      /> -->
+                      <div class="space-y-2 pt-3">
+    <div>
+      <input 
+        type="radio" 
+        id="5_minutes" 
+        name="responseTime" 
+        value="5_minutes"
+       v-model="payload.expectedResponseTime"
+        class="mr-2"
+      />
+      <label for="5_minutes">Within 5 minutes</label>
+    </div>
+    <div>
+      <input 
+        type="radio" 
+        id="10_minutes" 
+        name="responseTime" 
+        value="10_minutes"
+       v-model="payload.expectedResponseTime"
+        class="mr-2"
+      />
+      <label for="10_minutes">Within 10 minutes</label>
+    </div>
+    <div>
+      <input 
+        type="radio" 
+        id="30_minutes" 
+        name="responseTime" 
+        value="30_minutes"
+       v-model="payload.expectedResponseTime"
+        class="mr-2"
+      />
+      <label for="30_minutes">Within 30 minutes</label>
+    </div>
+    <div>
+      <input 
+        type="radio" 
+        id="1_hour" 
+        name="responseTime" 
+        value="1_hour"
+       v-model="payload.expectedResponseTime"
+        class="mr-2"
+      />
+      <label for="1_hour">Within 1 hour</label>
+    </div>
+    <div>
+      <input 
+        type="radio" 
+        id="more_than_1_hour" 
+        name="responseTime" 
+        value="more_than_1_hour"
+       v-model="payload.expectedResponseTime"
+        class="mr-2"
+      />
+      <label for="more_than_1_hour">More than 1 hour</label>
+    </div>
+  </div>
                     </div>
                   </div>
                 </div>
@@ -256,22 +363,44 @@
                   <div class="space-y-4">
                     <div>
                       <label for="importStaff" class="input-label">Dedicated Point of Contact (for collaboration and emergencies)</label>
-                      <input
+                      <!-- <input
                         v-model="payload.dedicatedPointOfContact"
                         type="text"
                         id="importStaff"
                         class="input-field"
-                      />
+                      /> -->
+                      <select 
+                      v-model="payload.dedicatedPointOfContact"
+  id="contactRole" 
+  class="mt-1 block w-full input-field text-sm border border-gray-300 rounded-md p-2"
+>
+  <option value="team_lead">Team Lead</option>
+  <option value="project_manager">Project Manager</option>
+  <option value="emergency_coordinator">Emergency Coordinator</option>
+  <option value="general_contact">General Contact</option>
+</select>
                     </div>
   
                     <div>
                       <label for="importStaff" class="input-label">Communication Protocols (how they prefer to receive and respond to emergency cases)</label>
-                      <input
+                      <!-- <input
                         v-model="payload.communicationProtocols"
                         type="text"
                         id="importStaff"
                         class="input-field"
-                      />
+                      /> -->
+                      <select
+                       v-model="payload.communicationProtocols"
+                      id="emergency-servivce"
+                      class="input-field mt-2 text-sm"
+                    >
+                    <option value="phone_call">Phone Call</option>
+                    <option value="sms">Text Message (SMS)</option>
+                    <option value="email">Email</option>
+                    <option value="mobile_app">Mobile App Notification</option>
+                    <option value="radio">Radio Communication</option>
+                    <option value="web_portal">Web Portal</option>
+                    </select>
                     </div>
                   </div>
                 </div>
@@ -283,22 +412,34 @@
                   <div class="space-y-4">
                     <div>
                       <label for="importStaff" class="input-label">Air Ambulance (if applicable)</label>
-                      <input
-                        v-model="payload.airAmbulance"
-                        type="text"
-                        id="importStaff"
-                        class="input-field"
-                      />
+                      <select
+                       v-model="payload.airAmbulance"
+                      id="emergency-servivce"
+                      class="input-field mt-2 text-sm"
+                    >
+                      <option value="Yes">
+                        Yes
+                      </option>
+                      <option value="No">
+                       No
+                      </option>
+                    </select>
                     </div>
   
                     <div>
                       <label for="importStaff" class="input-label">Telemedicine Services (for pre-arrival communication)</label>
-                      <input
-                        v-model="payload.telemedicineServices"
-                        type="text"
-                        id="importStaff"
-                        class="input-field"
-                      />
+                      <select
+                      v-model="payload.telemedicineServices"
+                      id="emergency-servivce"
+                      class="input-field mt-2 text-sm"
+                    >
+                      <option value="Yes">
+                        Yes
+                      </option>
+                      <option value="No">
+                       No
+                      </option>
+                    </select>
                     </div>
                   </div>
                 </div>
@@ -492,6 +633,7 @@
         </div>
       </div>
     </div>
+    <Footer />
   </template>
 
    <script setup lang="ts">
@@ -504,6 +646,13 @@ const { createCompany, payload, loading } = useCreateCompany();
 
 const isFormIncomplete = ref(true);
 const time = ref(null);
+const emergencyEquipmentData = ref<{ name: string; details: string }[]>([]);
+
+// Handle emitted data
+const handleUpdate = (data: { name: string; details: string }[]) => {
+  emergencyEquipmentData.value = data;
+  payload.value.emergencyEquipment = data
+};
 
 watch(
   payload,
@@ -519,6 +668,57 @@ watch(
   },
   { deep: true }
 );
+
+
+// Define available options
+const options = ref([
+  { name: "Ambulances", value: false },
+  { name: "Defibrillators", value: false },
+  { name: "Ventilators", value: false },
+]);
+
+// Track selected options
+const selectedOptions = computed(() =>
+  options.value.filter(option => option.value).map(option => option.name)
+);
+
+// Track user inputs for selected options
+const selectedOptionsDetails = ref<Record<string, string>>({});
+
+// Add new keys when options are selected
+watch(
+  selectedOptions,
+  newSelectedOptions => {
+    // Add entries for new selected options
+    newSelectedOptions.forEach(option => {
+      if (!selectedOptionsDetails.value[option]) {
+        selectedOptionsDetails.value[option] = "";
+      }
+    });
+
+    // Remove entries for unselected options
+    Object.keys(selectedOptionsDetails.value).forEach(option => {
+      if (!newSelectedOptions.includes(option)) {
+        delete selectedOptionsDetails.value[option];
+      }
+    });
+  },
+  { deep: true }
+);
+
+const insuranceProvidersInNigeria = ref([
+  { value: "aiico", label: "AIICO Insurance" },
+  { value: "leadway", label: "Leadway Assurance" },
+  { value: "custodian", label: "Custodian and Allied Insurance" },
+  { value: "axamansard", label: "AXA Mansard Insurance" },
+  { value: "mutual_benefits", label: "Mutual Benefits Assurance" },
+  { value: "cornerstone", label: "Cornerstone Insurance" },
+  { value: "industrial_general", label: "Industrial and General Insurance (IGI)" },
+  { value: "niger", label: "Niger Insurance" },
+  { value: "nsia", label: "NSIA Insurance" },
+  { value: "royal_exchange", label: "Royal Exchange Assurance" },
+]);
+
 
 const facilityTypes = ref([
   "General Hospital",
@@ -572,9 +772,19 @@ const payloadObj = ref({
   longitude: 0,
 });
 
+// const handleSpeciality = (item: any) => {
+//   payload.value.availableSpecialties = item.availableSpecialties
+// }
+
 const handleSpeciality = (item: any) => {
-  payload.value.availableSpecialties = item.availableSpecialties
-}
+  // Ensure doctorOnDutyContact is initialized as an array
+  if (!Array.isArray(payload.value.availableSpecialties)) {
+    payload.value.availableSpecialties = [];
+  }
+  
+  // Push the incoming item into the array
+  payload.value.availableSpecialties.push(item);
+};
 
 const updateLocation = (location: { address: string; latitude: any; longitude: any}) => {
   payloadObj.value.address = location.address;
@@ -603,8 +813,14 @@ const steps = [
 const parentOperatingHours = ref([]);
 
 const handleDoctors = (item: any) => {
-  payload.value.doctorOnDutyContact = item.doctorOnDutyContact
-}
+  // Ensure doctorOnDutyContact is initialized as an array
+  if (!Array.isArray(payload.value.doctorOnDutyContact)) {
+    payload.value.doctorOnDutyContact = [];
+  }
+  
+  // Push the incoming item into the array
+  payload.value.doctorOnDutyContact.push(item);
+};
 
 const updateOperatingHours = (hours: any) => {
   payload.value.operatingHours = hours;
