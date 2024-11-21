@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 container mx-auto">
     <!-- Search Input and Filter Icon -->
-    <section class="p-6 bg-[#FFF9F9CC] max-w-7xl mx-auto">
+    <section class="p-3 lg:p-6 bg-[#FFF9F9CC] max-w-7xl mx-auto">
       <div class="flex items-center border-2 border-red-600  rounded-lg bg-white p-3 shadow-lg">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -18,13 +18,13 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
-        <!-- <button @click="openFilterModal" class="text-gray-500">
+        <button @click="openFilterModal" class="text-gray-500 ml-4">
           <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M17.9516 9.787H6.39369M6.39369 9.787C6.39369 10.3652 6.17789 10.9197 5.79544 11.3285C5.41299 11.7373 4.89427 11.967 4.3534 11.967C3.81253 11.967 3.29381 11.7373 2.91136 11.3285C2.5289 10.9197 2.31404 10.3652 2.31404 9.787M6.39369 9.787C6.39369 9.20883 6.17789 8.65434 5.79544 8.24551C5.41299 7.83668 4.89427 7.607 4.3534 7.607C3.81253 7.607 3.29381 7.83668 2.91136 8.24551C2.5289 8.65434 2.31404 9.20883 2.31404 9.787M2.31404 9.787H0.645142M17.9516 16.394H12.5744M12.5744 16.394C12.5744 16.9723 12.3591 17.5274 11.9765 17.9363C11.594 18.3453 11.0751 18.575 10.5341 18.575C9.99327 18.575 9.47455 18.3443 9.0921 17.9355C8.70965 17.5267 8.49479 16.9722 8.49479 16.394M12.5744 16.394C12.5744 15.8157 12.3591 15.2616 11.9765 14.8527C11.594 14.4437 11.0751 14.214 10.5341 14.214C9.99327 14.214 9.47455 14.4437 9.0921 14.8525C8.70965 15.2613 8.49479 15.8158 8.49479 16.394M8.49479 16.394H0.645142M17.9516 3.18H15.0469M15.0469 3.18C15.0469 3.46628 14.9932 3.74976 14.8907 4.01425C14.7883 4.27874 14.638 4.51906 14.4487 4.72149C14.2593 4.92392 14.0345 5.0845 13.7871 5.19406C13.5396 5.30361 13.2744 5.36 13.0066 5.36C12.4658 5.36 11.947 5.13032 11.5646 4.72149C11.1821 4.31266 10.9673 3.75817 10.9673 3.18M15.0469 3.18C15.0469 2.89372 14.9932 2.61024 14.8907 2.34575C14.7883 2.08126 14.638 1.84094 14.4487 1.63851C14.2593 1.43608 14.0345 1.2755 13.7871 1.16594C13.5396 1.05639 13.2744 1 13.0066 1C12.4658 1 11.947 1.22968 11.5646 1.63851C11.1821 2.04734 10.9673 2.60183 10.9673 3.18M10.9673 3.18H0.645142"
               stroke="black" stroke-opacity="0.8" stroke-miterlimit="10" stroke-linecap="round" />
           </svg>
-        </button> -->
+        </button>
       </div>
     </section>
 
@@ -56,12 +56,26 @@
       <!-- Horizontal Scrollable Hospital Cards -->
       <div class="flex space-x-4 overflow-x-auto custom-scrollbar">
         <div v-for="hospital in displayedHospitals" :key="hospital.place_id"
-          class="hospital-card w-64 p-4 m-2 space-y-3 border rounded-lg shadow cursor-pointer transition-transform transform hover:scale-105"
+         @click="selectHospital(hospital)"
+          class="hospital-card relative w-64 p-4 m-2 space-y-3 border rounded-lg shadow cursor-pointer transition-transform transform hover:scale-105"
           :class="{
             'bg-green-100 border-green-400': hospital.availability === 'available',
             'bg-red-100 border-red-400': hospital.availability === 'unavailable',
             'bg-blue-100 border-blue-400': hospital.availability === 'busy',
-          }" @click="selectHospital(hospital)">
+          }">
+          <!-- {{ hospital }} -->
+             <div class="flex justify-start items-start absolute top-0 left-0">
+            <!-- <span class="text-xs rounded-full" :class="{
+              'bg-green-500 text-white px-2 py-1 rounded': hospital.pricing === 'high',
+              'bg-red-500 text-white px-2 py-1 rounded': hospital.pricing === 'affordable',
+              'bg-blue-500 text-white px-2 py-1 rounded': hospital.pricing === 'average',
+            }">
+              {{ hospital.pricing }}
+            </span> -->
+            <span class="text-xs rounded-tl-lg py-1 px-2 bg-black text-white">
+              {{ hospital.pricing }}
+            </span>
+          </div>
           <div class="flex justify-end items-end">
             <span class="text-xs rounded-full" :class="{
               'bg-green-500 text-white px-2 py-1 rounded': hospital.availability === 'available',
@@ -76,43 +90,13 @@
             'text-red-500': hospital.availability === 'unavailable',
             'text-blue-500': hospital.availability === 'busy',
           }">
+            <!-- <img class="h-10 w-10 " :src="hospital.icon" alt="icon"/> -->
             {{ hospital.name }}
           </h3>
           <p class="text-sm text-gray-600">
             {{ hospital.vicinity }}
           </p>
         </div>
-
-        <!-- <div
-        v-for="hospital in displayedHospitals"
-        :key="hospital.place_id"
-        class="hospital-card w-64 p-4 m-2 space-y-3 border rounded-lg shadow cursor-pointer transition-transform transform hover:scale-105"
-        :class="{
-          'bg-green-100 border-green-400': hospital.availability === 'available',
-          'bg-red-100 border-red-400': hospital.availability === 'unavailable',
-          'bg-blue-100 border-blue-400': hospital.availability === 'busy',
-        }"
-        @click="selectHospital(hospital)"
-      >
-<div class="flex justify-end items-end">
-    <span
-          class="text-xs rounded-full"
-          :class="{
-            'bg-green-500 text-white px-2 py-1 rounded': hospital.availability === 'available',
-            'bg-red-500 text-white px-2 py-1 rounded': hospital.availability === 'unavailable',
-            'bg-blue-500 text-white px-2 py-1 rounded': hospital.availability === 'busy',
-          }"
-        >
-          {{ hospital.availability }}
-        </span>
-</div>
-        <h3 class="text-base leading-snug font-bold" :class="{
-            'text-green-500': hospital.availability === 'available',
-            'text-red-500': hospital.availability === 'unavailable',
-            'text-blue-500': hospital.availability === 'busy',
-          }">{{ hospital.name }}</h3>
-        <p class="text-sm text-gray-600">{{ hospital.vicinity }}</p>
-      </div> -->
       </div>
     </div>
 
@@ -122,7 +106,12 @@
     </button>
 
     <!-- Filter Modal -->
-    <!-- <FilterModal v-if="showFilterModal" @applyFilters="applyFilters" @close="closeFilterModal" /> -->
+    <!-- <FilterModal v-if="showFilterModal" @filters-applied="applyFilters" @close="closeFilterModal" /> -->
+    <FilterModal
+      v-if="showFilterModal"
+      @filters-applied="applyFilters"
+      @close="showFilterModal = false"
+    />
 
     <div v-if="showMap" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div class="relative bg-white w-full max-w-lg h-3/4 m-3 rounded-lg shadow-lg overflow-hidden">
@@ -137,7 +126,7 @@
       </div>
     </div>
 
-    <transition name="fade">
+    <!-- <transition name="fade">
       <div v-if="showFilterModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
         <div class="bg-white w-11/12 max-w-lg p-6 rounded-lg shadow-xl relative">
           <section class="flex justify-between items-center pb-6">
@@ -147,21 +136,16 @@
               </button>
             </div>
 
-            <!-- Title and Reset -->
-            <!-- <div class="flex justify-between items-center mb-6"> -->
             <div>
               <h2 class="text-red-600 text-sm font-bold">Filter by</h2>
             </div>
             <div>
               <button class="text-gray-400" @click="resetFilters">Reset</button>
             </div>
-            <!-- </div> -->
           </section>
 
 
-          <!-- Filters Section -->
           <div class="space-y-8">
-            <!-- Location Filter -->
             <div>
               <h3 class="text-red-600 font-bold">LOCATION</h3>
               <hr class="border-gray-200 my-2" />
@@ -177,13 +161,10 @@
                       fill="white" />
                   </svg>
 
-                  <!-- <span class="block w-3 h-3 rounded-full border border-white" v-if="selectedFilters.location.includes(location)" style="background-color: white;"></span> -->
                   {{ location }}
                 </button>
               </div>
             </div>
-
-            <!-- Bed Availability Filter -->
             <div>
               <h3 class="text-red-600 font-bold">BED AVAILABILITY</h3>
               <hr class="border-gray-200 my-2" />
@@ -198,13 +179,12 @@
                       d="M3.77531 11.3429C3.53124 11.0988 3.13551 11.0988 2.89143 11.3429C2.64736 11.587 2.64736 11.9827 2.89143 12.2267L6.64143 15.9767C6.88551 16.2208 7.28124 16.2208 7.52531 15.9767L16.692 6.8101C16.936 6.56603 16.936 6.1703 16.692 5.92622C16.4479 5.68215 16.0522 5.68215 15.8081 5.92622L7.08337 14.6509L3.77531 11.3429Z"
                       fill="white" />
                   </svg>
-                  <!-- <span class="block w-3 h-3 rounded-full border border-white" v-if="selectedFilters.bedAvailability.includes(availability)" style="background-color: white;"></span> -->
+                
                   {{ availability }}
                 </button>
               </div>
             </div>
 
-            <!-- Hospital Type Filter -->
             <div>
               <h3 class="text-red-600 font-bold">HOSPITAL TYPE</h3>
               <hr class="border-gray-300 my-2" />
@@ -219,14 +199,12 @@
                       d="M3.77531 11.3429C3.53124 11.0988 3.13551 11.0988 2.89143 11.3429C2.64736 11.587 2.64736 11.9827 2.89143 12.2267L6.64143 15.9767C6.88551 16.2208 7.28124 16.2208 7.52531 15.9767L16.692 6.8101C16.936 6.56603 16.936 6.1703 16.692 5.92622C16.4479 5.68215 16.0522 5.68215 15.8081 5.92622L7.08337 14.6509L3.77531 11.3429Z"
                       fill="white" />
                   </svg>
-                  <!-- <span class="block w-3 h-3 rounded-full border border-white" v-if="selectedFilters.hospitalType.includes(type)" style="background-color: white;"></span> -->
                   {{ type }}
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- Apply Filter Button -->
           <div class="mt-6">
             <button @click="applyFilters" class="w-full bg-red-600 text-white py-3 mt-6 rounded-lg font-bold">
               APPLY FILTER TO SEARCH
@@ -234,7 +212,7 @@
           </div>
         </div>
       </div>
-    </transition>
+    </transition> -->
 
     <!-- <CoreModal :isOpen="showMap">
         <MapViews :hospital="selectedHospital" :userLocation="userLocation" @close="showMap = false" />
@@ -262,20 +240,245 @@ const userLocation = ref({ lat: null, lng: null })
 
 const { $loadGoogleMaps } = useNuxtApp()
 
+
+// Mock function to assign random availability status
+const mockAvailability = () => {
+  const statuses = ['available', 'unavailable', 'busy']
+  return statuses[Math.floor(Math.random() * statuses.length)]
+}
+
+const mockPricing = () => {
+  const priceStatus = ['high', 'affordable', 'average']
+  return priceStatus[Math.floor(Math.random() * priceStatus.length)]
+}
+
+const mockHospitalType = () => {
+  const hospitalTypes = ['Teaching Hospital', 'General', 'Private', 'FMC', 'Specialist Hospital', 'Primary Healthcare Center']
+  return hospitalTypes[Math.floor(Math.random() * hospitalTypes.length)]
+}
+
+const specialities = [
+  "Diabetes",
+  "Sickle cell crisis",
+  "Hypertensive related crisis",
+  "Asthma",
+  "Drug overdose",
+  "Mania",
+  "Panic attacks",
+  "Shortness of breath",
+  "Fainting/Syncope",
+  "Seizures/Epilepsy",
+  "Bleeding",
+  "Falls",
+  "Stomach ache",
+  "Headache",
+  "Chest pain",
+  "Fever",
+  "Cough",
+  "Fracture",
+  "Gun shot",
+  "Pregnancy",
+  "Labour pain",
+  "Newborn care",
+  "Car accidents",
+  "Workplace accidents",
+  "Pain",
+  "Swelling",
+];
+
+const mockSpecialities = () => {
+  // Number of specialities to select (1 to 3 random specialities)
+  const numberOfSpecialities = Math.floor(Math.random() * 3) + 1;
+
+  // Shuffle the array and pick the first `numberOfSpecialities` items
+  const shuffledSpecialities = [...specialities].sort(() => 0.5 - Math.random());
+  return shuffledSpecialities.slice(0, numberOfSpecialities);
+};
+
 // Filtered hospitals based on view mode
+// const displayedHospitals = computed(() => {
+//   return viewAll.value ? hospitals.value : hospitals.value.slice(0, 6)
+// })
+
 const displayedHospitals = computed(() => {
-  return viewAll.value ? hospitals.value : hospitals.value.slice(0, 6)
-})
+  // If a bed availability filter is selected, filter hospitals
+  if (selectedBedAvailability.value) {
+    console.log(selectedBedAvailability.value, 'availabiliet')
+    const filteredHospitals = hospitals.value.filter((hospital) => {
+      return hospital.availability === selectedBedAvailability.value?.toLowerCase();
+    });
+
+    // Apply pagination if viewAll is false
+    return viewAll.value ? filteredHospitals : filteredHospitals.slice(0, 6);
+  }
+
+  // If no filter is selected, return the original functionality
+  return viewAll.value ? hospitals.value : hospitals.value.slice(0, 6);
+});
+
+// Example user-selected filters
+const selectedHospitalType = ref('') as Record<string, any>
+const selectedSpecialities = ref('') as Record<string, any>
+const selectedBedAvailability = ref('') as Record<string, any>
+const selectedLocation = ref('') as Record<string, any>
+
+// const displayedHospitals = ref([]);
+
+// Function to update the hospital list based on filters
+// const updateDisplayedHospitals = () => {
+//   displayedHospitals.value = hospitals.value.filter((hospital) => {
+//     // If no filters are selected, return all hospitals
+//     const noFiltersSelected =
+//       !selectedHospitalType.value &&
+//       selectedSpecialities.value.length === 0 &&
+//       !selectedBedAvailability.value &&
+//       !selectedLocation.value;
+
+//     if (noFiltersSelected) {
+//       return true; // Include all hospitals if no filters are applied
+//     }
+
+//     // Filter by hospital type
+//     const matchesType =
+//       !selectedHospitalType.value || hospital.types.includes(selectedHospitalType.value);
+
+//     // Filter by specialities
+//     const matchesSpecialities =
+//       selectedSpecialities.value.length === 0 ||
+//       selectedSpecialities.value.some((speciality) => hospital.specialities?.includes(speciality));
+
+//     // Filter by bed availability
+//     const matchesAvailability =
+//       !selectedBedAvailability.value || hospital.availability === selectedBedAvailability.value;
+
+//     // Filter by location
+//     const matchesLocation =
+//       !selectedLocation.value || hospital.vicinity.toLowerCase().includes(selectedLocation.value.toLowerCase());
+
+//     // Return hospitals matching all selected filters
+//     return matchesType && matchesSpecialities && matchesAvailability && matchesLocation;
+//   }).slice(0, viewAll.value ? undefined : 6); // Slice for pagination
+// };
+
+// Watchers to detect changes in filters
+// watch(
+//   [selectedHospitalType, selectedSpecialities, selectedBedAvailability, selectedLocation, viewAll],
+//   () => {
+//     console.log(selectedHospitalType, selectedSpecialities, selectedBedAvailability, selectedLocation.value)
+//     // updateDisplayedHospitals();
+//   },
+//   { immediate: true }
+// );
+
+// Function to apply filters from user input
+const applyFilters = (filters) => {
+  selectedLocation.value = filters?.locations || '';
+  selectedBedAvailability.value = filters.statuses || '';
+  selectedSpecialities.value = filters.specialities || '';
+  selectedHospitalType.value = filters.types || '';
+  showFilterModal.value = false
+};
+
+
+// const displayedHospitals = ref([]);
+
+// // Function to update the hospital list based on filters
+// const updateDisplayedHospitals = () => {
+//   displayedHospitals.value = hospitals.value.filter((hospital) => {
+//     // Filter by hospital type
+//     const matchesType =
+//       !selectedHospitalType.value || hospital.types.includes(selectedHospitalType.value);
+
+//     // Filter by specialities
+//     const matchesSpecialities =
+//       selectedSpecialities.value.length === 0 ||
+//       selectedSpecialities.value.some((speciality) => hospital.specialities?.includes(speciality));
+
+//     // Filter by bed availability
+//     const matchesAvailability =
+//       !selectedBedAvailability.value || hospital.availability === selectedBedAvailability.value;
+
+//     // Filter by location
+//     const matchesLocation =
+//       !selectedLocation.value || hospital.vicinity.toLowerCase().includes(selectedLocation.value.toLowerCase());
+
+//     return matchesType && matchesSpecialities && matchesAvailability && matchesLocation;
+//   }).slice(0, viewAll.value ? undefined : 6); // Slice for pagination
+// };
+
+// // Watchers to detect changes in filters
+// watch(
+//   [selectedHospitalType, selectedSpecialities, selectedBedAvailability, selectedLocation, viewAll],
+//   () => {
+//     updateDisplayedHospitals();
+//   },
+//   { immediate: true }
+// );
+
+// // Function to apply filters from user input
+// const applyFilters = (filters: {
+//   locations: string[];
+//   statuses: string[];
+//   types: string[];
+//   specialities: string[];
+// }) => {
+//   selectedLocation.value = filters.locations[0] || null;
+//   selectedBedAvailability.value = filters.statuses[0] || null;
+//   selectedSpecialities.value = filters.specialities || [];
+//   selectedHospitalType.value = filters.types[0] || null;
+// };
+
+// // Example user-selected filters (replace with actual data from your app)
+// const selectedHospitalType = ref<string | null>(null); // e.g., 'Teaching Hospital'
+// const selectedSpecialities = ref<string[]>([]); // e.g., ['Cardiology', 'Neurology']
+// const selectedBedAvailability = ref<string | null>(null); // e.g., 'available'
+// const selectedLocation = ref<string | null>(null); // e.g., 'Ibadan'
+
+// const displayedHospitals = computed(() => {
+//   return hospitals.value.filter((hospital) => {
+//     // Filter by hospital type
+//     const matchesType = !selectedHospitalType.value || hospital.types.includes(selectedHospitalType.value);
+
+//     // Filter by specialities
+//     const matchesSpecialities =
+//       selectedSpecialities.value.length === 0 ||
+//       selectedSpecialities.value.some((speciality) => hospital.specialities?.includes(speciality));
+
+//     // Filter by bed availability
+//     const matchesAvailability =
+//       !selectedBedAvailability.value || hospital.availability === selectedBedAvailability.value;
+
+//     // Filter by location
+//     const matchesLocation =
+//       !selectedLocation.value || hospital.vicinity.toLowerCase().includes(selectedLocation.value.toLowerCase());
+
+//     return matchesType && matchesSpecialities && matchesAvailability && matchesLocation;
+//   }).slice(0, viewAll.value ? undefined : 6); // Slice for pagination
+// });
+
+// const applyFilters = (filters: {
+//   locations: string[];
+//   statuses: string[];
+//   types: string[];
+//   specialities: string[];
+// }) => {
+//   console.log('Applied Filters:', filters);
+//   selectedLocation.value = filters.locations
+//   selectedBedAvailability.value = filters.statuses
+//   selectedSpecialities.value = filters.specialities
+//   selectedHospitalType.value = filters.types
+//   // Handle the filters logic here, such as updating a search query or filtering data
+// };
 
 // Function to open filter modal
 const openFilterModal = () => {
   showFilterModal.value = true
 }
 
-// Function to close filter modal
-const closeFilterModal = () => {
-  showFilterModal.value = false
-}
+// // Function to close filter modal
+// const closeFilterModal = () => {
+//   showFilterModal.value = false
+// }
 
 // Function to fetch closest hospital facilities ORIGINAL
 // const fetchHospitals = async () => {
@@ -333,11 +536,7 @@ const closeFilterModal = () => {
 // }
 
 
-// Mock function to assign random availability status
-const mockAvailability = () => {
-  const statuses = ['available', 'unavailable', 'busy']
-  return statuses[Math.floor(Math.random() * statuses.length)]
-}
+
 
 // Get the user's current geolocation and populate the address ORIGINAL
 // const getUserLocation = () => {
@@ -441,37 +640,77 @@ const getUserLocation = () => {
         localStorage.setItem('userLocation', JSON.stringify(userLocation.value))
 
         // Step 2: Reverse geocode to get the address
+        // try {
+        //   const google = await $loadGoogleMaps()
+        //   const geocoder = new google.maps.Geocoder()
+
+        //   geocoder.geocode(
+        //     { location: { lat, lng } },
+        //     (results, status) => {
+        //       if (
+        //         status === google.maps.GeocoderStatus.OK &&
+        //         results[0]?.formatted_address
+        //       ) {
+        //         // Step 3: Prefill input field with the address
+        //         query.value = results[0].formatted_address
+        //         console.log('User location (address):', query.value)
+
+        //         // Step 4: Fetch hospitals near the user's location
+        //         fetchHospitalsByLocation(lat, lng)
+        //       } else {
+        //         console.error('Reverse geocoding failed:', status)
+        //         showToast({
+        //           title: 'Error',
+        //           message: 'Could not determine your location.',
+        //           toastType: 'error',
+        //           duration: 3000,
+        //         })
+        //       }
+        //     }
+        //   )
+        // } catch (error) {
+        //   console.error('Error during reverse geocoding:', error)
+        // }
         try {
-          const google = await $loadGoogleMaps()
-          const geocoder = new google.maps.Geocoder()
+  const google = await $loadGoogleMaps();
+  const geocoder = new google.maps.Geocoder();
 
-          geocoder.geocode(
-            { location: { lat, lng } },
-            (results, status) => {
-              if (
-                status === google.maps.GeocoderStatus.OK &&
-                results[0]?.formatted_address
-              ) {
-                // Step 3: Prefill input field with the address
-                query.value = results[0].formatted_address
-                console.log('User location (address):', query.value)
+  geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+    if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
+      // Log all results for debugging
+      console.log('Geocoding results:', results);
 
-                // Step 4: Fetch hospitals near the user's location
-                fetchHospitalsByLocation(lat, lng)
-              } else {
-                console.error('Reverse geocoding failed:', status)
-                showToast({
-                  title: 'Error',
-                  message: 'Could not determine your location.',
-                  toastType: 'error',
-                  duration: 3000,
-                })
-              }
-            }
-          )
-        } catch (error) {
-          console.error('Error during reverse geocoding:', error)
-        }
+      // Prefer the most specific result
+      const formattedAddress = results[0].formatted_address || 'Unknown location';
+      query.value = formattedAddress;
+
+      console.log('User location (address):', query.value);
+
+      // Fetch hospitals near the user's location
+      fetchHospitalsByLocation(lat, lng);
+    } else {
+      // Handle geocoding errors
+      console.error('Reverse geocoding failed:', status);
+      showToast({
+        title: 'Error',
+        message: 'Could not determine your location. Please refine your location manually.',
+        toastType: 'error',
+        duration: 3000,
+      });
+
+      query.value = 'Enter your location manually';
+    }
+  });
+} catch (error) {
+  console.error('Error during reverse geocoding:', error);
+  showToast({
+    title: 'Error',
+    message: 'An unexpected error occurred while determining your location.',
+    toastType: 'error',
+    duration: 3000,
+  });
+}
+
       },
       (error) => {
         console.error('Error retrieving geolocation:', error)
@@ -523,6 +762,9 @@ const fetchHospitalsByLocation = async (lat, lng) => {
           hospitals.value = results.map((hospital) => ({
             ...hospital,
             availability: mockAvailability(),
+            pricing: mockPricing(),
+            specialities: mockSpecialities(),
+            hospitalType: mockHospitalType(),
             latitude: hospital.geometry.location.lat(),
             longitude: hospital.geometry.location.lng(),
           }))
@@ -552,8 +794,6 @@ const fetchHospitalsByLocation = async (lat, lng) => {
 }
 
 
-
-
 // Function to open map view
 const selectHospital = (hospital) => {
   console.log(hospital, 'here')
@@ -579,12 +819,6 @@ onMounted(() => {
   getUserLocation()
 })
 
-// Filter options
-const locations = ref([
-  'Nearest to you', 'Surulere', 'Oshodi', 'Ikeja', 'Isolo', 'Mushin', 'Yaba', 'Idi-Araba'
-])
-const bedAvailabilityOptions = ref(['Available', 'Unavailable', 'Busy'])
-const hospitalTypes = ref(['Teaching Hospital', 'General', 'Private', 'FMC'])
 
 // Selected filters
 const selectedFilters = ref({
@@ -599,11 +833,11 @@ const closeModal = () => {
 }
 
 
-// Apply filters
-const applyFilters = () => {
-  console.log('Selected Filters:', selectedFilters.value)
-  closeModal()
-}
+// // Apply filters
+// const applyFilters = (data: any) => {
+//   console.log('Selected Filters:', data)
+//   // closeModal()
+// }
 
 // Reset filters
 const resetFilters = () => {
@@ -614,7 +848,7 @@ const resetFilters = () => {
   }
 }
 
-const query = ref('') // Single query for name or location
+const query = ref('') as any // Single query for name or location
 
 //ORIGINAL
 // const fetchHospitals = async () => {
@@ -733,6 +967,8 @@ const fetchHospitals = async () => {
             name: hospital.name,
             vicinity: hospital.vicinity || hospital.formatted_address,
             availability: mockAvailability(),
+            pricing: mockPricing(),
+            specialities: mockSpecialities(),
             latitude: hospital.geometry.location.lat(),
             longitude: hospital.geometry.location.lng(),
           }))
@@ -761,7 +997,6 @@ const fetchHospitals = async () => {
     loading.value = false
   }
 }
-
 
 const hospitalName = ref('') // New state for hospital name
 
@@ -848,6 +1083,31 @@ const filterHospitals = (results) => {
   return results
 }
 
+// Handle filters applied event
+
+// Handle modal close event
+const closeFilterModal = () => {
+  showFilterModal.value = false;
+};
+
+// watch(selectedHospitalType, (value) => {
+//   fetchHospitals(null, null, { hospitalType: value.toLowerCase() })
+// }, { immediate: true })
+
+
+// watch(selectedSpecialities, (value) => {
+//   fetchHospitals(null, null, { speciality: value.toLowerCase() })
+// }, { immediate: true })
+
+// watch(selectedLocation, (value) => {
+//    query.value = value
+//    fetchHospitals(null, null, { place: value.toLowerCase() })
+// }, { immediate: true })
+
+// watch(selectedBedAvailability, (value) => {
+//   console.log(value, 'value')
+//   fetchHospitals(null, null, { availability: value.toLowerCase() })
+// }, { immediate: true });
 
 const router = useRouter()
 

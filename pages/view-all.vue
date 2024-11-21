@@ -11,8 +11,8 @@
   </template>
   
   <script setup lang="ts">
-  import useUserLocation from '@/composables/core/useUserLocation';
-  const { latitude, longitude, error, address, loading } = useUserLocation();
+  // import useUserLocation from '@/composables/core/useUserLocation';
+  // const { latitude, longitude, error, address, loading } = useUserLocation();
   import ceo from '@/assets/img/ceo.jpeg'
   import cto from '@/assets/img/cto.jpg'
   import coo from '@/assets/img/coo.jpeg'

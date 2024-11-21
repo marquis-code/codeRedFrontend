@@ -316,8 +316,8 @@
 </template>
 
 <script setup lang="ts">
-import useUserLocation from '@/composables/core/useUserLocation';
-const { latitude, longitude, error, address, loading } = useUserLocation();
+// import useUserLocation from '@/composables/core/useUserLocation';
+// const { latitude, longitude, error, address, loading } = useUserLocation();
 import service1 from "@/assets/img/service1.png";
 import service2 from "@/assets/img/service2.png";
 import service3 from "@/assets/img/service3.png";

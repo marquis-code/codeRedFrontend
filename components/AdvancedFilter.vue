@@ -141,8 +141,8 @@
   
   <script setup lang="ts">
     import axios from 'axios'
-  import useUserLocation from '@/composables/core/useUserLocation';
-const { latitude, longitude, error, address, loading } = useUserLocation();
+  // import useUserLocation from '@/composables/core/useUserLocation';
+// const { latitude, longitude, error, address, loading } = useUserLocation();
 
     // const location = ref('')
     const hospitals = ref([])
