@@ -72,7 +72,7 @@
             }">
               {{ hospital.pricing }}
             </span> -->
-            <span class="text-xs rounded-tl-lg py-1 px-2 bg-black text-white">
+            <span class="text-xs rounded-tl-lg py-1 px-6 bg-black text-white">
               {{ hospital.pricing }}
             </span>
           </div>

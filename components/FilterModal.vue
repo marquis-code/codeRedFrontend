@@ -1,12 +1,12 @@
 <template>
   <div class="fixed inset-0 z-[9999999] bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center">
-    <div class="bg-white p-6 z-[9999999] rounded-lg shadow-lg z-50 m-4 max-w-lg w-full max-h-[90vh] overflow-hidden">
+    <div class="bg-white z-[9999999] rounded-lg shadow-lg z-50 m-4 max-w-lg w-full max-h-[90vh] overflow-hidden">
       <div class="overflow-y-auto custom-scrollbar">
-        <h2 class="text-lg font-bold mb-4">Filter by</h2>
+        <h2 class="text-lg font-bold mb-4 px-6 pt-6">Filter by</h2>
 
         <!-- Location Filter -->
-        <h3 class="text-xs font-semibold mb-2">Location</h3>
-        <div class="flex flex-wrap gap-3 my-4">
+        <h3 class="text-sm text-[#CC1100] border-b font-semibold mb-2 px-6 pb-2">Location</h3>
+        <div class="flex flex-wrap gap-3 my-4 px-6 pb-4">
           <label
             v-for="location in locations"
             :key="location"
@@ -20,7 +20,7 @@
             />
             <span
               :class="selectedLocation === location ? 'bg-[#CC1100] text-white' : 'bg-gray-200 text-gray-700'"
-              class="px-3 py-1.5 rounded-full mb-3 text-xs"
+              class="px-3 py-1.5 rounded-full mb-3 text-sm"
             >
               {{ location }}
             </span>
@@ -28,8 +28,8 @@
         </div>
 
         <!-- Availability Filter -->
-        <h3 class="text-xs font-semibold mb-2">Bed Availability</h3>
-        <div class="flex flex-wrap gap-3 mb-4">
+        <h3 class="text-sm text-[#CC1100] border-b font-semibold mb-2 px-6 pb-2">Bed Availability</h3>
+        <div class="flex flex-wrap gap-3 mb-4 px-6 pb-4">
           <label
             v-for="status in statuses"
             :key="status"
@@ -43,7 +43,7 @@
             />
             <span
               :class="selectedStatus === status ? 'bg-[#CC1100] text-white' : 'bg-gray-200 text-gray-700'"
-              class="px-3 py-1.5 rounded-full mb-3 text-xs"
+              class="px-3 py-1.5 rounded-full mb-3 text-sm"
             >
               {{ status }}
             </span>
@@ -51,8 +51,8 @@
         </div>
 
         <!-- Hospital Type Filter -->
-        <h3 class="text-xs font-semibold mb-2">Hospital Type</h3>
-        <div class="flex flex-wrap gap-3 mb-4">
+        <h3 class="text-sm text-[#CC1100] border-b font-semibold mb-2 px-6 pb-2">Hospital Type</h3>
+        <div class="flex flex-wrap gap-3 mb-4 px-6 pb-4">
           <label
             v-for="type in hospitalTypes"
             :key="type"
@@ -66,7 +66,7 @@
             />
             <span
               :class="selectedType === type ? 'bg-[#CC1100] text-white' : 'bg-gray-200 text-gray-700'"
-              class="px-3 py-1.5 rounded-full mb-3 text-xs"
+              class="px-3 py-1.5 rounded-full mb-3 text-sm"
             >
               {{ type }}
             </span>
@@ -74,8 +74,8 @@
         </div>
 
         <!-- Specialities Filter -->
-        <h3 class="text-xs font-semibold mb-2">Specialities</h3>
-        <div class="flex flex-wrap gap-3">
+        <h3 class="text-sm font-semibold border-b text-[#CC1100] mb-2 px-6 pb-2">Specialities</h3>
+        <div class="flex flex-wrap gap-3 px-6 pb-4">
           <label
             v-for="speciality in specialities"
             :key="speciality"
@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <div class="mt-6">
+      <div class="mt-6 px-6 pb-6">
         <button @click="applyFilters" class="mt-6 w-full bg-[#CC1100] text-white py-2 rounded-md">Apply Filter to Search</button>
         <button @click="$emit('close')" class="mt-4 w-full text-center text-gray-500">Cancel</button>
       </div>
@@ -110,7 +110,7 @@ import { ref } from 'vue';
 
 // Realistic data for Nigeria
 const locations = [
-  'Nearest to you',
+  // 'Nearest to you',
   'Surulere',
   'Oshodi',
   'Ikeja',
