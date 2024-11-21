@@ -659,76 +659,76 @@ const getUserLocation = () => {
         localStorage.setItem('userLocation', JSON.stringify(userLocation.value))
 
         // Step 2: Reverse geocode to get the address
-        // try {
-        //   const google = await $loadGoogleMaps()
-        //   const geocoder = new google.maps.Geocoder()
-
-        //   geocoder.geocode(
-        //     { location: { lat, lng } },
-        //     (results, status) => {
-        //       if (
-        //         status === google.maps.GeocoderStatus.OK &&
-        //         results[0]?.formatted_address
-        //       ) {
-        //         // Step 3: Prefill input field with the address
-        //         query.value = results[0].formatted_address
-        //         console.log('User location (address):', query.value)
-
-        //         // Step 4: Fetch hospitals near the user's location
-        //         fetchHospitalsByLocation(lat, lng)
-        //       } else {
-        //         console.error('Reverse geocoding failed:', status)
-        //         showToast({
-        //           title: 'Error',
-        //           message: 'Could not determine your location.',
-        //           toastType: 'error',
-        //           duration: 3000,
-        //         })
-        //       }
-        //     }
-        //   )
-        // } catch (error) {
-        //   console.error('Error during reverse geocoding:', error)
-        // }
         try {
-  const google = await $loadGoogleMaps();
-  const geocoder = new google.maps.Geocoder();
+          const google = await $loadGoogleMaps()
+          const geocoder = new google.maps.Geocoder()
 
-  geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-    if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
-      // Log all results for debugging
-      console.log('Geocoding results:', results);
+          geocoder.geocode(
+            { location: { lat, lng } },
+            (results, status) => {
+              if (
+                status === google.maps.GeocoderStatus.OK &&
+                results[0]?.formatted_address
+              ) {
+                // Step 3: Prefill input field with the address
+                query.value = results[0].formatted_address
+                console.log('User location (address):', query.value)
 
-      // Prefer the most specific result
-      const formattedAddress = results[0].formatted_address || 'Unknown location';
-      query.value = formattedAddress;
+                // Step 4: Fetch hospitals near the user's location
+                fetchHospitalsByLocation(lat, lng)
+              } else {
+                console.error('Reverse geocoding failed:', status)
+                showToast({
+                  title: 'Error',
+                  message: 'Could not determine your location.',
+                  toastType: 'error',
+                  duration: 3000,
+                })
+              }
+            }
+          )
+        } catch (error) {
+          console.error('Error during reverse geocoding:', error)
+        }
+//         try {
+//   const google = await $loadGoogleMaps();
+//   const geocoder = new google.maps.Geocoder();
 
-      console.log('User location (address):', query.value);
+//   geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+//     if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
+//       // Log all results for debugging
+//       console.log('Geocoding results:', results);
 
-      // Fetch hospitals near the user's location
-      fetchHospitalsByLocation(lat, lng);
-    } else {
-      // Handle geocoding errors
-      console.error('Reverse geocoding failed:', status);
-      showToast({
-        title: 'Error',
-        message: 'Could not determine your location. Please refine your location manually.',
-        toastType: 'error',
-        duration: 3000,
-      });
+//       // Prefer the most specific result
+//       const formattedAddress = results[0].formatted_address || 'Unknown location';
+//       query.value = formattedAddress;
 
-      query.value = 'Enter your location manually';
-    }
-  });
-} catch (error) {
-  console.error('Error during reverse geocoding:', error);
-  showToast({
-    title: 'Error',
-    message: 'An unexpected error occurred while determining your location.',
-    toastType: 'error',
-    duration: 3000,
-  });
-}
+//       console.log('User location (address):', query.value);
+
+//       // Fetch hospitals near the user's location
+//       fetchHospitalsByLocation(lat, lng);
+//     } else {
+//       // Handle geocoding errors
+//       console.error('Reverse geocoding failed:', status);
+//       showToast({
+//         title: 'Error',
+//         message: 'Could not determine your location. Please refine your location manually.',
+//         toastType: 'error',
+//         duration: 3000,
+//       });
+
+//       query.value = 'Enter your location manually';
+//     }
+//   });
+// } catch (error) {
+//   console.error('Error during reverse geocoding:', error);
+//   showToast({
+//     title: 'Error',
+//     message: 'An unexpected error occurred while determining your location.',
+//     toastType: 'error',
+//     duration: 3000,
+//   });
+// }
 
       },
       (error) => {
