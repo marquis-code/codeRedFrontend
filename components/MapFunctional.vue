@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 container mx-auto">
+  <div class="container mx-auto">
     <!-- Search Input and Filter Icon -->
     <section class="p-3 lg:p-6 bg-[#FFF9F9CC] max-w-7xl mx-auto">
       <div class="flex items-center border-2 border-red-600  rounded-lg bg-white p-3 shadow-lg">
@@ -18,7 +18,7 @@
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
         </button>
-        <button @click="openFilterModal" class="text-gray-500 ml-4">
+        <button @click="showFilterModal = true" class="text-gray-500 ml-4">
           <svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M17.9516 9.787H6.39369M6.39369 9.787C6.39369 10.3652 6.17789 10.9197 5.79544 11.3285C5.41299 11.7373 4.89427 11.967 4.3534 11.967C3.81253 11.967 3.29381 11.7373 2.91136 11.3285C2.5289 10.9197 2.31404 10.3652 2.31404 9.787M6.39369 9.787C6.39369 9.20883 6.17789 8.65434 5.79544 8.24551C5.41299 7.83668 4.89427 7.607 4.3534 7.607C3.81253 7.607 3.29381 7.83668 2.91136 8.24551C2.5289 8.65434 2.31404 9.20883 2.31404 9.787M2.31404 9.787H0.645142M17.9516 16.394H12.5744M12.5744 16.394C12.5744 16.9723 12.3591 17.5274 11.9765 17.9363C11.594 18.3453 11.0751 18.575 10.5341 18.575C9.99327 18.575 9.47455 18.3443 9.0921 17.9355C8.70965 17.5267 8.49479 16.9722 8.49479 16.394M12.5744 16.394C12.5744 15.8157 12.3591 15.2616 11.9765 14.8527C11.594 14.4437 11.0751 14.214 10.5341 14.214C9.99327 14.214 9.47455 14.4437 9.0921 14.8525C8.70965 15.2613 8.49479 15.8158 8.49479 16.394M8.49479 16.394H0.645142M17.9516 3.18H15.0469M15.0469 3.18C15.0469 3.46628 14.9932 3.74976 14.8907 4.01425C14.7883 4.27874 14.638 4.51906 14.4487 4.72149C14.2593 4.92392 14.0345 5.0845 13.7871 5.19406C13.5396 5.30361 13.2744 5.36 13.0066 5.36C12.4658 5.36 11.947 5.13032 11.5646 4.72149C11.1821 4.31266 10.9673 3.75817 10.9673 3.18M15.0469 3.18C15.0469 2.89372 14.9932 2.61024 14.8907 2.34575C14.7883 2.08126 14.638 1.84094 14.4487 1.63851C14.2593 1.43608 14.0345 1.2755 13.7871 1.16594C13.5396 1.05639 13.2744 1 13.0066 1C12.4658 1 11.947 1.22968 11.5646 1.63851C11.1821 2.04734 10.9673 2.60183 10.9673 3.18M10.9673 3.18H0.645142"
@@ -240,6 +240,12 @@ const userLocation = ref({ lat: null, lng: null })
 
 const { $loadGoogleMaps } = useNuxtApp()
 
+// Example user-selected filters
+const selectedHospitalType = ref('') as Record<string, any>
+const selectedSpeciality = ref('') as Record<string, any>
+const selectedBedAvailability = ref('') as Record<string, any>
+const selectedLocation = ref('') as Record<string, any>
+
 
 // Mock function to assign random availability status
 const mockAvailability = () => {
@@ -316,12 +322,6 @@ const displayedHospitals = computed(() => {
   return viewAll.value ? hospitals.value : hospitals.value.slice(0, 6);
 });
 
-// Example user-selected filters
-const selectedHospitalType = ref('') as Record<string, any>
-const selectedSpecialities = ref('') as Record<string, any>
-const selectedBedAvailability = ref('') as Record<string, any>
-const selectedLocation = ref('') as Record<string, any>
-
 // const displayedHospitals = ref([]);
 
 // Function to update the hospital list based on filters
@@ -330,7 +330,7 @@ const selectedLocation = ref('') as Record<string, any>
 //     // If no filters are selected, return all hospitals
 //     const noFiltersSelected =
 //       !selectedHospitalType.value &&
-//       selectedSpecialities.value.length === 0 &&
+//       selectedSpeciality.value.length === 0 &&
 //       !selectedBedAvailability.value &&
 //       !selectedLocation.value;
 
@@ -344,8 +344,8 @@ const selectedLocation = ref('') as Record<string, any>
 
 //     // Filter by specialities
 //     const matchesSpecialities =
-//       selectedSpecialities.value.length === 0 ||
-//       selectedSpecialities.value.some((speciality) => hospital.specialities?.includes(speciality));
+//       selectedSpeciality.value.length === 0 ||
+//       selectedSpeciality.value.some((speciality) => hospital.specialities?.includes(speciality));
 
 //     // Filter by bed availability
 //     const matchesAvailability =
@@ -362,9 +362,9 @@ const selectedLocation = ref('') as Record<string, any>
 
 // Watchers to detect changes in filters
 // watch(
-//   [selectedHospitalType, selectedSpecialities, selectedBedAvailability, selectedLocation, viewAll],
+//   [selectedHospitalType, selectedSpeciality, selectedBedAvailability, selectedLocation, viewAll],
 //   () => {
-//     console.log(selectedHospitalType, selectedSpecialities, selectedBedAvailability, selectedLocation.value)
+//     console.log(selectedHospitalType, selectedSpeciality, selectedBedAvailability, selectedLocation.value)
 //     // updateDisplayedHospitals();
 //   },
 //   { immediate: true }
@@ -372,12 +372,31 @@ const selectedLocation = ref('') as Record<string, any>
 
 // Function to apply filters from user input
 const applyFilters = (filters) => {
-  selectedLocation.value = filters?.locations || '';
-  selectedBedAvailability.value = filters.statuses || '';
-  selectedSpecialities.value = filters.specialities || '';
-  selectedHospitalType.value = filters.types || '';
+  console.log(filters, 'filters here')
+  selectedLocation.value = filters?.location || '';
+  selectedBedAvailability.value = filters.status || '';
+  selectedSpeciality.value = filters.speciality || '';
+  selectedHospitalType.value = filters.hospitalType || '';
   showFilterModal.value = false
 };
+
+// Watchers for each filter
+watch(
+  [selectedLocation, selectedBedAvailability, selectedSpeciality, selectedHospitalType],
+  ([newLocation, newAvailability, newSpecialities, newType]) => {
+    // console.log('Filters changed:', {
+    //   location: newLocation,
+    //   availability: newAvailability,
+    //   specialities: newSpecialities,
+    //   type: newType,
+    // });
+
+    // Call fetchHospitals whenever any filter changes
+    fetchHospitals();
+  },
+  { immediate: false, deep: false }
+);
+
 
 
 // const displayedHospitals = ref([]);
@@ -391,8 +410,8 @@ const applyFilters = (filters) => {
 
 //     // Filter by specialities
 //     const matchesSpecialities =
-//       selectedSpecialities.value.length === 0 ||
-//       selectedSpecialities.value.some((speciality) => hospital.specialities?.includes(speciality));
+//       selectedSpeciality.value.length === 0 ||
+//       selectedSpeciality.value.some((speciality) => hospital.specialities?.includes(speciality));
 
 //     // Filter by bed availability
 //     const matchesAvailability =
@@ -408,7 +427,7 @@ const applyFilters = (filters) => {
 
 // // Watchers to detect changes in filters
 // watch(
-//   [selectedHospitalType, selectedSpecialities, selectedBedAvailability, selectedLocation, viewAll],
+//   [selectedHospitalType, selectedSpeciality, selectedBedAvailability, selectedLocation, viewAll],
 //   () => {
 //     updateDisplayedHospitals();
 //   },
@@ -424,13 +443,13 @@ const applyFilters = (filters) => {
 // }) => {
 //   selectedLocation.value = filters.locations[0] || null;
 //   selectedBedAvailability.value = filters.statuses[0] || null;
-//   selectedSpecialities.value = filters.specialities || [];
+//   selectedSpeciality.value = filters.specialities || [];
 //   selectedHospitalType.value = filters.types[0] || null;
 // };
 
 // // Example user-selected filters (replace with actual data from your app)
 // const selectedHospitalType = ref<string | null>(null); // e.g., 'Teaching Hospital'
-// const selectedSpecialities = ref<string[]>([]); // e.g., ['Cardiology', 'Neurology']
+// const selectedSpeciality = ref<string[]>([]); // e.g., ['Cardiology', 'Neurology']
 // const selectedBedAvailability = ref<string | null>(null); // e.g., 'available'
 // const selectedLocation = ref<string | null>(null); // e.g., 'Ibadan'
 
@@ -441,8 +460,8 @@ const applyFilters = (filters) => {
 
 //     // Filter by specialities
 //     const matchesSpecialities =
-//       selectedSpecialities.value.length === 0 ||
-//       selectedSpecialities.value.some((speciality) => hospital.specialities?.includes(speciality));
+//       selectedSpeciality.value.length === 0 ||
+//       selectedSpeciality.value.some((speciality) => hospital.specialities?.includes(speciality));
 
 //     // Filter by bed availability
 //     const matchesAvailability =
@@ -465,15 +484,15 @@ const applyFilters = (filters) => {
 //   console.log('Applied Filters:', filters);
 //   selectedLocation.value = filters.locations
 //   selectedBedAvailability.value = filters.statuses
-//   selectedSpecialities.value = filters.specialities
+//   selectedSpeciality.value = filters.specialities
 //   selectedHospitalType.value = filters.types
 //   // Handle the filters logic here, such as updating a search query or filtering data
 // };
 
 // Function to open filter modal
-const openFilterModal = () => {
-  showFilterModal.value = true
-}
+// const openFilterModal = () => {
+//   showFilterModal.value = true
+// }
 
 // // Function to close filter modal
 // const closeFilterModal = () => {
@@ -909,21 +928,119 @@ const query = ref('') as any // Single query for name or location
 
 // }
 
+// const fetchHospitals = async () => {
+//   if (!query.value || !selectedLocation.value || !selectedBedAvailability.value || !selectedSpeciality.value || !selectedHospitalType.value) {
+//     showToast({
+//       title: 'Error',
+//       message: 'Please enter a location or hospital name to search.',
+//       toastType: 'error',
+//       duration: 3000,
+//     })
+//     return
+//   }
+
+//   loading.value = true
+//   hospitals.value = []
+
+//   console.log(selectedLocation, 'selected location')
+
+//   try {
+//     console.log('Searching for hospitals with query:', query.value)
+
+//     // Load Google Maps SDK
+//     const google = await $loadGoogleMaps()
+//     const service = new google.maps.places.PlacesService(
+//       document.createElement('div')
+//     )
+
+//     // Use PlacesService's textSearch for both name and location
+//     // service.textSearch(
+//     //   { query: query.value, type: 'hospital' },
+//     //   (results, status) => {
+//     //     if (status === google.maps.PlacesServiceStatus.OK) {
+//     //       hospitals.value = results.map((hospital) => ({
+//     //         ...hospital,
+//     //         name: hospital.name, // Hospital name
+//     //         vicinity: hospital.vicinity || 'No address available', // Hospital address
+//     //         availability: mockAvailability(), // Mock availability status
+//     //         latitude: hospital.geometry.location.lat(), // Extract latitude
+//     //         longitude: hospital.geometry.location.lng(), // Extract longitude
+//     //       }))
+//     //       console.log('Hospitals found:', hospitals.value) // Debug log
+//     //     } else {
+//     //       console.error('No hospitals found.')
+//     //       showToast({
+//     //         title: 'Error',
+//     //         message: 'No hospitals found for your query. Try again.',
+//     //         toastType: 'error',
+//     //         duration: 3000,
+//     //       })
+//     //     }
+//     //     loading.value = false
+//     //   }
+//     // )
+//     service.textSearch(
+//       { query: query.value, type: 'hospital' },
+//       (results, status) => {
+//         if (status === google.maps.places.PlacesServiceStatus.OK) {
+//           hospitals.value = results.map((hospital) => ({
+//             ...hospital,
+//             name: hospital.name,
+//             vicinity: hospital.vicinity || hospital.formatted_address,
+//             availability: mockAvailability(),
+//             pricing: mockPricing(),
+//             specialities: mockSpecialities(),
+//             latitude: hospital.geometry.location.lat(),
+//             longitude: hospital.geometry.location.lng(),
+//           }))
+//           console.log(results, 'resultes here')
+//         } else {
+//           console.error(`Google Places textSearch error: ${status}`)
+//           showToast({
+//             title: 'Error',
+//             message: `Search failed with status: ${status}`,
+//             toastType: 'error',
+//             duration: 3000,
+//           })
+//         }
+//         loading.value = false
+//       }
+//     )
+
+//   } catch (error) {
+//     console.error('Error fetching hospitals:', error)
+//     showToast({
+//       title: 'Error',
+//       message: 'An error occurred while fetching hospitals. Try again later.',
+//       toastType: 'error',
+//       duration: 3000,
+//     })
+//     loading.value = false
+//   }
+// }
+
 const fetchHospitals = async () => {
-  if (!query.value) {
+  if (!query.value && !selectedLocation.value && !selectedBedAvailability.value && !selectedSpeciality.value && !selectedHospitalType.value) {
     showToast({
       title: 'Error',
-      message: 'Please enter a location or hospital name to search.',
+      message: 'Please enter a location, hospital name, or select filters to search.',
       toastType: 'error',
       duration: 3000,
     })
     return
   }
 
+  console.log('sdfhsdfshgjfdgjfdgfdkjsgfkjfdg:', selectedHospitalType.value)
+
   loading.value = true
   hospitals.value = []
 
   try {
+    // Set query to selectedLocation if it exists
+    if (selectedLocation.value) {
+      query.value = selectedLocation.value
+    }
+
     console.log('Searching for hospitals with query:', query.value)
 
     // Load Google Maps SDK
@@ -932,47 +1049,48 @@ const fetchHospitals = async () => {
       document.createElement('div')
     )
 
-    // Use PlacesService's textSearch for both name and location
-    // service.textSearch(
-    //   { query: query.value, type: 'hospital' },
-    //   (results, status) => {
-    //     if (status === google.maps.PlacesServiceStatus.OK) {
-    //       hospitals.value = results.map((hospital) => ({
-    //         ...hospital,
-    //         name: hospital.name, // Hospital name
-    //         vicinity: hospital.vicinity || 'No address available', // Hospital address
-    //         availability: mockAvailability(), // Mock availability status
-    //         latitude: hospital.geometry.location.lat(), // Extract latitude
-    //         longitude: hospital.geometry.location.lng(), // Extract longitude
-    //       }))
-    //       console.log('Hospitals found:', hospitals.value) // Debug log
-    //     } else {
-    //       console.error('No hospitals found.')
-    //       showToast({
-    //         title: 'Error',
-    //         message: 'No hospitals found for your query. Try again.',
-    //         toastType: 'error',
-    //         duration: 3000,
-    //       })
-    //     }
-    //     loading.value = false
-    //   }
-    // )
+    // Use PlacesService's textSearch
     service.textSearch(
-      { query: query.value, type: 'hospital' },
+      { query: query.value || '', type: 'hospital' },
       (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-          hospitals.value = results.map((hospital) => ({
+          // Map and augment results
+          let fetchedHospitals = results.map((hospital) => ({
             ...hospital,
             name: hospital.name,
             vicinity: hospital.vicinity || hospital.formatted_address,
             availability: mockAvailability(),
             pricing: mockPricing(),
             specialities: mockSpecialities(),
+            hospitalType: mockHospitalType(),
             latitude: hospital.geometry.location.lat(),
             longitude: hospital.geometry.location.lng(),
           }))
-          console.log(results, 'resultes here')
+
+          // Apply additional filters
+          if (selectedBedAvailability.value) {
+              fetchedHospitals = fetchedHospitals.filter(
+                (hospital) =>
+                  hospital.availability.toLowerCase() === selectedBedAvailability.value.toLowerCase()
+              )
+            }
+
+
+          if (selectedSpeciality.value) {
+            fetchedHospitals = fetchedHospitals.filter((hospital) =>
+              hospital.specialities.includes(selectedSpeciality.value)
+            )
+          }
+
+          if (selectedHospitalType.value) {
+            console.log(selectedHospitalType.value, 'here ahgain')
+            fetchedHospitals = fetchedHospitals.filter(
+              (hospital) => hospital.hospitalType === selectedHospitalType.value
+            )
+          }
+
+          hospitals.value = fetchedHospitals
+          console.log('Filtered hospitals:', hospitals.value)
         } else {
           console.error(`Google Places textSearch error: ${status}`)
           showToast({
@@ -985,7 +1103,6 @@ const fetchHospitals = async () => {
         loading.value = false
       }
     )
-
   } catch (error) {
     console.error('Error fetching hospitals:', error)
     showToast({
@@ -997,6 +1114,7 @@ const fetchHospitals = async () => {
     loading.value = false
   }
 }
+
 
 const hospitalName = ref('') // New state for hospital name
 
@@ -1095,7 +1213,7 @@ const closeFilterModal = () => {
 // }, { immediate: true })
 
 
-// watch(selectedSpecialities, (value) => {
+// watch(selectedSpeciality, (value) => {
 //   fetchHospitals(null, null, { speciality: value.toLowerCase() })
 // }, { immediate: true })
 
