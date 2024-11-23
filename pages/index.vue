@@ -114,7 +114,7 @@
     </span>
 
     <!-- Text -->
-    <p class="text-gray-800 leading-relaxed">
+    <p class="text-gray-800 leading-relaxed text-justify">
       Click on a hospital color box indicator above to get map directions,
       access the emergency hotlines, and get short illustrative videos during emergencies!
     </p>
@@ -311,6 +311,11 @@
     </div>
 
   <FooterSection />
+
+  <CoreFullScreenLoader
+      text="Authenticating..."
+      logo="/path-to-your-logo.png"
+    />
       
   </main>
 </template>

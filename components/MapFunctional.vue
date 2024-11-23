@@ -1,4 +1,5 @@
 <template>
+<main>
   <div class="container mx-auto">
     <!-- Search Input and Filter Icon -->
     <section class="p-3 lg:p-6 bg-[#FFF9F9CC] max-w-7xl mx-auto">
@@ -8,7 +9,7 @@
             d="M19.485 20.1536L13.223 13.8916C12.723 14.3176 12.148 14.6472 11.498 14.8806C10.848 15.1139 10.1947 15.2306 9.53798 15.2306C7.93665 15.2306 6.58132 14.6762 5.47198 13.5676C4.36265 12.4589 3.80798 11.1039 3.80798 9.50256C3.80798 7.90122 4.36198 6.54556 5.46998 5.43556C6.57798 4.32556 7.93265 3.76989 9.53398 3.76856C11.1353 3.76722 12.4913 4.32189 13.602 5.43256C14.7127 6.54322 15.268 7.89889 15.268 9.49956C15.268 10.1942 15.145 10.8666 14.899 11.5166C14.653 12.1666 14.3296 12.7226 13.929 13.1846L20.191 19.4456L19.485 20.1536ZM9.53898 14.2296C10.8656 14.2296 11.9857 13.7729 12.899 12.8596C13.8123 11.9462 14.269 10.8259 14.269 9.49856C14.269 8.17122 13.8123 7.05122 12.899 6.13856C11.9857 5.22589 10.8656 4.76922 9.53898 4.76856C8.21232 4.76789 7.09198 5.22456 6.17798 6.13856C5.26398 7.05256 4.80732 8.17256 4.80798 9.49856C4.80865 10.8246 5.26532 11.9446 6.17798 12.8586C7.09065 13.7726 8.21065 14.2292 9.53798 14.2286"
             fill="black" fill-opacity="0.8" />
         </svg>
-        <input type="text" v-model="query" placeholder="Search by name or location..."
+        <input ref="inputRef" type="text" @keyup.enter="handleEnter" v-model="query" placeholder="Search by name or location..."
           class="flex-grow outline-none text-gray-500 py-5 bg-white" />
         <button @click="fetchHospitals"
           class="bg-black text-white rounded-lg p-2 ml-4 flex justify-center items-center">
@@ -28,9 +29,9 @@
       </div>
     </section>
 
-    <div v-if="loading" class="text-center text-gray-600">
+    <div v-if="loading" class="text-center text-gray-600 py-10">
       <div class="spinner"></div>
-      Searching...
+      please wait while we search for facilities closest to you...
     </div>
 
     <div v-else-if="!location && hospitals?.length === 0"
@@ -101,9 +102,12 @@
     </div>
 
     <!-- View All Results Link -->
-    <button v-if="!viewAll" @click="viewAll = true" class="mt-4 pl-6 text-red-600">
+    <!-- <button v-if="!viewAll" @click="viewAll = true" class="mt-4 pl-6 text-red-600">
       View all results
-    </button>
+    </button> -->
+    <NuxtLink to="/view-all"  class="mt-4 pl-6 text-red-600">
+      View all results
+    </NuxtLink>
 
     <!-- Filter Modal -->
     <!-- <FilterModal v-if="showFilterModal" @filters-applied="applyFilters" @close="closeFilterModal" /> -->
@@ -125,108 +129,27 @@
         <MapViews :hospital="selectedHospital" :userLocation="userLocation" />
       </div>
     </div>
-
-    <!-- <transition name="fade">
-      <div v-if="showFilterModal" class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-        <div class="bg-white w-11/12 max-w-lg p-6 rounded-lg shadow-xl relative">
-          <section class="flex justify-between items-center pb-6">
-            <div>
-              <button class="absolute top-4 left-4 text-gray-500" @click="closeModal">
-                &times;
-              </button>
-            </div>
-
-            <div>
-              <h2 class="text-red-600 text-sm font-bold">Filter by</h2>
-            </div>
-            <div>
-              <button class="text-gray-400" @click="resetFilters">Reset</button>
-            </div>
-          </section>
-
-
-          <div class="space-y-8">
-            <div>
-              <h3 class="text-red-600 font-bold">LOCATION</h3>
-              <hr class="border-gray-200 my-2" />
-              <div class="flex flex-wrap gap-3">
-                <button v-for="(location, index) in locations" :key="index"
-                  :class="['border px-3 py-1.5 rounded-full font-thin flex items-center gap-2', selectedFilters.location.includes(location) ? 'text-[#979797]' : 'text-[#979797]']"
-                  @click="toggleLocation(location)">
-                  <svg v-if="selectedFilters.location.includes(location)" width="20" height="21" viewBox="0 0 20 21"
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect y="0.535156" width="20" height="20" rx="10" fill="#CC1100" />
-                    <path
-                      d="M3.77531 11.3429C3.53124 11.0988 3.13551 11.0988 2.89143 11.3429C2.64736 11.587 2.64736 11.9827 2.89143 12.2267L6.64143 15.9767C6.88551 16.2208 7.28124 16.2208 7.52531 15.9767L16.692 6.8101C16.936 6.56603 16.936 6.1703 16.692 5.92622C16.4479 5.68215 16.0522 5.68215 15.8081 5.92622L7.08337 14.6509L3.77531 11.3429Z"
-                      fill="white" />
-                  </svg>
-
-                  {{ location }}
-                </button>
-              </div>
-            </div>
-            <div>
-              <h3 class="text-red-600 font-bold">BED AVAILABILITY</h3>
-              <hr class="border-gray-200 my-2" />
-              <div class="flex flex-wrap gap-3">
-                <button v-for="(availability, index) in bedAvailabilityOptions" :key="index"
-                  :class="['border px-3 py-1.5 rounded-full font-thin flex items-center gap-2', selectedFilters.bedAvailability.includes(availability) ? 'text-[#979797]' : 'text-[#979797]']"
-                  @click="toggleBedAvailability(availability)">
-                  <svg v-if="selectedFilters.bedAvailability.includes(availability)" width="20" height="21"
-                    viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect y="0.535156" width="20" height="20" rx="10" fill="#CC1100" />
-                    <path
-                      d="M3.77531 11.3429C3.53124 11.0988 3.13551 11.0988 2.89143 11.3429C2.64736 11.587 2.64736 11.9827 2.89143 12.2267L6.64143 15.9767C6.88551 16.2208 7.28124 16.2208 7.52531 15.9767L16.692 6.8101C16.936 6.56603 16.936 6.1703 16.692 5.92622C16.4479 5.68215 16.0522 5.68215 15.8081 5.92622L7.08337 14.6509L3.77531 11.3429Z"
-                      fill="white" />
-                  </svg>
-                
-                  {{ availability }}
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <h3 class="text-red-600 font-bold">HOSPITAL TYPE</h3>
-              <hr class="border-gray-300 my-2" />
-              <div class="flex flex-wrap gap-3">
-                <button v-for="(type, index) in hospitalTypes" :key="index"
-                  :class="['border px-3 py-1.5 rounded-full font-thin flex items-center gap-2', selectedFilters.hospitalType.includes(type) ? 'text-[#979797]' : 'text-[#979797]']"
-                  @click="toggleHospitalType(type)">
-                  <svg v-if="selectedFilters.hospitalType.includes(type)" width="20" height="21" viewBox="0 0 20 21"
-                    fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect y="0.535156" width="20" height="20" rx="10" fill="#CC1100" />
-                    <path
-                      d="M3.77531 11.3429C3.53124 11.0988 3.13551 11.0988 2.89143 11.3429C2.64736 11.587 2.64736 11.9827 2.89143 12.2267L6.64143 15.9767C6.88551 16.2208 7.28124 16.2208 7.52531 15.9767L16.692 6.8101C16.936 6.56603 16.936 6.1703 16.692 5.92622C16.4479 5.68215 16.0522 5.68215 15.8081 5.92622L7.08337 14.6509L3.77531 11.3429Z"
-                      fill="white" />
-                  </svg>
-                  {{ type }}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-6">
-            <button @click="applyFilters" class="w-full bg-red-600 text-white py-3 mt-6 rounded-lg font-bold">
-              APPLY FILTER TO SEARCH
-            </button>
-          </div>
-        </div>
-      </div>
-    </transition> -->
-
-    <!-- <CoreModal :isOpen="showMap">
-        <MapViews :hospital="selectedHospital" :userLocation="userLocation" @close="showMap = false" />
-      </CoreModal> -->
-    <!-- Map View -->
-    <!-- <MapViews v-if="showMap" :hospital="selectedHospital" :userLocation="userLocation" @close="showMap = false" /> -->
   </div>
 
+  <div v-if="forceLocationModal" class="location-modal">
+    <div class="modal-content">
+      <h2>Enable Location Access</h2>
+      <p>
+        This application requires location access to function. Please enable
+        location services in your browser settings.
+      </p>
+      <button @click="retryLocationAccess">Retry</button>
+    </div>
+  </div>
+</main>
 </template>
 
 <script lang="ts" setup>
+import { Loader } from '@googlemaps/js-api-loader';
 import { useCustomToast } from '@/composables/core/useCustomToast'
 const { showToast } = useCustomToast();
 import { ref, onMounted, computed } from 'vue'
+const router = useRouter()
 import { useNuxtApp } from '#app'
 
 const location = ref('')
@@ -237,8 +160,11 @@ const showFilterModal = ref(false)
 const showMap = ref(false)
 const selectedHospital = ref(null)
 const userLocation = ref({ lat: null, lng: null })
+const query = ref('') as any // Single query for name or location
+const inputRef = ref<HTMLInputElement | null>(null);
 
 const { $loadGoogleMaps } = useNuxtApp()
+const forceLocationModal = ref(false); 
 
 // Example user-selected filters
 const selectedHospitalType = ref('') as Record<string, any>
@@ -398,217 +324,7 @@ watch(
 );
 
 
-
-// const displayedHospitals = ref([]);
-
-// // Function to update the hospital list based on filters
-// const updateDisplayedHospitals = () => {
-//   displayedHospitals.value = hospitals.value.filter((hospital) => {
-//     // Filter by hospital type
-//     const matchesType =
-//       !selectedHospitalType.value || hospital.types.includes(selectedHospitalType.value);
-
-//     // Filter by specialities
-//     const matchesSpecialities =
-//       selectedSpeciality.value.length === 0 ||
-//       selectedSpeciality.value.some((speciality) => hospital.specialities?.includes(speciality));
-
-//     // Filter by bed availability
-//     const matchesAvailability =
-//       !selectedBedAvailability.value || hospital.availability === selectedBedAvailability.value;
-
-//     // Filter by location
-//     const matchesLocation =
-//       !selectedLocation.value || hospital.vicinity.toLowerCase().includes(selectedLocation.value.toLowerCase());
-
-//     return matchesType && matchesSpecialities && matchesAvailability && matchesLocation;
-//   }).slice(0, viewAll.value ? undefined : 6); // Slice for pagination
-// };
-
-// // Watchers to detect changes in filters
-// watch(
-//   [selectedHospitalType, selectedSpeciality, selectedBedAvailability, selectedLocation, viewAll],
-//   () => {
-//     updateDisplayedHospitals();
-//   },
-//   { immediate: true }
-// );
-
-// // Function to apply filters from user input
-// const applyFilters = (filters: {
-//   locations: string[];
-//   statuses: string[];
-//   types: string[];
-//   specialities: string[];
-// }) => {
-//   selectedLocation.value = filters.locations[0] || null;
-//   selectedBedAvailability.value = filters.statuses[0] || null;
-//   selectedSpeciality.value = filters.specialities || [];
-//   selectedHospitalType.value = filters.types[0] || null;
-// };
-
-// // Example user-selected filters (replace with actual data from your app)
-// const selectedHospitalType = ref<string | null>(null); // e.g., 'Teaching Hospital'
-// const selectedSpeciality = ref<string[]>([]); // e.g., ['Cardiology', 'Neurology']
-// const selectedBedAvailability = ref<string | null>(null); // e.g., 'available'
-// const selectedLocation = ref<string | null>(null); // e.g., 'Ibadan'
-
-// const displayedHospitals = computed(() => {
-//   return hospitals.value.filter((hospital) => {
-//     // Filter by hospital type
-//     const matchesType = !selectedHospitalType.value || hospital.types.includes(selectedHospitalType.value);
-
-//     // Filter by specialities
-//     const matchesSpecialities =
-//       selectedSpeciality.value.length === 0 ||
-//       selectedSpeciality.value.some((speciality) => hospital.specialities?.includes(speciality));
-
-//     // Filter by bed availability
-//     const matchesAvailability =
-//       !selectedBedAvailability.value || hospital.availability === selectedBedAvailability.value;
-
-//     // Filter by location
-//     const matchesLocation =
-//       !selectedLocation.value || hospital.vicinity.toLowerCase().includes(selectedLocation.value.toLowerCase());
-
-//     return matchesType && matchesSpecialities && matchesAvailability && matchesLocation;
-//   }).slice(0, viewAll.value ? undefined : 6); // Slice for pagination
-// });
-
-// const applyFilters = (filters: {
-//   locations: string[];
-//   statuses: string[];
-//   types: string[];
-//   specialities: string[];
-// }) => {
-//   console.log('Applied Filters:', filters);
-//   selectedLocation.value = filters.locations
-//   selectedBedAvailability.value = filters.statuses
-//   selectedSpeciality.value = filters.specialities
-//   selectedHospitalType.value = filters.types
-//   // Handle the filters logic here, such as updating a search query or filtering data
-// };
-
-// Function to open filter modal
-// const openFilterModal = () => {
-//   showFilterModal.value = true
-// }
-
-// // Function to close filter modal
-// const closeFilterModal = () => {
-//   showFilterModal.value = false
-// }
-
-// Function to fetch closest hospital facilities ORIGINAL
-// const fetchHospitals = async () => {
-//   if (!location.value) return
-
-//   loading.value = true
-//   hospitals.value = []
-
-//   try {
-//     console.log("Fetching hospitals for location:", location.value) // Debug log
-
-//     // Load Google Maps SDK
-//     const google = await $loadGoogleMaps()
-
-//     // Use PlacesService for Nearby Search
-//     const service = new google.maps.places.PlacesService(document.createElement('div'))
-//     const geocoder = new google.maps.Geocoder()
-
-//     // Retrieve latitude and longitude from input location
-//     geocoder.geocode({ address: location.value }, (results, status) => {
-//       if (status === google.maps.GeocoderStatus.OK && results[0].geometry.location) {
-//         const locationLatLng = results[0].geometry.location
-
-//         // Search for the closest hospitals, ordered by distance
-//         service.nearbySearch(
-//           {
-//             location: locationLatLng,
-//             rankBy: google.maps.places.RankBy.DISTANCE,
-//             type: 'hospital',
-//           },
-//           (results, status) => {
-//             if (status === google.maps.places.PlacesServiceStatus.OK) {
-//               hospitals.value = results.map((hospital) => ({
-//                 ...hospital,
-//                 availability: mockAvailability(), // Mocking availability status
-//                 latitude: hospital.geometry.location.lat(), // Extract latitude
-//                 longitude: hospital.geometry.location.lng() // Extract longitude
-//               }))
-//               console.log("Hospitals found:", hospitals.value) // Debug log
-//             } else {
-//               console.error('No hospitals found nearby.')
-//             }
-//             loading.value = false
-//           }
-//         )
-//       } else {
-//         console.error('Could not find location.')
-//         loading.value = false
-//       }
-//     })
-//   } catch (error) {
-//     console.error('Error loading Google Maps:', error)
-//     loading.value = false
-//   }
-// }
-
-
-
-
-// Get the user's current geolocation and populate the address ORIGINAL
 // const getUserLocation = () => {
-//   if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(
-//       async (position) => {
-//         // Step 1: Retrieve coordinates
-//         const lat = position.coords.latitude
-//         const lng = position.coords.longitude
-//         userLocation.value = { lat, lng }
-//         console.log("User coordinates:", userLocation.value) // Debug log
-//         localStorage.setItem('userLocation', JSON.stringify(userLocation.value))
-
-//         // Step 2: Load Google Maps SDK
-//         const google = await $loadGoogleMaps()
-//         const geocoder = new google.maps.Geocoder()
-
-//         // Step 3: Reverse geocode to get the address
-//         geocoder.geocode({ location: userLocation.value }, (results, status) => {
-//           if (status === google.maps.GeocoderStatus.OK && results[0]) {
-//             // Step 4: Set location value with the address
-//             location.value = results[0].formatted_address
-//             console.log("Reverse geocoded address:", location.value) // Debug log
-
-//             // Step 5: Fetch hospitals after setting location
-//             fetchHospitals()
-//           } else {
-//             console.error('Could not retrieve address.')
-//             loading.value = false
-//           }
-//         })
-//       },
-//       (error) => {
-//         showToast({
-//         title: "Error",
-//         message: "Could not get current location. Please enter your location manually.",
-//         toastType: "error",
-//         duration: 3000
-//       });
-//         loading.value = false
-//       }
-//     )
-//   } else {
-//     showToast({
-//         title: "Error",
-//         message: "Geolocation is not supported by this browser",
-//         toastType: "error",
-//         duration: 3000
-//       });
-//   }
-// }
-
-//   const getUserLocation = () => {
 //   if (navigator.geolocation) {
 //     navigator.geolocation.getCurrentPosition(
 //       async (position) => {
@@ -619,9 +335,80 @@ watch(
 //         console.log('User coordinates:', userLocation.value)
 
 //         localStorage.setItem('userLocation', JSON.stringify(userLocation.value))
+        
 
-//         // Step 2: Fetch nearby hospitals
-//         fetchHospitalsByLocation(lat, lng)
+//         // Step 2: Reverse geocode to get the address
+//         try {
+//           const google = await $loadGoogleMaps()
+//           const geocoder = new google.maps.Geocoder()
+
+//           geocoder.geocode(
+//             { location: { lat, lng } },
+//             (results, status) => {
+//               if (
+//                 status === google.maps.GeocoderStatus.OK &&
+//                 results[0]?.formatted_address
+//               ) {
+//                 // Step 3: Prefill input field with the address
+//                 query.value = results[0].formatted_address
+//                 console.log('User location (address):', query.value)
+
+//                 // Step 4: Fetch hospitals near the user's location
+//                 fetchHospitalsByLocation(lat, lng)
+//               } else {
+//                 console.error('Reverse geocoding failed:', status)
+//                 showToast({
+//                   title: 'Error',
+//                   message: 'Could not determine your location.',
+//                   toastType: 'error',
+//                   duration: 3000,
+//                 })
+//               }
+//             }
+//           )
+//         } catch (error) {
+//           console.error('Error during reverse geocoding:', error)
+//         }
+// //         try {
+// //   const google = await $loadGoogleMaps();
+// //   const geocoder = new google.maps.Geocoder();
+
+// //   geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+// //     if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
+// //       // Log all results for debugging
+// //       console.log('Geocoding results:', results);
+
+// //       // Prefer the most specific result
+// //       const formattedAddress = results[0].formatted_address || 'Unknown location';
+// //       query.value = formattedAddress;
+
+// //       console.log('User location (address):', query.value);
+
+// //       // Fetch hospitals near the user's location
+// //       fetchHospitalsByLocation(lat, lng);
+// //     } else {
+// //       // Handle geocoding errors
+// //       console.error('Reverse geocoding failed:', status);
+// //       showToast({
+// //         title: 'Error',
+// //         message: 'Could not determine your location. Please refine your location manually.',
+// //         toastType: 'error',
+// //         duration: 3000,
+// //       });
+
+// //       query.value = 'Enter your location manually';
+// //     }
+// //   });
+// // } catch (error) {
+// //   console.error('Error during reverse geocoding:', error);
+// //   showToast({
+// //     title: 'Error',
+// //     message: 'An unexpected error occurred while determining your location.',
+// //     toastType: 'error',
+// //     duration: 3000,
+// //   });
+// // }
+
 //       },
 //       (error) => {
 //         console.error('Error retrieving geolocation:', error)
@@ -646,113 +433,88 @@ watch(
 //   }
 // }
 
+
 const getUserLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         // Step 1: Retrieve coordinates
-        const lat = position.coords.latitude
-        const lng = position.coords.longitude
-        userLocation.value = { lat, lng }
-        console.log('User coordinates:', userLocation.value)
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        userLocation.value = { lat, lng };
+        console.log("User coordinates:", userLocation.value);
 
-        localStorage.setItem('userLocation', JSON.stringify(userLocation.value))
+        localStorage.setItem("userLocation", JSON.stringify(userLocation.value));
 
         // Step 2: Reverse geocode to get the address
         try {
-          const google = await $loadGoogleMaps()
-          const geocoder = new google.maps.Geocoder()
+          const google = await $loadGoogleMaps();
+          const geocoder = new google.maps.Geocoder();
 
-          geocoder.geocode(
-            { location: { lat, lng } },
-            (results, status) => {
-              if (
-                status === google.maps.GeocoderStatus.OK &&
-                results[0]?.formatted_address
-              ) {
-                // Step 3: Prefill input field with the address
-                query.value = results[0].formatted_address
-                console.log('User location (address):', query.value)
+          geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+            if (
+              status === google.maps.GeocoderStatus.OK &&
+              results[0]?.formatted_address
+            ) {
+              // Step 3: Prefill input field with the address
+              query.value = results[0].formatted_address;
+              console.log("User location (address):", query.value);
 
-                // Step 4: Fetch hospitals near the user's location
-                fetchHospitalsByLocation(lat, lng)
-              } else {
-                console.error('Reverse geocoding failed:', status)
-                showToast({
-                  title: 'Error',
-                  message: 'Could not determine your location.',
-                  toastType: 'error',
-                  duration: 3000,
-                })
-              }
+              // Step 4: Fetch hospitals near the user's location
+              fetchHospitalsByLocation(lat, lng);
+            } else {
+              console.error("Reverse geocoding failed:", status);
+              showToast({
+                title: "Error",
+                message: "Could not determine your location.",
+                toastType: "error",
+                duration: 3000,
+              });
             }
-          )
+          });
         } catch (error) {
-          console.error('Error during reverse geocoding:', error)
+          console.error("Error during reverse geocoding:", error);
         }
-//         try {
-//   const google = await $loadGoogleMaps();
-//   const geocoder = new google.maps.Geocoder();
 
-//   geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-//     if (status === google.maps.GeocoderStatus.OK && results.length > 0) {
-//       // Log all results for debugging
-//       console.log('Geocoding results:', results);
-
-//       // Prefer the most specific result
-//       const formattedAddress = results[0].formatted_address || 'Unknown location';
-//       query.value = formattedAddress;
-
-//       console.log('User location (address):', query.value);
-
-//       // Fetch hospitals near the user's location
-//       fetchHospitalsByLocation(lat, lng);
-//     } else {
-//       // Handle geocoding errors
-//       console.error('Reverse geocoding failed:', status);
-//       showToast({
-//         title: 'Error',
-//         message: 'Could not determine your location. Please refine your location manually.',
-//         toastType: 'error',
-//         duration: 3000,
-//       });
-
-//       query.value = 'Enter your location manually';
-//     }
-//   });
-// } catch (error) {
-//   console.error('Error during reverse geocoding:', error);
-//   showToast({
-//     title: 'Error',
-//     message: 'An unexpected error occurred while determining your location.',
-//     toastType: 'error',
-//     duration: 3000,
-//   });
-// }
-
+        // Hide the modal once the location is obtained
+        forceLocationModal.value = false;
       },
       (error) => {
-        console.error('Error retrieving geolocation:', error)
+        console.error("Error retrieving geolocation:", error);
+
+        // Show a modal and retry prompt
+        forceLocationModal.value = true;
+
         showToast({
-          title: 'Error',
-          message: 'Could not get your current location. Please enter it manually.',
-          toastType: 'error',
-          duration: 3000,
-        })
-        loading.value = false
+          title: "Error",
+          message:
+            "Location access is required for this app. Please enable location services and try again.",
+          toastType: "error",
+          duration: 5000,
+        });
+
+        loading.value = false;
       }
-    )
+    );
   } else {
-    console.error('Geolocation is not supported by this browser.')
+    console.error("Geolocation is not supported by this browser.");
     showToast({
-      title: 'Error',
-      message: 'Geolocation is not supported by your browser.',
-      toastType: 'error',
+      title: "Error",
+      message: "Geolocation is not supported by your browser.",
+      toastType: "error",
       duration: 3000,
-    })
-    loading.value = false
+    });
+
+    forceLocationModal.value = true; // Force modal for unsupported browser
+    loading.value = false;
   }
-}
+};
+
+// Retry mechanism
+const retryLocationAccess = () => {
+  getUserLocation(); // Retry getting the location
+};
+
 
 
 const fetchHospitalsByLocation = async (lat, lng) => {
@@ -832,12 +594,6 @@ const selectHospital = (hospital) => {
   })
 }
 
-// Fetch hospitals based on user’s current location on mount
-onMounted(() => {
-  loading.value = true
-  getUserLocation()
-})
-
 
 // Selected filters
 const selectedFilters = ref({
@@ -867,7 +623,6 @@ const resetFilters = () => {
   }
 }
 
-const query = ref('') as any // Single query for name or location
 
 //ORIGINAL
 // const fetchHospitals = async () => {
@@ -1227,7 +982,46 @@ const closeFilterModal = () => {
 //   fetchHospitals(null, null, { availability: value.toLowerCase() })
 // }, { immediate: true });
 
-const router = useRouter()
+
+// Fetch hospitals based on user’s current location on mount
+onMounted(() => {
+  forceLocationModal.value = true;
+  loading.value = true
+  getUserLocation()
+
+  if (inputRef.value) {
+    initializeAutocomplete();
+  }
+})
+
+const handleEnter = () => {
+  fetchHospitals()
+}
+
+const initializeAutocomplete = () => {
+  const loader = new Loader({
+    apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    version: 'weekly',
+    libraries: ['places'],
+  });
+
+  loader.load().then(() => {
+    const autocomplete = new google.maps.places.Autocomplete(inputRef.value!, {
+      types: ['geocode'],
+      componentRestrictions: { country: 'NG' },
+    });
+
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (place.geometry) {
+        userLocation.value.lat = place.geometry.location.lat()
+        userLocation.value.lng = place.geometry.location.lng()
+        query.value = place.formatted_address || place.name || ''
+        fetchHospitals()
+      }
+    });
+  });
+};
 
 </script>
 
@@ -1298,4 +1092,5 @@ const router = useRouter()
   min-width: 16rem;
   /* Ensures consistent width in the scroll container */
 }
+
 </style>
