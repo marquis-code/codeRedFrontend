@@ -8,7 +8,7 @@ const inputRef = ref<HTMLInputElement | null>(null);
 
 const initializeAutocomplete = () => {
   const loader = new Loader({
-    apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    apiKey: 'AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg',
     version: 'weekly',
     libraries: ['places'],
   });
