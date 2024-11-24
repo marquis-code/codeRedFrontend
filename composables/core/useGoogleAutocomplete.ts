@@ -4,7 +4,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 
 export function useGoogleAutocomplete(payload: { address: string; latitude: number; longitude: number }) {
   const autocomplete = ref<google.maps.places.Autocomplete | null>(null);
-  const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const googleMapsApiKey = 'AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg'
 
   const initializeAutocomplete = (inputElement: HTMLInputElement) => {
     const loader = new Loader({

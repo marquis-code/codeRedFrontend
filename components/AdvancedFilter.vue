@@ -299,7 +299,7 @@
 
 
   const getCurrentLocation = async () => {
-    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+    const apiKey = 'AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg'
     loading.value = true
     error.value = ''
   

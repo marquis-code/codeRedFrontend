@@ -1,7 +1,7 @@
 import { Loader } from "@googlemaps/js-api-loader";
 
 export function useGoogleMaps() {
-  const apiKey = process.env.VITE_GOOGLE_MAPS_API_KEY_UPDATED;
+  const apiKey = 'AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg'
   const loader = new Loader({
     apiKey,
     libraries: ["places"],
