@@ -28,6 +28,8 @@
   
   <script lang="ts" setup>
   import { ref, onMounted } from 'vue';
+  import { useCustomToast } from '@/composables/core/useCustomToast'
+  const { showToast } = useCustomToast();
   
   // State to control modal visibility
   const showModal = ref(false);
@@ -37,10 +39,22 @@
     navigator.geolocation.getCurrentPosition(
       (position) => {
         console.log("Location access granted:", position);
+        showToast({
+          title: "Success",
+          message: `"Location access granted:", ${position}`,
+          toastType: "success",
+          duration: 3000
+        });
         showModal.value = false; // Close modal if location is accessible
       },
       (error) => {
         console.error("Location access denied or unavailable:", error);
+        // showToast({
+        //   title: "Success",
+        //   message: "Please enable location services in your device settings.",
+        //   toastType: "success",
+        //   duration: 3000
+        // });
         alert("Please enable location services in your device settings.");
       }
     );
