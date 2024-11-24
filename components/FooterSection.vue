@@ -66,7 +66,7 @@
             </div>
           </div>
           <div class="mt-16 pt-8 sm:mt-20 lg:mt-24">
-            <p class="text-xs leading-5 text-gray-400">
+            <div class="text-xs leading-5 text-gray-400">
                 <ul role="list" class="flex items-center gap-x-3 lg:gap-x-7">
                     <li>
                       <a  href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Privacy Policy</a>
@@ -81,7 +81,7 @@
                       <a  href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Site Map</a>
                     </li>
                   </ul>
-            </p>
+            </div>
           </div>
         </div>
       </footer>

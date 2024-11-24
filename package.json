@@ -32,7 +32,6 @@
     "apexcharts": "^3.49.0",
     "axios": "^1.6.8",
     "jwt-decode": "^4.0.0",
-    "leaflet": "^1.9.4",
     "moment": "^2.30.1",
     "pinia": "^2.1.7",
     "postcss-custom-properties": "^13.3.6",
@@ -41,7 +40,6 @@
     "uuid": "^10.0.0",
     "vue3-apexcharts": "^1.5.3",
     "vue3-datepicker": "^0.4.0",
-    "vue3-toastify": "^0.2.1",
     "yarn": "^1.22.22"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"

@@ -1,6 +1,7 @@
 export default {
   ssr: false,
   target: "static",
+
   app: {
     head: {
       title: "CodeRed | Home",
@@ -13,43 +14,50 @@ export default {
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
     },
   },
-//   modules: ["@nuxtjs/tailwindcss", ['@nuxtjs/google-fonts', {
-//     families: {
-//       Roboto: true,
-//       Inter: [400, 700],
-//       'Josefin+Sans': true,
-//       Lato: [100, 300],
-//       Raleway: {
-//         wght: [100, 400],
-//         ital: [100]
-//       },
-//       Inter: '200..700',
-//       'Crimson Pro': {
-//         wght: '200..900',
-//         ital: '200..700',
-//       }
-//     }
-// }],],
-modules: ["@nuxtjs/tailwindcss", '@nuxtjs/google-fonts'],
-googleFonts: {
-  families: {
-    Gorditas: true, // Loads Gorditas font
+
+  //   modules: ["@nuxtjs/tailwindcss", ['@nuxtjs/google-fonts', {
+  //     families: {
+  //       Roboto: true,
+  //       Inter: [400, 700],
+  //       'Josefin+Sans': true,
+  //       Lato: [100, 300],
+  //       Raleway: {
+  //         wght: [100, 400],
+  //         ital: [100]
+  //       },
+  //       Inter: '200..700',
+  //       'Crimson Pro': {
+  //         wght: '200..900',
+  //         ital: '200..700',
+  //       }
+  //     }
+  // }],],
+  modules: ["@nuxtjs/tailwindcss", '@nuxtjs/google-fonts'],
+
+  googleFonts: {
+    families: {
+      Gorditas: true, // Loads Gorditas font
+    },
+    display: 'swap', // Adds display swap for faster loading
   },
-  display: 'swap', // Adds display swap for faster loading
-},
+
   plugins: ["~/plugins/aos.client.ts"],
-  css: ["/assets/css/main.css", 'leaflet/dist/leaflet.css', '@/assets/css/custom.css'],
+  css: ["/assets/css/main.css", '@/assets/css/custom.css'],
+
   tailwindcss: {
     cssPath: "@/assets/css/main.css",
   },
-  axios: {
-    // Axios options here
-    timeout: 10000, // Example: set timeout to 10 seconds
-  },
+
   // buildModules: [
   //   '@nuxtjs/moment'
   // ]
   // alias: {
   // 	'@': '/'
   // },
+  axios: {
+    // Axios options here
+    timeout: 10000, // Example: set timeout to 10 seconds
+  },
+
+  compatibilityDate: "2024-11-23",
 };
