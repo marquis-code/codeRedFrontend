@@ -136,11 +136,11 @@
           <p class="text-gray-700 mb-6 text-lg font-light lg:max-w-xl font-light leading-relaxed">
             Our mission is to revolutionize emergency healthcare in Nigeria with real-time hospital bed updates, bridging the gap between patients and care facilities.
           </p>
-          <button data-aos="flip-left"
+          <NuxtLink to="/about-us" data-aos="flip-left"
             class="text-[#CC1100] border-[#CC1100] border text-sm lg:text-base font-bold py-3.5 px-4"
           >
             About CODE-RED
-          </button>
+          </NuxtLink>
         </div>
       </div>
     </div>

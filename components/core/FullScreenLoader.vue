@@ -35,31 +35,68 @@
   const showModal = ref(false);
   
   // Function to request location access
+  // const requestLocationAccess = () => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (position) => {
+  //       console.log("Location access granted:", position);
+  //       showToast({
+  //         title: "Success",
+  //         message: `"Location access granted:", ${position}`,
+  //         toastType: "success",
+  //         duration: 3000
+  //       });
+  //       showModal.value = false; // Close modal if location is accessible
+  //     },
+  //     (error) => {
+  //       console.error("Location access denied or unavailable:", error);
+  //       showToast({
+  //         title: "Success",
+  //         message: "Please enable location services in your device settings.",
+  //         toastType: "success",
+  //         duration: 3000
+  //       });
+  //       alert("Please enable location services in your device settings.");
+  //     }
+  //   );
+  // };
+
   const requestLocationAccess = () => {
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        console.log("Location access granted:", position);
-        showToast({
-          title: "Success",
-          message: `"Location access granted:", ${position}`,
-          toastType: "success",
-          duration: 3000
-        });
-        showModal.value = false; // Close modal if location is accessible
-      },
-      (error) => {
-        console.error("Location access denied or unavailable:", error);
-        // showToast({
-        //   title: "Success",
-        //   message: "Please enable location services in your device settings.",
-        //   toastType: "success",
-        //   duration: 3000
-        // });
-        alert("Please enable location services in your device settings.");
-      }
+        (position) => {
+          console.log("Location access granted:", position);
+
+          // Show success toast
+          showToast({
+            title: "Success",
+            message: "Location access granted! Your changes will be applied.",
+            toastType: "success",
+            duration: 3000,
+          });
+
+          showModal.value = false; // Close the modal
+
+          // Refresh the page after a short delay
+          setTimeout(() => {
+            window.location.reload(); // Refresh to apply changes
+          }, 3000); // Allow the toast to display fully before refreshing
+        },
+        (error) => {
+          console.error("Location access denied or unavailable:", error);
+
+          // Show error toast
+          showToast({
+            title: "Error",
+            message: "Please enable location services in your device settings.",
+            toastType: "error",
+            duration: 3000,
+          });
+
+          // Optionally, you could close the modal or take additional actions here
+          showModal.value = false;
+        }
     );
   };
-  
+
   // Check if location is enabled when the component is mounted
   onMounted(() => {
     navigator.geolocation.getCurrentPosition(

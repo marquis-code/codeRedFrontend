@@ -4,7 +4,7 @@
       v-if="showDirections || isDesktop"
       class="w-full lg:w-1/2 lg:h-full order-1 lg:order-2 flex-1"
     >
-      <MapViews :hospital="selectedHospitalData" :userLocation="userLocation" />
+      <MapViews @close="handleDirections" :hospital="selectedHospitalData" :userLocation="userLocation" />
     </div>
 
     <div

@@ -5,7 +5,7 @@
           <div class="xl:grid xl:grid-cols-3 xl:gap-8">
             <div class="space-y-8">
               <img data-aos="fade-up" class="h-7" src="@/assets/img/logo-white.png" alt="Company name">
-              <p data-aos="fade-up" class="text-sm leading-6 text-gray-300">High level experience in web design and development knowledge, producing quality work.
+              <p data-aos="fade-up" class="text-sm leading-6 text-gray-300">Saving Lives while saving time.
             </p>
               <div class="flex space-x-6 border-t">
                 <p data-aos="fade-up" class="text-gray-500 hover:text-gray-400 pt-10">© 2024 All Rights Reserved</p>
@@ -17,7 +17,7 @@
                   <h3 data-aos="fade-up" class="text-sm font-semibold leading-6 text-white">Follow us</h3>
                   <ul role="list" class="mt-6 space-y-4">
                     <li data-aos="fade-up">
-                      <a href="#" class="text-sm leading-6 text-gray-300 hover:text-white flex items-center gap-x-3">
+                      <a href="https://www.linkedin.com/company/code-red-nigeria" class="text-sm leading-6 text-gray-300 hover:text-white flex items-center gap-x-3">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="12" cy="12" r="12" fill="white"/>
                             <path d="M16.7273 4H14.3471C13.295 4 12.286 4.42143 11.5421 5.17157C10.7981 5.92172 10.3802 6.93913 10.3802 8V10.4H8V13.6H10.3802V20H13.5537V13.6H15.9339L16.7273 10.4H13.5537V8C13.5537 7.78783 13.6373 7.58434 13.7861 7.43431C13.9349 7.28429 14.1367 7.2 14.3471 7.2H16.7273V4Z" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
@@ -34,12 +34,12 @@
                                                                                                 
                       </a>
                     </li>
-                    <li data-aos="fade-up">
-                      <a href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Email us</a>
-                    </li>
-                    <li data-aos="fade-up">
-                      <a href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Code-red@gmail.com</a>
-                    </li>
+<!--                    <li data-aos="fade-up">-->
+<!--                      <a href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Email us</a>-->
+<!--                    </li>-->
+<!--                    <li data-aos="fade-up">-->
+<!--                      <a href="#" class="text-sm leading-6 text-gray-300 hover:text-white">Code-red@gmail.com</a>-->
+<!--                    </li>-->
                   </ul>
                 </div>
                 <div class="mt-10 md:mt-0">
