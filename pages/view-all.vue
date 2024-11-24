@@ -4,7 +4,7 @@
         <NavigationBar :isMobile="isMobile" @close="isMobile = false" @open="isMobile = true" />
       </section>
   
-      <ViewAll id="filter" class="mt-16 z-10" />
+      <ViewAll id="filter" class="pt-16 z-10" />
   
       <!-- Scroll Buttons -->
       <div class="fixed bottom-10 space-x-2 right-10 space-y-2">

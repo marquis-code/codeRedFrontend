@@ -262,6 +262,7 @@
   </template>
   
   <script lang="ts" setup>
+  import { Loader } from '@googlemaps/js-api-loader';
   import { useCustomToast } from '@/composables/core/useCustomToast'
   const { showToast } = useCustomToast();
   import { ref, onMounted, computed } from 'vue'

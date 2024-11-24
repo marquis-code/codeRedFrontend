@@ -28,7 +28,7 @@
       {{hospital?.name ?? 'Nil'}}
     </h2>
     <p class="text-sm text-gray-700">
-      {{hospital?.formatted_address ?? 'Nil'}}
+      {{ hospital?.formatted_address || hospital?.vicinity || 'Nil' }}
     </p>
   </div>
   <div>

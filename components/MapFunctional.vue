@@ -29,7 +29,7 @@
       </div>
     </section>
 
-    <div v-if="loading" class="text-center text-gray-600 py-10">
+    <div v-if="loading" class="text-center text-gray-600 py-10 max-w-sm mx-auto">
       <div class="spinner"></div>
       please wait while we search for facilities closest to you...
     </div>
@@ -131,16 +131,16 @@
     </div>
   </div>
 
-  <div v-if="forceLocationModal" class="location-modal">
-    <div class="modal-content">
-      <h2>Enable Location Access</h2>
-      <p>
-        This application requires location access to function. Please enable
-        location services in your browser settings.
-      </p>
-      <button @click="retryLocationAccess">Retry</button>
-    </div>
-  </div>
+<!--  <div v-if="forceLocationModal" class="location-modal">-->
+<!--    <div class="modal-content">-->
+<!--      <h2>Enable Location Access</h2>-->
+<!--      <p>-->
+<!--        This application requires location access to function. Please enable-->
+<!--        location services in your browser settings.-->
+<!--      </p>-->
+<!--      <button @click="retryLocationAccess">Retry</button>-->
+<!--    </div>-->
+<!--  </div>-->
 </main>
 </template>
 

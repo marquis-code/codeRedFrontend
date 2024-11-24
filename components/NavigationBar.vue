@@ -23,19 +23,19 @@
             </button>
           </div>
           <div class="hidden lg:flex lg:gap-x-12">
-            <NuxtLink href="/" class="text-sm font-semibold leading-6 text-gray-900"
+            <NuxtLink href="/" class="text-sm px-4 py-2 rounded-lg font-semibold leading-6 text-gray-900"
               >Home</NuxtLink
             >
-            <NuxtLink href="#" class="text-sm font-semibold leading-6 text-gray-900"
+            <NuxtLink to="/ambulance" class="text-sm px-4 py-2 rounded-lg font-semibold leading-6 text-gray-900"
               >Find ambulances</NuxtLink
             >
-            <NuxtLink href="/blogs" class="text-sm font-semibold leading-6 text-gray-900"
+            <NuxtLink href="/blogs" class="text-sm px-4 py-2 rounded-lg font-semibold leading-6 text-gray-900"
               >First aid tips</NuxtLink
             >
-            <NuxtLink to="/business" class="text-sm font-semibold leading-6 text-gray-900"
+            <NuxtLink to="/business" class="text-sm px-4 py-2 rounded-lg font-semibold leading-6 text-gray-900"
             >CODE-RED For Business</NuxtLink
           >
-            <NuxtLink to="/about-us" class="text-sm font-semibold leading-6 text-gray-900"
+            <NuxtLink to="/about-us" class="text-sm px-4 py-2 rounded-lg font-semibold leading-6 text-gray-900"
               >About CODE-RED</NuxtLink
             >
           </div>
@@ -49,7 +49,7 @@
           </div>
         </nav>
 
-        <div v-if="isMobile" class="lg:hidden" role="dialog" aria-modal="true">
+        <div v-if="isMobile" class="lg:hidden bg-gray-100" role="dialog" aria-modal="true">
           <div class="fixed inset-0 z-50"></div>
           <div
             class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
@@ -95,14 +95,24 @@
                     >Home</NuxtLink
                   >
 
+<!--                  <a-->
+<!--                      href="#filter"-->
+<!--                      @click="emit('close')"-->
+<!--                      class="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold leading-7 text-[#979797] hover:bg-[#FEEAEA]"-->
+<!--                  >Check Hospital Bed Availability</a>-->
                   <a
                       href="#filter"
-                      @click="emit('close')"
+                      @click.prevent="navigateToFilter"
                       class="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold leading-7 text-[#979797] hover:bg-[#FEEAEA]"
-                  >Check Hospital Bed Availability</a>
+                  >
+                    Check Hospital Bed Availability
+                  </a>
 
-                  <NuxtLink href="/blogs"  class="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold leading-7 text-[#979797] hover:bg-gray-50"
+                  <NuxtLink to="/blogs"  class="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold leading-7 text-[#979797] hover:bg-gray-50"
               >First Aid tips</NuxtLink>
+
+                  <NuxtLink to="/ambulance"  class="-mx-3 block rounded-lg px-3 py-3 text-base font-semibold leading-7 text-[#979797] hover:bg-gray-50"
+                  >Find Ambulance</NuxtLink>
                   <NuxtLink
                       @click="emit('close')"
                     to="/business"
@@ -173,6 +183,11 @@ const props = defineProps({
         type: Boolean
     }
 })
+
+
+function navigateToFilter() {
+  router.push({ path: '/', hash: '#filter' });
+}
 
 const emit = defineEmits(['close', 'open'])
 </script>

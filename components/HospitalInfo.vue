@@ -38,7 +38,8 @@
               <!-- {{ hospital.name }} {{ selectedHospital }} -->
               {{selectedHospitalData.name}}
             </h1>
-            <div class="text-sm lg:text-base text-gray-500 lg:-mt-3 max-w-xs">{{ hospital?.formatted_address ?? 'Nil' }}</div>
+<!--            {{hospital}}-->
+            <div class="text-sm lg:text-base text-gray-500 lg:-mt-3 max-w-xs">{{ hospital?.formatted_address || hospital?.vicinity || 'Nil' }}</div>
             <!-- <span class="bg-red-500 text-white text-sm px-2 py-1 rounded-full px-6">{{ hospital.status }}</span> -->
           </div>
         </div>
