@@ -26,7 +26,7 @@
       </div>
 </section>
 
-<HospitalsList :hospitals="hospitals" :searched="searched" :loading="fetching" />
+    <HospitalsList :hospitals="hospitals" :searched="searched" :loading="fetching" />
   
       <!-- Modal -->
       <transition name="fade">
@@ -137,22 +137,17 @@
         </div>
       </transition>
     </div>
-  </template>
+</template>
   
   <script setup lang="ts">
-    import axios from 'axios'
-  // import useUserLocation from '@/composables/core/useUserLocation';
-// const { latitude, longitude, error, address, loading } = useUserLocation();
-
-    // const location = ref('')
-    const hospitals = ref([])
+  import axios from 'axios'
+  const hospitals = ref([])
   const searched = ref(false)
   const fetching = ref(false)
 
   watch(address, () => {
     fetchHealthFacilities()
   })
-
   
    const fetchHealthFacilities = async () => {
      if (address.value.length > 2) {
@@ -187,46 +182,6 @@
        fetching.value = false
      }
    }
-
-  // import axios from 'axios'
-
-// const fetchHealthFacilities = async () => {
-//   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
-//   if (address.value.length > 2) {
-//     loading.value = true
-//     try {
-//       const response = await axios.get('https://maps.googleapis.com/maps/api/place/textsearch/json', {
-//         params: {
-//           query: `hospital near ${address.value}`,
-//           key: apiKey, // Replace with your actual API key
-//           type: 'hospital'
-//         }
-//       })
-
-//       hospitals.value = response.data.results.map((facility) => ({
-//         id: facility.place_id,
-//         name: facility.name,
-//         location: facility.formatted_address,
-//         bedSpaces: Math.floor(Math.random() * 100), // Placeholder for bed spaces
-//         status: ['Available', 'Busy', 'Unavailable'][Math.floor(Math.random() * 3)] // Random status
-//       }))
-//       searched.value = true
-//     } catch (error) {
-//       console.error('Error fetching health facilities:', error)
-//       hospitals.value = []
-//       searched.value = true
-//     } finally {
-//       loading.value = false
-//     }
-//   } else {
-//     hospitals.value = []
-//     searched.value = false
-//     loading.value = false
-//   }
-// }
-
-// import axios from 'axios'
-
   
   const onInput = () => {
     searched.value = false
