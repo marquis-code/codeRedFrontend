@@ -59,7 +59,7 @@ export function useGoogleLocation() {
   
     const getLocationText = async (latitude: number, longitude: number): Promise<string | null> => {
       try {
-        const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY_UPDATED // Replace with your Google API key
+        const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY // Replace with your Google API key
         const response = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
         );
