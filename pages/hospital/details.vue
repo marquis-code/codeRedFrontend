@@ -24,7 +24,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
-import MapView from '@/components/MapView.vue'
 import HospitalInfo from '@/components/HospitalInfo.vue'
 
 // State management

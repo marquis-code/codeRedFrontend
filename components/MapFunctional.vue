@@ -105,7 +105,7 @@
     <!-- <button v-if="!viewAll" @click="viewAll = true" class="mt-4 pl-6 text-red-600">
       View all results
     </button> -->
-    <NuxtLink to="/view-all"  class="mt-4 pl-6 text-red-600">
+    <NuxtLink v-if="displayedHospitals.length" to="/view-all"  class="mt-4 pl-6 text-red-600">
       View all results
     </NuxtLink>
 
