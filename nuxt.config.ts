@@ -12,6 +12,13 @@ export default {
         { name: "format-detection", content: "telephone=no" },
       ],
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
+      script: [
+        {
+          src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg&libraries=places",
+          async: true,
+          defer: true,
+        },
+      ],
     },
   },
 
@@ -41,7 +48,7 @@ export default {
     display: 'swap', // Adds display swap for faster loading
   },
 
-  plugins: ["~/plugins/aos.client.ts"],
+  plugins: ["~/plugins/aos.client.ts","~/plugins/googleMaps.client.ts"],
   css: ["/assets/css/main.css", '@/assets/css/custom.css'],
 
   tailwindcss: {

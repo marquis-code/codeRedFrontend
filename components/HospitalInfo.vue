@@ -1,7 +1,7 @@
 <template>
   <div class="lg:p-4 flex flex-col justify-center h-full">
     <div class="p-3 lg:p-10 flex flex-col justify-between h-full bg-white space-y-10 lg:space-y-0">
-      <div class="flex items-center">
+      <div class="flex mb-6 items-center">
         <NuxtLink to="/" class="text-2xl">←</NuxtLink>
         <div class="flex-grow text-center text-2xl font-bold">
           <div class="flex justify-center items-center">
@@ -47,10 +47,10 @@
           <div class="bg-[#FFF9F9CC] shadow space-y-6 rounded-lg p-5">
             <div>
               <p class="text- text-gray-500">From your location</p>
-              <h2 class="text-2xl lg:text-4xl mt-6 font-semibold text-black mt-2">Estimated Time Of Arrival</h2>
+              <h2 class="text-2xl lg:text-3xl mt-6 font-semibold text-black mt-2">Estimated Time Of Arrival</h2>
             </div>
             <div class="flex items-end mt-4">
-              <span class="text-5xl lg:text-8xl font-bold text-red-600">{{ eta }}</span>
+              <span class="text-5xl lg:text-7xl font-bold text-red-600">{{ eta }}</span>
               <span class="text-lg text-red-600 ml-2">mins</span>
             </div>
           </div>
@@ -98,7 +98,7 @@
                 <h2 class="text-2xl font-medium mt-3">Distance</h2>
               </div>
               <div class="flex items-center mt-6">
-                <span class="text-5xl lg:text-8xl font-bold  text-[#CC1100]">{{ distance }}</span>
+                <span class="text-5xl lg:text-7xl font-bold  text-[#CC1100]">{{ distance }}</span>
                 <span class="ml-2 text-sm lg:text-lg text-[#CC1100]">km</span>
               </div>
             </div>
@@ -165,6 +165,11 @@ const selectedHospitalData = JSON.parse(localStorage.getItem('selectedHospital')
 
 const userLocation = ref({}) as any
 const selectedHospital = ref({}) as any
+
+function makeEmergencyCall() {
+  const emergencyNumber = '08060907333';
+  window.location.href = `tel:${emergencyNumber}`;
+}
 
 
 // const calculateDistanceAndETA = () => {
