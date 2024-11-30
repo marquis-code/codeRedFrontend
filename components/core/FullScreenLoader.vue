@@ -61,7 +61,8 @@
   // };
 
   const requestLocationAccess = () => {
-    navigator.geolocation.getCurrentPosition(
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
         (position) => {
           console.log("Location access granted:", position);
 
@@ -86,7 +87,7 @@
           // Show error toast
           showToast({
             title: "Error",
-            message: "Please enable location services in your device settings.",
+            message: "Error getting location: Please enable location services in your device settings.",
             toastType: "error",
             duration: 3000,
           });
@@ -95,6 +96,14 @@
           showModal.value = false;
         }
     );
+    } else {
+      showToast({
+            title: "Error",
+            message: "Geolocation is not supported by this browser.",
+            toastType: "error",
+            duration: 3000,
+          });
+    }
   };
 
   // Check if location is enabled when the component is mounted
