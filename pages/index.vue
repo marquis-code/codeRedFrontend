@@ -6,9 +6,7 @@
 
     <div class="flex flex-col md:flex-row items-center container mx-auto justify-between p-8 bg-white pt-20">
       <div class="text-left md:max-w-lg space-y-4">
-        <!-- <h1 class="text-5xl md:text-5xl font-bold">
-          Need help <span class="text-[#CC1100]">locating</span> bed Spaces?
-        </h1> -->
+
         <h1 data-aos="flip-left"
               class="font-black text-5xl  tracking-tight text-gray-900 sm:mt-10 sm:text-6xl"
             >
@@ -24,9 +22,7 @@
         <p class="text-gray-600 font-light lg:text-lg leading-tight lg:leading-7">
           Get real-time updates on hospital bed availability, essential first aid tips, and access to ambulance services when you need them most.
         </p>
-    <!-- <button>
-      
-    </button> -->
+
         <div class="relative mt-4 w-full">
               <a href="#filter"
               class="bg-[#CC1100] lg:w-1/2 text-base block text-center px-3.5 py-3.5 rounded-sm font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
@@ -248,8 +244,45 @@
         </div>
       </div>
     </div>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 p-6 max-w-7xl mx-auto">
-      <!-- Team Section -->
+
+    <div class="bg-white py-20">
+  <div class="mx-auto max-w-7xl px-6 text-center lg:px-8">
+    <div class="mx-auto max-w-2xl">
+      <h2 class="text-34l text-balance font-semibold tracking-tight text-gray-900 sm:text-5xl">Meet our leadership</h2>
+      <p class="mt-6 text-lg/8 text-gray-600">We’re a dynamic group of individuals who are passionate about what we do and dedicated to delivering the best results.</p>
+    </div>
+    <ul role="list" class="mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+      <li v-for="member in teamMembers"
+      :key="member.name">
+        <img class="mx-auto size-56 rounded-full" :src="member.image" alt="">
+        <h3 class="mt-6 text-base/7 font-semibold tracking-tight text-gray-900">{{ member.name }}</h3>
+        <p class="text-sm/6 text-gray-600">{{ member.role }}</p>
+        <ul role="list" class="mt-6 flex justify-center gap-x-6">
+          <!-- <li>
+            <a href="#" class="text-gray-400 hover:text-gray-500">
+              <span class="sr-only">X</span>
+              <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M11.4678 8.77491L17.2961 2H15.915L10.8543 7.88256L6.81232 2H2.15039L8.26263 10.8955L2.15039 18H3.53159L8.87581 11.7878L13.1444 18H17.8063L11.4675 8.77491H11.4678ZM9.57608 10.9738L8.95678 10.0881L4.02925 3.03974H6.15068L10.1273 8.72795L10.7466 9.61374L15.9156 17.0075H13.7942L9.57608 10.9742V10.9738Z" />
+              </svg>
+            </a>
+          </li> -->
+          <li>
+            <a :href="member.social" class="text-gray-400 hover:text-gray-500">
+              <span class="sr-only">LinkedIn</span>
+              <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 p-6 max-w-7xl mx-auto">
+
       <div>
         <div data-aos="fade-up" class="text-sm font-medium text-[#CC1100] mb-2">TEAM</div>
         <h2 data-aos="fade-up" class="mb-8 text-2xl font-light max-w-xs">Meet The Team</h2>
@@ -259,15 +292,13 @@
             :key="member.name"
             class="bg-white p-1"
           >
-            <!-- <div class="h-40 bg-[#F4F5F4]"></div> -->
-            <!-- Placeholder for image -->
             <img :src="member.image" class="lg:h-40 w-full rounded-lg" data-aos="fade-up" />
             <h3 data-aos="fade-up" class="mt-2 font-light">{{ member.name }}</h3>
             <p data-aos="fade-up" class="text-[#CC1100] text-sm font-semibold">{{ member.role }}</p>
           </div>
         </div>
       </div>
-      <!-- Feedback Form -->
+
       <div class="bg-white p-3 lg:p-8 shadow rounded border">
         <div class="space-y-3">
           <div data-aos="fade-up" class="text-sm font-medium text-[#CC1100]">FEEDBACK</div>
@@ -308,7 +339,7 @@
           </button>
         </form>
       </div>
-    </div>
+    </div> -->
 
   <FooterSection />
 
@@ -330,6 +361,7 @@ import service4 from "@/assets/img/service4.png";
 import ceo from '@/assets/img/ceo.jpeg'
 import cto from '@/assets/img/cto.jpg'
 import coo from '@/assets/img/coo.jpeg'
+import cmo from '@/assets/img/people1.jpeg'
 
 
 const isMobile = ref(false)
@@ -371,9 +403,10 @@ const filteredHospitals = computed(() => {
 });
 
 const teamMembers = ref([
-  { name: "Anita Orji", role: "Co-Founder & CEO", image: ceo },
-  { name: "Oluwakemi Ifedoyin", role: "Co-Founder & COO", image: coo },
-  { name: "Marquis Abah", role: "CTO", image: cto },
+  { name: "Anita Orji", role: "Co-Founder & CEO", image: ceo, social: 'https://www.linkedin.com/in/anita-orji-uzoma/?originalSubdomain=ng' },
+  { name: "Oluwakemi Ifedoyin", role: "Co-Founder & COO", image: coo, social: 'https://www.linkedin.com/in/oluwakemi-ifedoyin/?originalSubdomain=ng' },
+  { name: "Marquis Abah", role: "Chief Technology Officer (CTO)", image: cto, social: 'https://www.linkedin.com/in/marquis-abah-584a12199/' },
+  { name: "Chioma Ileka", role: "Head Of Marketing", image: cmo, social: '' },
 ]);
 
 const feedback = ref({
