@@ -1,5 +1,5 @@
 <template>
-  <div class="websocket-status" v-if="showStatus">
+  <div class="websocket-status ml-3" v-if="showStatus">
     <div class="status-indicator" :class="{ 'connected': isConnected, 'disconnected': !isConnected }"></div>
     <span>{{ isConnected ? 'Connected to real-time updates' : 'Disconnected from real-time updates' }}</span>
     <span v-if="isConnected && debugMode" class="debug-info">

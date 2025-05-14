@@ -2,7 +2,7 @@
   <main>
     <!-- {{nearbyHospitals}} -->
     <div class="container mx-auto">
-      <section class="p-3 lg:p-6 bg-[#FFF9F9CC] max-w-7xl mx-auto">
+      <!-- <section class="p-3 lg:p-6 bg-[#FFF9F9CC] max-w-7xl mx-auto">
         <div
           class="flex items-center border-2 border-red-600 rounded-lg bg-white p-3 shadow-lg"
         >
@@ -64,7 +64,7 @@
             </svg>
           </button>
         </div>
-      </section>
+      </section> -->
 
       <div
         v-if="loading"
@@ -103,9 +103,10 @@
         </div>
       </div>
 
-      <div v-else class="p-4">
+      <BedspaceAvailability v-else />
+      <!-- <div v-else class="p-4">
         <p class="text-gray-600 mb-4">
-          Results are automatically filtered based on your location
+          Results are automatically filtered based on your location ccccc
         </p>
 
         <div class="flex space-x-4 overflow-x-auto custom-scrollbar">
@@ -122,16 +123,11 @@
               'bg-blue-100 border-blue-400': hospital.availability === 'busy',
             }"
           >
-            <!-- Code Red Tag -->
-            <div v-if="hospital.isCodeRed" class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-tr-lg rounded-bl-lg">
+
+            <div v-if="hospital.isCodeRed" class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-tl-lg">
               CODE RED
             </div>
             
-            <!-- <div class="flex justify-start items-start absolute top-0 left-0">
-              <span class="text-xs rounded-tl-lg py-1 px-6 bg-black text-white">
-                {{ hospital.pricing || 'Standard' }}
-              </span>
-            </div> -->
             <div class="flex justify-end items-end">
               <span
                 class="text-xs rounded-full"
@@ -161,14 +157,12 @@
               {{ hospital.address || hospital.vicinity }}
             </p>
             
-            <!-- Emergency Services Badge -->
             <div v-if="hospital.emergencyServices" class="mt-2">
               <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
                 {{ hospital.emergencyServices }}
               </span>
             </div>
             
-            <!-- Specialties -->
             <div v-if="hospital.availableSpecialties && hospital.availableSpecialties.length" class="mt-2 flex flex-wrap gap-1">
               <span 
                 v-for="(specialty, idx) in hospital.availableSpecialties.slice(0, 2)" 
@@ -182,7 +176,6 @@
               </span>
             </div>
             
-            <!-- Contact Info -->
             <div v-if="hospital.emergencyContactNumber" class="mt-2 text-sm text-gray-700">
               <span class="font-medium">Emergency:</span> {{ hospital.emergencyContactNumber }}
             </div>
@@ -196,7 +189,7 @@
         class="mt-4 pl-6 text-red-600"
       >
         View all results
-      </NuxtLink>
+      </NuxtLink> -->
 
       <FilterModal
         v-if="showFilterModal"
