@@ -1,5 +1,6 @@
 <template>
   <main>
+    <!-- {{nearbyHospitals}} -->
     <div class="container mx-auto">
       <section class="p-3 lg:p-6 bg-[#FFF9F9CC] max-w-7xl mx-auto">
         <div
@@ -110,7 +111,7 @@
         <div class="flex space-x-4 overflow-x-auto custom-scrollbar">
           <div
             v-for="hospital in displayedHospitals"
-            :key="hospital.place_id"
+            :key="hospital.place_id || hospital._id"
             @click="selectHospital(hospital)"
             class="hospital-card relative w-64 p-4 m-2 space-y-3 border rounded-lg shadow cursor-pointer transition-transform transform hover:scale-105"
             :class="{
@@ -121,11 +122,16 @@
               'bg-blue-100 border-blue-400': hospital.availability === 'busy',
             }"
           >
-            <div class="flex justify-start items-start absolute top-0 left-0">
-              <span class="text-xs rounded-tl-lg py-1 px-6 bg-black text-white">
-                {{ hospital.pricing }}
-              </span>
+            <!-- Code Red Tag -->
+            <div v-if="hospital.isCodeRed" class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-tr-lg rounded-bl-lg">
+              CODE RED
             </div>
+            
+            <!-- <div class="flex justify-start items-start absolute top-0 left-0">
+              <span class="text-xs rounded-tl-lg py-1 px-6 bg-black text-white">
+                {{ hospital.pricing || 'Standard' }}
+              </span>
+            </div> -->
             <div class="flex justify-end items-end">
               <span
                 class="text-xs rounded-full"
@@ -138,7 +144,7 @@
                     hospital.availability === 'busy',
                 }"
               >
-                {{ hospital.availability }}
+                {{ hospital.availability || 'Unknown' }}
               </span>
             </div>
             <h3
@@ -149,12 +155,37 @@
                 'text-blue-500': hospital.availability === 'busy',
               }"
             >
-              <!-- <img class="h-10 w-10 " :src="hospital.icon" alt="icon"/> -->
-              {{ hospital.name }}
+              {{ hospital.hospitalName || hospital.name }}
             </h3>
             <p class="text-sm text-gray-600">
-              {{ hospital.vicinity }}
+              {{ hospital.address || hospital.vicinity }}
             </p>
+            
+            <!-- Emergency Services Badge -->
+            <div v-if="hospital.emergencyServices" class="mt-2">
+              <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                {{ hospital.emergencyServices }}
+              </span>
+            </div>
+            
+            <!-- Specialties -->
+            <div v-if="hospital.availableSpecialties && hospital.availableSpecialties.length" class="mt-2 flex flex-wrap gap-1">
+              <span 
+                v-for="(specialty, idx) in hospital.availableSpecialties.slice(0, 2)" 
+                :key="idx"
+                class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded"
+              >
+                {{ specialty }}
+              </span>
+              <span v-if="hospital.availableSpecialties.length > 2" class="text-xs text-gray-500">
+                +{{ hospital.availableSpecialties.length - 2 }} more
+              </span>
+            </div>
+            
+            <!-- Contact Info -->
+            <div v-if="hospital.emergencyContactNumber" class="mt-2 text-sm text-gray-700">
+              <span class="font-medium">Emergency:</span> {{ hospital.emergencyContactNumber }}
+            </div>
           </div>
         </div>
       </div>
@@ -208,16 +239,25 @@
 
 <script lang="ts" setup>
 import { Loader } from "@googlemaps/js-api-loader";
+import { useFetchNearbyHospitals } from "@/composables/modules/hospitals/useFetchNearbyHospitals";
+import { useFetchHospitals } from "@/composables/modules/hospitals/useFetchHospitals";
 import { useCustomToast } from "@/composables/core/useCustomToast";
 const { showToast } = useCustomToast();
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 const router = useRouter();
 import { useNuxtApp } from "#app";
-const hospitalsCache = ref<any[]>([]); // Cache to store hospitals
-const isCacheValid = ref(true); // Flag to invalidate cache if needed
 
+// Constants
+const MAX_DISTANCE = 10; // Maximum distance in kilometers
+
+// API Hospitals
+const { fetchNearbyHospitals, nearbyHospitals, loading: fetchingNearbyHospitals } = useFetchNearbyHospitals();
+const { hospitals: hospitalsList, loading: fetchingHospitals } = useFetchHospitals();
+
+// State variables
 const location = ref("");
 const hospitals = ref([]);
+const apiHospitals = ref([]);
 const loading = ref(false);
 const viewAll = ref(false);
 const showFilterModal = ref(false);
@@ -260,6 +300,11 @@ const mockHospitalType = () => {
 };
 
 const specialities = [
+  "Cardiology",
+  "Neurology",
+  "Orthopedics",
+  "Pediatrics",
+  "Emergency Medicine",
   "Diabetes",
   "Sickle cell crisis",
   "Hypertensive related crisis",
@@ -298,19 +343,53 @@ const mockSpecialities = () => {
   return shuffledSpecialities.slice(0, numberOfSpecialities);
 };
 
+// Combine API hospitals with Google hospitals
+const combinedHospitals = computed(() => {
+  // If we have API hospitals, use them first
+  if (apiHospitals.value && apiHospitals.value.length > 0) {
+    // Create a map of hospital names from API for quick lookup
+    const apiHospitalNames = new Map(
+      apiHospitals.value.map(h => [h.hospitalName.toLowerCase(), h])
+    );
+    
+    // Mark Google hospitals that match API hospitals as "Code Red"
+    const googleHospitalsWithCodeRed = hospitals.value.map(h => {
+      const name = (h.name || '').toLowerCase();
+      const isCodeRed = apiHospitalNames.has(name);
+      return {
+        ...h,
+        isCodeRed
+      };
+    });
+    
+    // Combine both sets, with API hospitals first
+    return [
+      ...apiHospitals.value.map(h => ({
+        ...h,
+        isCodeRed: true,
+        availability: 'available', // Default availability for API hospitals
+        place_id: h._id // Use _id as place_id for API hospitals
+      })),
+      ...googleHospitalsWithCodeRed.filter(h => !apiHospitalNames.has((h.name || '').toLowerCase()))
+    ];
+  }
+  
+  // If no API hospitals, just return Google hospitals
+  return hospitals.value;
+});
+
 const displayedHospitals = computed(() => {
+  let filteredHospitals = combinedHospitals.value;
+  
   if (selectedBedAvailability.value) {
-    console.log(selectedBedAvailability.value, "availabiliet");
-    const filteredHospitals = hospitals.value.filter((hospital) => {
+    filteredHospitals = filteredHospitals.filter((hospital) => {
       return (
         hospital.availability === selectedBedAvailability.value?.toLowerCase()
       );
     });
-
-    return viewAll.value ? filteredHospitals : filteredHospitals.slice(0, 6);
   }
 
-  return viewAll.value ? hospitals.value : hospitals.value.slice(0, 6);
+  return viewAll.value ? filteredHospitals : filteredHospitals.slice(0, 6);
 });
 
 // Function to apply filters from user input
@@ -340,75 +419,79 @@ watch(
 const getUserLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          userLocation.value = { lat, lng };
-          console.log("User coordinates:", userLocation.value);
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        userLocation.value = { lat, lng };
+        console.log("User coordinates:", userLocation.value);
 
-          localStorage.setItem(
-              "userLocation",
-              JSON.stringify(userLocation.value)
-          );
+        localStorage.setItem(
+          "userLocation",
+          JSON.stringify(userLocation.value)
+        );
 
-          try {
-            const { $loadGoogleMaps } = useNuxtApp(); // Access loadGoogleMaps from the plugin
-            const google = await $loadGoogleMaps();
-            if (!google) {
-              console.error("Google Maps API failed to load.");
-              showToast({
-                title: "Error",
-                message: "Google Maps API not loaded. Try again later.",
-                toastType: "error",
-                duration: 3000,
-              });
-              return;
-            }
-
-            const geocoder = new google.maps.Geocoder();
-
-            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-              if (status === "OK" && results[0]?.formatted_address) {
-                query.value = results[0].formatted_address;
-                console.log("User location (address):", query.value);
-
-                fetchHospitalsByLocation(lat, lng); // Fetch nearby hospitals
-              } else {
-                console.error("Reverse geocoding failed:", status);
-                showToast({
-                  title: "Error",
-                  message: "Could not determine your location.",
-                  toastType: "error",
-                  duration: 3000,
-                });
-              }
-            });
-          } catch (error) {
-            console.error("Error during reverse geocoding:", error);
+        try {
+          const { $loadGoogleMaps } = useNuxtApp();
+          const google = await $loadGoogleMaps();
+          if (!google) {
+            console.error("Google Maps API failed to load.");
             showToast({
               title: "Error",
-              message: "An unexpected error occurred while determining your location.",
+              message: "Google Maps API not loaded. Try again later.",
               toastType: "error",
               duration: 3000,
             });
+            return;
           }
 
-          forceLocationModal.value = false;
-        },
-        (error) => {
-          console.error("Error retrieving geolocation:", error);
-          forceLocationModal.value = true;
+          const geocoder = new google.maps.Geocoder();
 
+          geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+            if (status === "OK" && results[0]?.formatted_address) {
+              query.value = results[0].formatted_address;
+              console.log("User location (address):", query.value);
+
+              // Fetch nearby hospitals from API
+              fetchNearbyHospitalsFromAPI(lat, lng);
+              
+              // Also fetch from Google Maps as a backup
+              fetchHospitalsByLocation(lat, lng);
+            } else {
+              console.error("Reverse geocoding failed:", status);
+              showToast({
+                title: "Error",
+                message: "Could not determine your location.",
+                toastType: "error",
+                duration: 3000,
+              });
+            }
+          });
+        } catch (error) {
+          console.error("Error during reverse geocoding:", error);
           showToast({
             title: "Error",
-            message:
-                "Location access is required for this app. Please enable location services and try again.",
+            message: "An unexpected error occurred while determining your location.",
             toastType: "error",
-            duration: 5000,
+            duration: 3000,
           });
-
-          loading.value = false;
         }
+
+        forceLocationModal.value = false;
+      },
+      (error) => {
+        console.error("Error retrieving geolocation:", error);
+        forceLocationModal.value = true;
+
+        showToast({
+          title: "Error",
+          message:
+            "Location access is required for this app. Please enable location services and try again.",
+          toastType: "error",
+          duration: 5000,
+        });
+
+        loading.value = false;
+      }
     );
   } else {
     console.error("Geolocation is not supported by this browser.");
@@ -419,95 +502,41 @@ const getUserLocation = () => {
       duration: 3000,
     });
 
-    forceLocationModal.value = true; // Force modal for unsupported browser
+    forceLocationModal.value = true;
     loading.value = false;
   }
 };
 
-
-
-// const getUserLocation = () => {
-//   if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(
-//       async (position) => {
-//         // Step 1: Retrieve coordinates
-//         const lat = position.coords.latitude;
-//         const lng = position.coords.longitude;
-//         userLocation.value = { lat, lng };
-//         console.log("User coordinates:", userLocation.value);
-//
-//         localStorage.setItem(
-//           "userLocation",
-//           JSON.stringify(userLocation.value)
-//         );
-//
-//         // Step 2: Reverse geocode to get the address
-//         try {
-//           const google = await $loadGoogleMaps();
-//           const geocoder = new google.maps.Geocoder();
-//
-//           geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-//             if (
-//               status === google.maps.GeocoderStatus.OK &&
-//               results[0]?.formatted_address
-//             ) {
-//               // Step 3: Prefill input field with the address
-//               query.value = results[0].formatted_address;
-//               console.log("User location (address):", query.value);
-//
-//               // Step 4: Fetch hospitals near the user's location
-//               fetchHospitalsByLocation(lat, lng);
-//             } else {
-//               console.error("Reverse geocoding failed:", status);
-//               showToast({
-//                 title: "Error",
-//                 message: "Could not determine your location.",
-//                 toastType: "error",
-//                 duration: 3000,
-//               });
-//             }
-//           });
-//         } catch (error) {
-//           console.error("Error during reverse geocoding:", error);
-//         }
-//
-//         // Hide the modal once the location is obtained
-//         forceLocationModal.value = false;
-//       },
-//       (error) => {
-//         console.error("Error retrieving geolocation:", error);
-//
-//         // Show a modal and retry prompt
-//         forceLocationModal.value = true;
-//
-//         showToast({
-//           title: "Error",
-//           message:
-//             "Location access is required for this app. Please enable location services and try again.",
-//           toastType: "error",
-//           duration: 5000,
-//         });
-//
-//         loading.value = false;
-//       }
-//     );
-//   } else {
-//     console.error("Geolocation is not supported by this browser.");
-//     showToast({
-//       title: "Error",
-//       message: "Geolocation is not supported by your browser.",
-//       toastType: "error",
-//       duration: 3000,
-//     });
-//
-//     forceLocationModal.value = true; // Force modal for unsupported browser
-//     loading.value = false;
-//   }
-// };
-
-// Retry mechanism
-const retryLocationAccess = () => {
-  getUserLocation(); // Retry getting the location
+// Fetch nearby hospitals from our API
+const fetchNearbyHospitalsFromAPI = async (lat: number, lng: number) => {
+  loading.value = true;
+  try {
+    console.log(`Fetching nearby hospitals from API with coordinates: lat=${lat}, lng=${lng}, maxDistance=${MAX_DISTANCE}`);
+    
+    // Call the composable function with the required parameters
+    const HARD_CODED_LAT = 6.5568768
+    const HARD_CODED_LNG = 3.325952
+    const response = await fetchNearbyHospitals(HARD_CODED_LAT, HARD_CODED_LNG, MAX_DISTANCE);
+    
+    if (response && response.length > 0) {
+      console.log("API Hospitals found:", response);
+      apiHospitals.value = response;
+    } else {
+      console.log("No hospitals found from API, will use Google results only");
+      apiHospitals.value = [];
+    }
+  } catch (error) {
+    console.error("Error fetching nearby hospitals from API:", error);
+    showToast({
+      title: "Error",
+      message: "Failed to fetch nearby hospitals from our database.",
+      toastType: "error",
+      duration: 3000,
+    });
+    apiHospitals.value = [];
+  } finally {
+    loading.value = false;
+  }
 };
 
 const fetchHospitalsByLocation = async (lat, lng) => {
@@ -573,15 +602,20 @@ const selectHospital = (hospital) => {
   localStorage.setItem("selectedHospital", JSON.stringify(hospital));
   selectedHospital.value = hospital;
   showMap.value = true;
+  
+  // Determine which ID to use (place_id for Google, _id for API)
+  const id = hospital.place_id || hospital._id;
+  
   router.push({
     path: "/hospital/details",
     query: {
-      id: hospital.place_id,
-      name: hospital.name,
-      location: hospital.vicinity,
-      status: hospital.avaailability,
+      id: id,
+      name: hospital.hospitalName || hospital.name,
+      location: hospital.address || hospital.vicinity,
+      status: hospital.availability,
       lat: hospital.latitude,
       lon: hospital.longitude,
+      isCodeRed: hospital.isCodeRed ? 'true' : 'false'
     },
   });
 };
@@ -608,22 +642,22 @@ const resetFilters = () => {
 };
 
 const cache = ref<{ query: string; hospitals: any[]; timestamp: number } | null>(
-    null
+  null
 );
 const CACHE_EXPIRY_TIME = 10 * 60 * 1000; // Cache expiry time (10 minutes)
 
 const fetchHospitals = async () => {
   if (
-      !query.value &&
-      !selectedLocation.value &&
-      !selectedBedAvailability.value &&
-      !selectedSpeciality.value &&
-      !selectedHospitalType.value
+    !query.value &&
+    !selectedLocation.value &&
+    !selectedBedAvailability.value &&
+    !selectedSpeciality.value &&
+    !selectedHospitalType.value
   ) {
     showToast({
       title: "Error",
       message:
-          "Please enter a location, hospital name, or select filters to search.",
+        "Please enter a location, hospital name, or select filters to search.",
       toastType: "error",
       duration: 3000,
     });
@@ -632,9 +666,9 @@ const fetchHospitals = async () => {
 
   // Check if query exists in cache and is still valid
   if (
-      cache.value &&
-      cache.value.query === query.value &&
-      Date.now() - cache.value.timestamp < CACHE_EXPIRY_TIME
+    cache.value &&
+    cache.value.query === query.value &&
+    Date.now() - cache.value.timestamp < CACHE_EXPIRY_TIME
   ) {
     console.log("Serving hospitals from cache:", cache.value.hospitals);
     hospitals.value = cache.value.hospitals; // Serve data from cache
@@ -655,69 +689,69 @@ const fetchHospitals = async () => {
     // Load Google Maps SDK
     const google = await $loadGoogleMaps();
     const service = new google.maps.places.PlacesService(
-        document.createElement("div")
+      document.createElement("div")
     );
 
     // Use PlacesService's textSearch
     service.textSearch(
-        { query: query.value || "", type: "hospital" },
-        (results, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            // Map and augment results
-            let fetchedHospitals = results.map((hospital) => ({
-              ...hospital,
-              name: hospital.name,
-              vicinity: hospital.vicinity || hospital.formatted_address,
-              availability: mockAvailability(),
-              pricing: mockPricing(),
-              specialities: mockSpecialities(),
-              hospitalType: mockHospitalType(),
-              latitude: hospital.geometry.location.lat(),
-              longitude: hospital.geometry.location.lng(),
-            }));
+      { query: query.value || "", type: "hospital" },
+      (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          // Map and augment results
+          let fetchedHospitals = results.map((hospital) => ({
+            ...hospital,
+            name: hospital.name,
+            vicinity: hospital.vicinity || hospital.formatted_address,
+            availability: mockAvailability(),
+            pricing: mockPricing(),
+            specialities: mockSpecialities(),
+            hospitalType: mockHospitalType(),
+            latitude: hospital.geometry.location.lat(),
+            longitude: hospital.geometry.location.lng(),
+          }));
 
-            // Apply additional filters
-            if (selectedBedAvailability.value) {
-              fetchedHospitals = fetchedHospitals.filter(
-                  (hospital) =>
-                      hospital.availability.toLowerCase() ===
-                      selectedBedAvailability.value.toLowerCase()
-              );
-            }
-
-            if (selectedSpeciality.value) {
-              fetchedHospitals = fetchedHospitals.filter((hospital) =>
-                  hospital.specialities.includes(selectedSpeciality.value)
-              );
-            }
-
-            if (selectedHospitalType.value) {
-              console.log(selectedHospitalType.value, "here ahgain");
-              fetchedHospitals = fetchedHospitals.filter(
-                  (hospital) => hospital.hospitalType === selectedHospitalType.value
-              );
-            }
-
-            // Cache the results
-            cache.value = {
-              query: query.value || "",
-              hospitals: fetchedHospitals,
-              timestamp: Date.now(),
-            };
-
-            hospitals.value = fetchedHospitals; // Update hospitals with the fetched data
-            console.log("Filtered hospitals:", hospitals.value);
-          } else {
-            console.error(`Google Places textSearch error: ${status}`);
-            showToast({
-              title: "Error",
-              message: `Search failed with status: ${status}`,
-              toastType: "error",
-              duration: 3000,
-            });
+          // Apply additional filters
+          if (selectedBedAvailability.value) {
+            fetchedHospitals = fetchedHospitals.filter(
+              (hospital) =>
+                hospital.availability.toLowerCase() ===
+                selectedBedAvailability.value.toLowerCase()
+            );
           }
-          loading.value = false;
+
+          if (selectedSpeciality.value) {
+            fetchedHospitals = fetchedHospitals.filter((hospital) =>
+              hospital.specialities.includes(selectedSpeciality.value)
+            );
+          }
+
+          if (selectedHospitalType.value) {
+            console.log(selectedHospitalType.value, "here ahgain");
+            fetchedHospitals = fetchedHospitals.filter(
+              (hospital) => hospital.hospitalType === selectedHospitalType.value
+            );
+          }
+
+          // Cache the results
+          cache.value = {
+            query: query.value || "",
+            hospitals: fetchedHospitals,
+            timestamp: Date.now(),
+          };
+
+          hospitals.value = fetchedHospitals; // Update hospitals with the fetched data
+          console.log("Filtered hospitals:", hospitals.value);
+        } else {
+          console.error(`Google Places textSearch error: ${status}`);
+          showToast({
+            title: "Error",
+            message: `Search failed with status: ${status}`,
+            toastType: "error",
+            duration: 3000,
+          });
         }
+        loading.value = false;
+      }
     );
   } catch (error) {
     console.error("Error fetching hospitals:", error);
@@ -731,111 +765,7 @@ const fetchHospitals = async () => {
   }
 };
 
-
-// const fetchHospitals = async () => {
-//   if (
-//     !query.value &&
-//     !selectedLocation.value &&
-//     !selectedBedAvailability.value &&
-//     !selectedSpeciality.value &&
-//     !selectedHospitalType.value
-//   ) {
-//     showToast({
-//       title: "Error",
-//       message:
-//         "Please enter a location, hospital name, or select filters to search.",
-//       toastType: "error",
-//       duration: 3000,
-//     });
-//     return;
-//   }
-//
-//
-//   loading.value = true;
-//   hospitals.value = [];
-//
-//   try {
-//     // Set query to selectedLocation if it exists
-//     if (selectedLocation.value) {
-//       query.value = selectedLocation.value;
-//     }
-//
-//     console.log("Searching for hospitals with query:", query.value);
-//
-//     // Load Google Maps SDK
-//     const google = await $loadGoogleMaps();
-//     const service = new google.maps.places.PlacesService(
-//       document.createElement("div")
-//     );
-//
-//     // Use PlacesService's textSearch
-//     service.textSearch(
-//       { query: query.value || "", type: "hospital" },
-//       (results, status) => {
-//         if (status === google.maps.places.PlacesServiceStatus.OK) {
-//           // Map and augment results
-//           let fetchedHospitals = results.map((hospital) => ({
-//             ...hospital,
-//             name: hospital.name,
-//             vicinity: hospital.vicinity || hospital.formatted_address,
-//             availability: mockAvailability(),
-//             pricing: mockPricing(),
-//             specialities: mockSpecialities(),
-//             hospitalType: mockHospitalType(),
-//             latitude: hospital.geometry.location.lat(),
-//             longitude: hospital.geometry.location.lng(),
-//           }));
-//
-//           // Apply additional filters
-//           if (selectedBedAvailability.value) {
-//             fetchedHospitals = fetchedHospitals.filter(
-//               (hospital) =>
-//                 hospital.availability.toLowerCase() ===
-//                 selectedBedAvailability.value.toLowerCase()
-//             );
-//           }
-//
-//           if (selectedSpeciality.value) {
-//             fetchedHospitals = fetchedHospitals.filter((hospital) =>
-//               hospital.specialities.includes(selectedSpeciality.value)
-//             );
-//           }
-//
-//           if (selectedHospitalType.value) {
-//             console.log(selectedHospitalType.value, "here ahgain");
-//             fetchedHospitals = fetchedHospitals.filter(
-//               (hospital) => hospital.hospitalType === selectedHospitalType.value
-//             );
-//           }
-//
-//           hospitals.value = fetchedHospitals;
-//           console.log("Filtered hospitals:", hospitals.value);
-//         } else {
-//           console.error(`Google Places textSearch error: ${status}`);
-//           showToast({
-//             title: "Error",
-//             message: `Search failed with status: ${status}`,
-//             toastType: "error",
-//             duration: 3000,
-//           });
-//         }
-//         loading.value = false;
-//       }
-//     );
-//   } catch (error) {
-//     console.error("Error fetching hospitals:", error);
-//     showToast({
-//       title: "Error",
-//       message: "An error occurred while fetching hospitals. Try again later.",
-//       toastType: "error",
-//       duration: 3000,
-//     });
-//     loading.value = false;
-//   }
-// };
-
 const hospitalName = ref(""); // New state for hospital name
-
 
 // Helper to filter hospitals based on name
 const filterHospitals = (results) => {
@@ -847,29 +777,17 @@ const filterHospitals = (results) => {
   return results;
 };
 
-// Handle filters applied event
-
 // Handle modal close event
 const closeFilterModal = () => {
   showFilterModal.value = false;
 };
 
-
-// Fetch hospitals based on user’s current location on mount
-onMounted(() => {
-  forceLocationModal.value = true;
-  loading.value = true;
-  getUserLocation();
-
-  if (inputRef.value) {
-    initializeAutocomplete();
-  }
-});
-
+// Handle Enter key press in search input
 const handleEnter = () => {
   fetchHospitals();
 };
 
+// Initialize Google Places Autocomplete
 const initializeAutocomplete = () => {
   const loader = new Loader({
     apiKey: "AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg",
@@ -894,6 +812,20 @@ const initializeAutocomplete = () => {
     });
   });
 };
+
+// Fetch hospitals based on user's current location on mount
+onMounted(() => {
+  forceLocationModal.value = true;
+  loading.value = true;
+  getUserLocation();
+  const HARD_CODED_LAT = 6.5568768
+  const HARD_CODED_LNG = 3.325952
+  fetchNearbyHospitalsFromAPI(HARD_CODED_LAT, HARD_CODED_LNG)
+
+  if (inputRef.value) {
+    initializeAutocomplete();
+  }
+});
 </script>
 
 <style scoped>

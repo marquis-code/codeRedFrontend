@@ -639,7 +639,7 @@
    <script setup lang="ts">
    import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css';
-import { useCreateCompany } from '@/composables/modules/company/signup';
+import { useCreateCompany } from '@/composables/modules/hospitals/signup';
 import OperatingHours from '@/components/OperatingHours.vue';
 import SpecialitiesOnDuty from '@/components/SpecialitiesOnDuty.vue';
 const { createCompany, payload, loading } = useCreateCompany();

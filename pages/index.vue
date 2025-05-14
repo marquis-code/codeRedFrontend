@@ -364,6 +364,7 @@ import coo from '@/assets/img/coo.jpeg'
 import cmo from '@/assets/img/people1.jpeg'
 
 
+
 const isMobile = ref(false)
 
 const searchQuery = ref("");

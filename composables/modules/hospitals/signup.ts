@@ -1,4 +1,4 @@
-import { company_apis } from "@/apiFactory/modules/company";
+import { hospital_apis } from "@/apiFactory/modules/hospital";
 import { useCustomToast } from '@/composables/core/useCustomToast';
 import { v4 as uuidv4 } from 'uuid'; // Import UUID generator
 
@@ -40,7 +40,7 @@ export const useCreateCompany = () => {
 
     loading.value = true;
     try {
-      const res = await company_apis.$_create_company(payload.value) as any;
+      const res = await hospital_apis.$_create_company(payload.value) as any;
       if (res.type !== 'ERROR') {
         showToast({
           title: "Success",
