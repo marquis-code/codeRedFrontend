@@ -4,6 +4,10 @@ export const auth_api = {
 		const url = '/auth/login'
 		return GATEWAY_ENDPOINT.post(url, credential)
 	},
+	$_hospital_signup: (payload: any) => {
+		const url = '/hospitals'
+		return GATEWAY_ENDPOINT.post(url, payload)
+	},
 	$_update_profile: (payload: any) => {
 		const url = '/admins/profile'
 		return GATEWAY_ENDPOINT.patch(url, payload);
@@ -16,4 +20,5 @@ export const auth_api = {
 		const url = '/admins/profile'
 		return GATEWAY_ENDPOINT.get(url);
 	},
+
 }

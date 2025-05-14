@@ -65,6 +65,13 @@ export default {
     // Axios options here
     timeout: 10000, // Example: set timeout to 10 seconds
   },
+  server: {
+    port: 3001,
+    host: '0.0.0.0' // This makes the server accessible from all network interfaces
+  },
+  build: {
+    transpile: ['@ckeditor/ckeditor5-vue']
+  },
 
   compatibilityDate: "2024-11-23",
 };
