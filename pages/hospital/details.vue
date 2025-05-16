@@ -52,13 +52,13 @@ onMounted(() => {
     selectedHospitalData.value = JSON.parse(storedHospital)
     const parsedHospital = JSON.parse(storedHospital)
     hospital.value = {
-      id: parsedHospital.id || '',
-      name: parsedHospital.name || '',
+      id: parsedHospital.id || parsedHospital._id,
+      name: parsedHospital.name || parsedHospital.hospitalName,
       location: parsedHospital.location || '',
       status: parsedHospital.status || '',
-      bedSpaces: parsedHospital.bedSpaces || '',
-      lat: parseFloat(parsedHospital.lat) || 0,
-      lon: parseFloat(parsedHospital.lon) || 0,
+      bedSpaces: parsedHospital.bedSpaces || parsedHospital.totalAvailableBeds,
+      lat: parseFloat(parsedHospital.lat) || parseFloat(parsedHospital.latitude),
+      lon: parseFloat(parsedHospital.lon) || parseFloat(parsedHospital.longitude)
     }
   } else {
     // Fallback: retrieve hospital data from route query if available

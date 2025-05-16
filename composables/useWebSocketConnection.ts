@@ -1,4 +1,4 @@
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, shallowRef } from 'vue'
 import { io, Socket } from 'socket.io-client'
 import { useCustomToast } from '@/composables/core/useCustomToast'
 
@@ -40,8 +40,15 @@ export function useWebSocketConnection() {
   const subscribedHospitals = ref<Set<string>>(new Set())
   const subscribedRegions = ref<Set<string>>(new Set())
   
-  // Store the latest updates received
-  const latestBedspaceUpdates = ref<Map<string, BedspaceUpdate>>(new Map())
+  // Use a non-reactive data store for the raw updates
+  const _bedspaceUpdatesStore = new Map<string, BedspaceUpdate>()
+  
+  // Use shallowRef for better performance with large collections
+  const latestBedspaceUpdates = shallowRef<Map<string, BedspaceUpdate>>(new Map())
+  
+  // Add an update counter to trigger reactivity without causing recursive updates
+  const updateCounter = ref(0)
+  
   const reconnectAttempts = ref(0)
   const maxReconnectAttempts = 5
   const reconnectInterval = ref(2000) // Start with 2 seconds
@@ -57,6 +64,32 @@ export function useWebSocketConnection() {
   const enableDebugMode = () => {
     debugMode.value = true
     console.log('WebSocket debug mode enabled')
+  }
+
+  // Safely update the bedspace data without causing recursive updates
+  const updateBedspaceData = (updates: Map<string, BedspaceUpdate> | Array<[string, BedspaceUpdate]>) => {
+    // Update the non-reactive store
+    if (updates instanceof Map) {
+      updates.forEach((update, id) => {
+        _bedspaceUpdatesStore.set(id, update)
+      })
+    } else {
+      updates.forEach(([id, update]) => {
+        _bedspaceUpdatesStore.set(id, update)
+      })
+    }
+    
+    // Create a new Map to ensure reactivity
+    latestBedspaceUpdates.value = new Map(_bedspaceUpdatesStore)
+    
+    // Increment counter to notify watchers
+    updateCounter.value++
+  }
+
+  // Update a single bedspace entry
+  const updateSingleBedspace = (id: string, update: BedspaceUpdate) => {
+    _bedspaceUpdatesStore.set(id, update)
+    updateBedspaceData(new Map()) // This will create a new Map from _bedspaceUpdatesStore
   }
 
   // Initialize WebSocket connection
@@ -147,7 +180,8 @@ export function useWebSocketConnection() {
         hasReceivedData.value = true
         
         if (data && data.bedspace && data.bedspace._id) {
-          latestBedspaceUpdates.value.set(data.bedspace._id, data)
+          // Use the safe update method
+          updateSingleBedspace(data.bedspace._id, data)
           
           showToast({
             title: 'Bedspace Update',
@@ -166,7 +200,8 @@ export function useWebSocketConnection() {
         hasReceivedData.value = true
         
         if (data && data.bedspace && data.bedspace._id) {
-          latestBedspaceUpdates.value.set(data.bedspace._id, data)
+          // Use the safe update method
+          updateSingleBedspace(data.bedspace._id, data)
           
           showToast({
             title: 'Regional Bedspace Update',
@@ -211,9 +246,12 @@ export function useWebSocketConnection() {
         if (data.bedspaces && Array.isArray(data.bedspaces)) {
           console.log(`Processing ${data.bedspaces.length} bedspaces for hospital ${data.hospitalId}`)
           
+          // Create a batch of updates to apply at once
+          const batchUpdates = new Map<string, BedspaceUpdate>()
+          
           data.bedspaces.forEach((bedspace) => {
             if (bedspace && bedspace._id) {
-              latestBedspaceUpdates.value.set(bedspace._id, {
+              batchUpdates.set(bedspace._id, {
                 hospitalId: data.hospitalId,
                 bedspace,
                 timestamp: data.timestamp || new Date().toISOString(),
@@ -224,8 +262,9 @@ export function useWebSocketConnection() {
             }
           })
           
-          // Force a reactivity update by creating a new Map
-          latestBedspaceUpdates.value = new Map(latestBedspaceUpdates.value)
+          // Apply all updates at once
+          updateBedspaceData(batchUpdates)
+          
         } else {
           console.log('No bedspaces in initial data or invalid format:', data)
         }
@@ -462,7 +501,8 @@ export function useWebSocketConnection() {
   const forceUpdateAllHospitals = (hospitals: any[]) => {
     console.log('Forcing update of all hospitals with current bedspace data')
     
-    const updatedHospitals = hospitals.map(hospital => {
+    // Create a new array to avoid mutating the original
+    return hospitals.map(hospital => {
       const bedspaceStatus = getHospitalBedspaceStatus(hospital)
       
       if (bedspaceStatus) {
@@ -483,8 +523,6 @@ export function useWebSocketConnection() {
       
       return hospital
     })
-    
-    return updatedHospitals
   }
 
   // Lifecycle hooks
@@ -527,6 +565,8 @@ export function useWebSocketConnection() {
     reconnect: initializeWebSocket,
     testConnection,
     enableDebugMode,
-    debugMode
+    debugMode,
+    // Export the update counter for components that need to watch for changes
+    updateCounter
   }
 }
