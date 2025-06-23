@@ -36,10 +36,10 @@
           }"
                 class="text-lg lg:text-3xl font-semibold">
               <!-- {{ hospital.name }} {{ selectedHospital }} -->
-              {{selectedHospitalData.name}}
+              {{selectedHospitalData?.name ||selectedHospitalData?.hospitalName}}
             </h1>
 <!--            {{hospital}}-->
-            <div class="text-sm lg:text-base text-gray-500 lg:-mt-3 max-w-xs">{{ hospital?.formatted_address || hospital?.vicinity || 'Nil' }}</div>
+            <div class="text-sm lg:text-base text-gray-500 lg:-mt-3 max-w-xs">{{ hospital?.formatted_address || hospital?.vicinity || selectedHospitalData?.address || 'Nil' }}</div>
             <!-- <span class="bg-red-500 text-white text-sm px-2 py-1 rounded-full px-6">{{ hospital.status }}</span> -->
           </div>
         </div>
@@ -120,7 +120,7 @@
 <!--          </div>-->
         </div>
       </div>
-      <div class="pb-10 lg:pb-0 w-full">
+      <div class="pb-10 md:hidden  lg:pb-0 w-full">
         <button @click="toggleMap" class="bg-[#CC1100] text-white py-4 mt-4 w-full lg:text-base text-sm rounded-lg">
           GET DIRECTION →
         </button>
@@ -167,61 +167,10 @@ const userLocation = ref({}) as any
 const selectedHospital = ref({}) as any
 
 function makeEmergencyCall() {
-  const emergencyNumber = '08060907333';
+  const emergencyNumber =  selectedHospitalData?.emergencyContactNumber || '08060907333';
   window.location.href = `tel:${emergencyNumber}`;
 }
 
-
-// const calculateDistanceAndETA = () => {
-//   const R = 6371; // Earth's radius in kilometers
-//   const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
-//
-//   const lat1 = userLocation.value?.lat;
-//   const lon1 = userLocation.value?.lng;
-//   const lat2 = selectedHospitalData.value?.latitude;
-//   const lon2 = selectedHospitalData.value?.longitude;
-//
-//   // Check if all required values are available
-//   if (
-//       lat1 === undefined ||
-//       lon1 === undefined ||
-//       lat2 === undefined ||
-//       lon2 === undefined
-//   ) {
-//     console.error("Invalid coordinates: Cannot calculate distance or ETA.");
-//     distance.value = 0;
-//     eta.value = 0;
-//     return;
-//   }
-//
-//   // Haversine formula
-//   const dLat = toRadians(lat2 - lat1);
-//   const dLon = toRadians(lon2 - lon1);
-//
-//   const a =
-//       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//       Math.cos(toRadians(lat1)) *
-//       Math.cos(toRadians(lat2)) *
-//       Math.sin(dLon / 2) *
-//       Math.sin(dLon / 2);
-//
-//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//   const calculatedDistance = R * c; // Distance in kilometers
-//
-//   // Assuming an average speed of 60 km/h
-//   const averageSpeed = 60; // km/h
-//   const calculatedETA = calculatedDistance / averageSpeed; // Time in hours
-//
-//   // Handle edge cases
-//   if (isNaN(calculatedDistance) || isNaN(calculatedETA)) {
-//     console.error("Error in calculations: Distance or ETA resulted in NaN.");
-//     distance.value = 0;
-//     eta.value = 0;
-//   } else {
-//     distance.value = parseFloat(calculatedDistance.toFixed(2));
-//     eta.value = parseFloat(calculatedETA.toFixed(2));
-//   }
-// };
 
 onMounted(() => {
   // Retrieve and parse values from local storage
