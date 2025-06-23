@@ -64,7 +64,7 @@
             </svg>
           </button>
         </div>
-      </section> -->
+      </section>  -->
 
       <div
         v-if="loading"
@@ -84,7 +84,7 @@
             class="h-20 w-20"
             alt="location search"
           />
-          <p>Search for bed spaces closest to you</p>
+          <p>Search for bed spaces closest to you search</p>
         </div>
       </div>
 
@@ -103,93 +103,7 @@
         </div>
       </div>
 
-      <BedspaceAvailability v-else />
-      <!-- <div v-else class="p-4">
-        <p class="text-gray-600 mb-4">
-          Results are automatically filtered based on your location ccccc
-        </p>
-
-        <div class="flex space-x-4 overflow-x-auto custom-scrollbar">
-          <div
-            v-for="hospital in displayedHospitals"
-            :key="hospital.place_id || hospital._id"
-            @click="selectHospital(hospital)"
-            class="hospital-card relative w-64 p-4 m-2 space-y-3 border rounded-lg shadow cursor-pointer transition-transform transform hover:scale-105"
-            :class="{
-              'bg-green-100 border-green-400':
-                hospital.availability === 'available',
-              'bg-red-100 border-red-400':
-                hospital.availability === 'unavailable',
-              'bg-blue-100 border-blue-400': hospital.availability === 'busy',
-            }"
-          >
-
-            <div v-if="hospital.isCodeRed" class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-tl-lg">
-              CODE RED
-            </div>
-            
-            <div class="flex justify-end items-end">
-              <span
-                class="text-xs rounded-full"
-                :class="{
-                  'bg-green-500 text-white px-2 py-1 rounded':
-                    hospital.availability === 'available',
-                  'bg-red-500 text-white px-2 py-1 rounded':
-                    hospital.availability === 'unavailable',
-                  'bg-blue-500 text-white px-2 py-1 rounded':
-                    hospital.availability === 'busy',
-                }"
-              >
-                {{ hospital.availability || 'Unknown' }}
-              </span>
-            </div>
-            <h3
-              class="text-base leading-snug font-bold"
-              :class="{
-                'text-green-500': hospital.availability === 'available',
-                'text-red-500': hospital.availability === 'unavailable',
-                'text-blue-500': hospital.availability === 'busy',
-              }"
-            >
-              {{ hospital.hospitalName || hospital.name }}
-            </h3>
-            <p class="text-sm text-gray-600">
-              {{ hospital.address || hospital.vicinity }}
-            </p>
-            
-            <div v-if="hospital.emergencyServices" class="mt-2">
-              <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                {{ hospital.emergencyServices }}
-              </span>
-            </div>
-            
-            <div v-if="hospital.availableSpecialties && hospital.availableSpecialties.length" class="mt-2 flex flex-wrap gap-1">
-              <span 
-                v-for="(specialty, idx) in hospital.availableSpecialties.slice(0, 2)" 
-                :key="idx"
-                class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-0.5 rounded"
-              >
-                {{ specialty }}
-              </span>
-              <span v-if="hospital.availableSpecialties.length > 2" class="text-xs text-gray-500">
-                +{{ hospital.availableSpecialties.length - 2 }} more
-              </span>
-            </div>
-            
-            <div v-if="hospital.emergencyContactNumber" class="mt-2 text-sm text-gray-700">
-              <span class="font-medium">Emergency:</span> {{ hospital.emergencyContactNumber }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <NuxtLink
-        v-if="displayedHospitals.length"
-        to="/view-all"
-        class="mt-4 pl-6 text-red-600"
-      >
-        View all results
-      </NuxtLink> -->
+      <BedspaceAvailability />
 
       <FilterModal
         v-if="showFilterModal"
