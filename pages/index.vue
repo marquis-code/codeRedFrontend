@@ -49,54 +49,6 @@
       </div>
     </div>
 
-    <!-- <div class="relative bg-white">
-      <div class="mx-auto max-w-7xl lg:grid lg:grid-cols-12 lg:gap-x-20">
-        <div
-          class="px-6 pb-24 sm:pb-32 lg:col-span-7 lg:px-0 lg:pb-56 xl:col-span-6"
-        >
-          <div class="mx-auto max-w-2xl lg:mx-0">
-            <h1 data-aos="flip-left"
-              class="mt-24 font-black text-5xl  tracking-tight text-gray-900 sm:mt-10 sm:text-6xl"
-            >
-              Need help locating<span class="text-[#CC1100]"> Bed Spaces?</span>
-            </h1>
-
-            <img data-aos="fade-down"
-            class="aspect-[3/2] lg:hidden w-full my-6 bg-gray-50 object-cover lg:absolute lg:inset-0 lg:aspect-auto lg:h-full"
-            src="@/assets/img/saving-lives.png"
-            alt=""
-          />
-            <p data-aos="flip-left" class="mt-2 font-light leading-snug text-gray-800">
-              Get real-time updates on hospital bed availability, essential first aid tips, and access to ambulance services when you need them most.
-            </p>
-
-            <div class="relative mt-4">
-              <a href="#filter"
-              class="bg-[#CC1100] text-base block text-center px-3.5 py-5 w-full rounded-sm font-semibold text-white shadow-sm hover:bg-[#CC1100] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#CC1100]"
-              >
-                CHECK BED AVAILABILITY
-              </a>
-          
-              <span
-                class="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full  bg-red-400 animate-ping"
-              ></span>
-              <span
-                class="absolute -top-1.5 -right-1.5 h-4 w-4 rounded-full bg-red-600"
-              ></span>
-            </div>
-          </div>
-        </div>
-        <div
-          class="relative lg:col-span-5 lg:-mr-8 xl:absolute xl:inset-0 xl:left-1/2 xl:mr-0"
-        >
-          <img data-aos="fade-down"
-            class="aspect-[3/2] hidden lg:block w-full bg-gray-50 object-cover lg:absolute lg:inset-0 lg:aspect-auto"
-            src="@/assets/img/animation.png"
-            alt=""
-          />
-        </div>
-      </div>
-    </div> -->
 
     <MapFunctional id="filter" />
 
@@ -215,32 +167,6 @@
               Subscribe
             </button>
           </form>
-          <!-- <svg
-            viewBox="0 0 1024 1024"
-            class="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-x-1/2"
-            aria-hidden="true"
-          >
-            <circle
-              cx="512"
-              cy="512"
-              r="512"
-              fill="url(#759c1415-0410-454c-8f7c-9a820de03641)"
-              fill-opacity="0.7"
-            />
-            <defs>
-              <radialGradient
-                id="759c1415-0410-454c-8f7c-9a820de03641"
-                cx="0"
-                cy="0"
-                r="1"
-                gradientUnits="userSpaceOnUse"
-                gradientTransform="translate(512 512) rotate(90) scale(512)"
-              >
-                <stop stop-color="#7775D6" />
-                <stop offset="1" stop-color="#E935C1" stop-opacity="0" />
-              </radialGradient>
-            </defs>
-          </svg> -->
         </div>
       </div>
     </div>
@@ -281,72 +207,13 @@
   </div>
 </div>
 
-    <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 p-6 max-w-7xl mx-auto">
-
-      <div>
-        <div data-aos="fade-up" class="text-sm font-medium text-[#CC1100] mb-2">TEAM</div>
-        <h2 data-aos="fade-up" class="mb-8 text-2xl font-light max-w-xs">Meet The Team</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div data-aos="fade-up"
-            v-for="member in teamMembers"
-            :key="member.name"
-            class="bg-white p-1"
-          >
-            <img :src="member.image" class="lg:h-40 w-full rounded-lg" data-aos="fade-up" />
-            <h3 data-aos="fade-up" class="mt-2 font-light">{{ member.name }}</h3>
-            <p data-aos="fade-up" class="text-[#CC1100] text-sm font-semibold">{{ member.role }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white p-3 lg:p-8 shadow rounded border">
-        <div class="space-y-3">
-          <div data-aos="fade-up" class="text-sm font-medium text-[#CC1100]">FEEDBACK</div>
-          <h2 data-aos="fade-up" class="text-lg lg:text-2xl font-light max-w-xs">
-            Your Feedback Helps Us Grow
-          </h2>
-        </div>
-        <form @submit.prevent="submitFeedback" class="pt-4">
-          <div data-aos="fade-up" class="mb-6">
-            <input
-              type="text"
-              placeholder="Your Name"
-              class="w-full border outline-none border-gray-300 p-3 rounded-lg"
-              v-model="feedback.name"
-            />
-          </div>
-          <div data-aos="fade-up" class="mb-6">
-            <input
-              type="email"
-              placeholder="Email"
-              class="w-full border outline-none border-gray-300 p-3 rounded-lg"
-              v-model="feedback.email"
-            />
-          </div>
-          <div data-aos="fade-up" class="mb-6">
-            <textarea
-              rows="4"
-              placeholder="Message"
-              class="w-full border outline-none border-gray-300 p-3 rounded-lg"
-              v-model="feedback.message"
-            ></textarea>
-          </div>
-          <button data-aos="fade-up"
-            type="submit"
-            class="bg-[#CC1100] text-sm text-white px-6 py-3 rounded font-bold"
-          >
-            SEND A REQUEST
-          </button>
-        </form>
-      </div>
-    </div> -->
 
   <FooterSection />
 
-  <CoreFullScreenLoader
+  <!-- <CoreFullScreenLoader
       text="Authenticating..."
       logo="/path-to-your-logo.png"
-    />
+    /> -->
       
   </main>
 </template>
