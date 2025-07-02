@@ -66,7 +66,7 @@ export default {
     timeout: 10000, // Example: set timeout to 10 seconds
   },
   server: {
-    port: 3001,
+    port: 3000,
     host: '0.0.0.0' // This makes the server accessible from all network interfaces
   },
   build: {
