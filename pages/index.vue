@@ -50,7 +50,6 @@
     </div>
 
 
-    <MapFunctional id="filter" />
 
   <div class="flex items-start space-x-4 p-4 px-10 max-w-7xl mx-auto">
     <!-- Icon -->
@@ -61,7 +60,6 @@
         
     </span>
 
-    <!-- Text -->
     <p class="text-gray-800 leading-relaxed text-justify">
       Click on a hospital color box indicator above to get map directions,
       access the emergency hotlines, and get short illustrative videos during emergencies!
@@ -210,11 +208,6 @@
 
   <FooterSection />
 
-  <!-- <CoreFullScreenLoader
-      text="Authenticating..."
-      logo="/path-to-your-logo.png"
-    /> -->
-      
   </main>
 </template>
 
