@@ -50,7 +50,7 @@
     </div>
 
 
-    <MapFunctional id="filter" />
+    <!-- <MapFunctional id="filter" /> -->
 
   <div class="flex items-start space-x-4 p-4 px-10 max-w-7xl mx-auto">
     <!-- Icon -->

@@ -6,11 +6,23 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M19.485 20.1536L13.223 13.8916C12.723 14.3176 12.148 14.6472 11.498 14.8806C10.848 15.1139 10.1947 15.2306 9.53798 15.2306C7.93665 15.2306 6.58132 14.6762 5.47198 13.5676C4.36265 12.4589 3.80798 11.1039 3.80798 9.50256C3.80798 7.90122 4.36198 6.54556 5.46998 5.43556C6.57798 4.32556 7.93265 3.76989 9.53398 3.76856C11.1353 3.76722 12.4913 4.32189 13.602 5.43256C14.7127 6.54322 15.268 7.89889 15.268 9.49956C15.268 10.1942 15.145 10.8666 14.899 11.5166C14.653 12.1666 14.3296 12.7226 13.929 13.1846L20.191 19.4456L19.485 20.1536ZM9.53898 14.2296C10.8656 14.2296 11.9857 13.7729 12.899 12.8596C13.8123 11.9462 14.269 10.8259 14.269 9.49856C14.269 8.17122 13.8123 7.05122 12.899 6.13856C11.9857 5.22589 10.8656 4.76922 9.53898 4.76856C8.21232 4.76789 7.09198 5.22456 6.17798 6.13856C5.26398 7.05256 4.80732 8.17256 4.80798 9.49856C4.80865 10.8246 5.26532 11.9446 6.17798 12.8586C7.09065 13.7726 8.21065 14.2292 9.53798 14.2286" fill="black" fill-opacity="0.8" />
           </svg>
-          <input ref="inputRef" type="text" @keyup.enter="handleEnter" v-model="query" placeholder="Search by name or location..." class="flex-grow outline-none text-gray-500 py-5 bg-white" />
+          <input 
+            ref="inputRef" 
+            type="text" 
+            @keyup.enter="handleEnter" 
+            v-model="query" 
+            placeholder="Search by name or location..." 
+            class="flex-grow outline-none text-gray-500 py-5 bg-white" 
+          />
           <button @click="fetchHospitals" class="bg-black text-white rounded-lg p-2 ml-4 flex justify-center items-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <button @click="requestLocationAccess" class="text-gray-500 ml-4" title="Use my location">
+            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
             </svg>
           </button>
           <button @click="showFilterModal = true" class="text-gray-500 ml-4">
@@ -21,44 +33,34 @@
         </div>
       </section>
 
-      <!-- Location Permission Modal -->
-      <div v-if="showLocationModal" class="fixed inset-0 z-50 backdrop-blur-xl flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg p-6 m-4 max-w-md w-full shadow-xl">
-          <div class="text-center">
-            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
-              <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Enable Location Access</h3>
-            <p class="text-sm text-gray-500 mb-6">
-              We need your location to find the nearest hospitals and provide accurate bed availability information.
-            </p>
-            <div class="flex flex-col space-y-3">
-              <button 
-                @click="requestLocationPermission" 
-                :disabled="locationLoading"
-                class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-              >
-                <span v-if="locationLoading" class="spinner-small mr-2"></span>
-                {{ locationLoading ? 'Getting Location...' : 'Allow Location Access' }}
-              </button>
-              <button 
-                @click="useManualLocation" 
-                class="w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300"
-              >
-                Enter Location Manually
-              </button>
-            </div>
-          </div>
+      <!-- Location status indicator -->
+      <div v-if="locationStatus" class="max-w-7xl mx-auto px-3 lg:px-6 mb-4">
+        <div class="flex items-center gap-2 text-sm" :class="{
+          'text-green-600': locationStatus === 'enabled',
+          'text-blue-600': locationStatus === 'loading',
+          'text-gray-600': locationStatus === 'disabled'
+        }">
+          <svg v-if="locationStatus === 'enabled'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+          </svg>
+          <div v-else-if="locationStatus === 'loading'" class="spinner-tiny"></div>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+          <span>
+            {{ locationStatus === 'enabled' ? 'Location enabled - showing nearby results' : 
+               locationStatus === 'loading' ? 'Getting your location...' : 
+               'Location disabled - search to find hospitals' }}
+          </span>
         </div>
       </div>
 
       <HospitalWebSocketManager 
-        :hospitals="combinedHospitals" 
+        :hospitals="combinedHospitals"
         :userLocation="userLocation"
-        @hospital-updated="updateHospital" 
+        @hospital-updated="updateHospital"  
       />
 
       <div v-if="loading" class="text-center text-gray-600 py-10 max-w-xs mx-auto">
@@ -66,34 +68,39 @@
         Hang tight! We're finding the closest facilities for you!
       </div>
 
-      <!-- Empty state - no location -->
-      <div v-else-if="!location && displayedHospitals.length === 0" class="text-center text-gray-600 border rounded border-gray-100 py-6">
+      <!-- Empty state - no location and no search -->
+      <div v-else-if="!hasSearched && displayedHospitals.length === 0" class="text-center text-gray-600 border rounded border-gray-100 py-6">
         <div class="flex justify-center items-center flex-col gap-y-2">
           <img src="@/assets/icons/location-search.svg" class="h-20 w-20" alt="location search" />
-          <p>Search for bed spaces closest to you</p>
+          <p>Search for hospitals by name or location</p>
+          <p class="text-sm text-gray-400">Or click the location button to find nearby hospitals</p>
         </div>
       </div>
 
-      <!-- Empty state - no hospitals found -->
-      <div v-else-if="location && displayedHospitals.length === 0" class="text-center text-gray-600">
+      <!-- Empty state - no hospitals found after search -->
+      <div v-else-if="hasSearched && displayedHospitals.length === 0" class="text-center text-gray-600">
         <div class="flex justify-center items-center flex-col gap-y-2">
           <img src="@/assets/icons/location-search.svg" class="h-20 w-20" alt="location search" />
-          <p>Bed space not available</p>
+          <p>No hospitals found for your search</p>
+          <p class="text-sm text-gray-400">Try a different location or search term</p>
         </div>
       </div>
 
       <!-- Hospital list -->
       <div v-else class="p-4">
-        <p class="text-gray-600 mb-4">
+        <p class="text-gray-600 mb-4" v-if="userLocation.lat && userLocation.lng">
           Results are automatically filtered based on your location
         </p>
-
+        <p class="text-gray-600 mb-4" v-else>
+          Showing search results - enable location for nearby hospitals
+        </p>
+        
         <div class="flex space-x-4 overflow-x-auto custom-scrollbar">
           <div 
-            v-for="hospital in displayedHospitals" 
-            :key="hospital.place_id || hospital._id" 
+            v-for="hospital in displayedHospitals"
+            :key="hospital.place_id || hospital._id"
             @click="handleHospitalClick(hospital)" 
-            class="hospital-card relative w-64 p-4 m-2 space-y-3 border rounded-lg shadow cursor-pointer transition-transform transform hover:scale-105" 
+            class="hospital-card relative w-64 p-4 m-2 space-y-3 border rounded-lg shadow cursor-pointer transition-transform transform hover:scale-105"
             :class="{
               'bg-green-100 border-green-400': hospital.availability === 'available',
               'bg-red-100 border-red-400': hospital.availability === 'unavailable',
@@ -104,7 +111,7 @@
             <div v-if="hospital.isCodeRed" class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-tl-lg">
               CODE RED
             </div>
-            
+
             <!-- Click Loading Indicator -->
             <div v-if="clickingHospital === hospital._id || clickingHospital === hospital.place_id" class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
               <div class="text-white text-center">
@@ -112,30 +119,35 @@
                 <p class="text-sm">Processing click...</p>
               </div>
             </div>
-            
+
             <!-- Availability Badge -->
             <div class="flex justify-end items-end">
               <span class="text-xs rounded-full" :class="{
-                  'bg-green-500 text-white px-2 py-1 rounded': hospital.availability === 'available',
-                  'bg-red-500 text-white px-2 py-1 rounded': hospital.availability === 'unavailable',
-                  'bg-blue-500 text-white px-2 py-1 rounded': hospital.availability === 'busy',
-                }">
+                'bg-green-500 text-white px-2 py-1 rounded': hospital.availability === 'available',
+                'bg-red-500 text-white px-2 py-1 rounded': hospital.availability === 'unavailable',
+                'bg-blue-500 text-white px-2 py-1 rounded': hospital.availability === 'busy',
+              }">
                 {{ hospital.availability || 'Unknown' }}
               </span>
             </div>
-            
+
             <!-- Hospital Name -->
             <h3 class="text-base leading-snug font-bold" :class="{
-                'text-green-500': hospital.availability === 'available',
-                'text-red-500': hospital.availability === 'unavailable',
-                'text-blue-500': hospital.availability === 'busy',
-              }">
+              'text-green-500': hospital.availability === 'available',
+              'text-red-500': hospital.availability === 'unavailable',
+              'text-blue-500': hospital.availability === 'busy',
+            }">
               {{ hospital.hospitalName || hospital.name }}
             </h3>
-            
+
             <!-- Address -->
             <p class="text-sm text-gray-600">
               {{ hospital.address || hospital.vicinity }}
+            </p>
+
+            <!-- Distance (if location is available) -->
+            <p v-if="hospital.distance" class="text-xs text-gray-500">
+              {{ hospital.distance.toFixed(1) }} km away
             </p>
 
             <!-- Click Stats (if available) -->
@@ -155,7 +167,11 @@
       </NuxtLink>
 
       <!-- Filter modal -->
-      <FilterModal v-if="showFilterModal" @filters-applied="applyFilters" @close="showFilterModal = false" />
+      <FilterModal 
+        v-if="showFilterModal" 
+        @filters-applied="applyFilters" 
+        @close="showFilterModal = false" 
+      />
 
       <!-- Map modal -->
       <div v-if="showMap" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -181,9 +197,11 @@ import { useCustomToast } from "@/composables/core/useCustomToast";
 import { useWebSocketConnection } from "@/composables/useWebSocketConnection";
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useNuxtApp } from "#app"; // Import useNuxtApp
 
 const { showToast } = useCustomToast();
 const router = useRouter();
+const { $loadGoogleMaps } = useNuxtApp(); // Declare useNuxtApp
 
 // WebSocket Connection
 const { 
@@ -219,22 +237,32 @@ const selectedHospital = ref(null);
 const userLocation = ref({ lat: null, lng: null });
 const query = ref("");
 const inputRef = ref<HTMLInputElement | null>(null);
+const hasSearched = ref(false);
 
-// Location modal state
-const showLocationModal = ref(false);
-const locationLoading = ref(false);
-const manualLocationMode = ref(false);
+// Location status tracking
+const locationStatus = ref<'disabled' | 'loading' | 'enabled'>('disabled');
 
 // Hospital Click State
 const clickingHospital = ref<string | null>(null);
-
-const { $loadGoogleMaps } = useNuxtApp();
 
 // Example user-selected filters
 const selectedHospitalType = ref("");
 const selectedSpeciality = ref("");
 const selectedBedAvailability = ref("");
 const selectedLocation = ref("");
+
+// Calculate distance between two coordinates
+const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLng/2) * Math.sin(dLng/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+};
 
 // Check if location is cached and still valid
 const getCachedLocation = () => {
@@ -282,10 +310,36 @@ const getHospitalClickInfo = (hospital: any) => {
   return hospitalClickStats.value.get(hospitalId) || null;
 };
 
+// Request location access (optional, user-initiated)
+const requestLocationAccess = async () => {
+  if (locationStatus.value === 'loading') return;
+  
+  locationStatus.value = 'loading';
+  
+  try {
+    await getUserLocationWithPermission();
+    locationStatus.value = 'enabled';
+    showToast({
+      title: 'Location Enabled',
+      message: 'Now showing hospitals near your location',
+      toastType: 'success',
+      duration: 3000
+    });
+  } catch (error) {
+    locationStatus.value = 'disabled';
+    console.error('❌ Location access failed:', error);
+    showToast({
+      title: 'Location Access Failed',
+      message: 'You can still search for hospitals manually using the search bar.',
+      toastType: 'warning',
+      duration: 5000
+    });
+  }
+};
+
 // Handle hospital click with WebSocket integration
 const handleHospitalClick = async (hospital: any) => {
   console.log('🖱️ Hospital clicked:', hospital);
-  
   const hospitalId = hospital._id || hospital.place_id;
   
   if (!hospitalId) {
@@ -299,15 +353,15 @@ const handleHospitalClick = async (hospital: any) => {
     return;
   }
 
-  if (!userLocation.value.lat || !userLocation.value.lng) {
-    console.error('❌ User location not available');
+  // Allow clicks even without location, but warn if WebSocket features need location
+  if (wsConnected.value && (!userLocation.value.lat || !userLocation.value.lng)) {
+    console.warn('⚠️ WebSocket features require location');
     showToast({
-      title: 'Location Required',
-      message: 'Please enable location services to interact with hospitals',
-      toastType: 'warning',
-      duration: 5000
+      title: 'Location Recommended',
+      message: 'Enable location for real-time hospital updates and surge alerts',
+      toastType: 'info',
+      duration: 4000
     });
-    return;
   }
 
   if (!wsConnected.value) {
@@ -318,81 +372,91 @@ const handleHospitalClick = async (hospital: any) => {
       toastType: 'error',
       duration: 5000
     });
+    // Still allow navigation to hospital details
+    navigateToHospitalDetails(hospital);
     return;
   }
 
   try {
     clickingHospital.value = hospitalId;
     
-    console.log('🚀 Sending hospital click with data:', {
-      hospitalId,
-      userLocation: userLocation.value,
-      hospitalName: hospital.hospitalName || hospital.name,
-      timestamp: new Date().toISOString()
-    });
-
-    const response = await sendHospitalClick(hospitalId, userLocation.value);
-    console.log('✅ Hospital click response:', response);
-
-    router.push({
-      path: "/hospital/details",
-      query: {
-        id: hospital.id,
-        name: hospital.hospitalName || hospital.name,
-        location: hospital.address || hospital.vicinity,
-        status: hospital.availability,
-        lat: hospital.latitude,
-        lon: hospital.longitude,
-        isCodeRed: hospital.isCodeRed ? 'true' : 'false'
-      },
-    });
-
-    try {
-      await subscribeToHospitalClicks(hospitalId);
-      console.log('🔔 Subscribed to hospital click updates');
-    } catch (subscribeError) {
-      console.warn('⚠️ Failed to subscribe to hospital clicks:', subscribeError);
-    }
-
-    try {
-      const stats = await getHospitalClickStats(hospitalId);
-      console.log('📊 Hospital click stats:', stats);
-    } catch (statsError) {
-      console.warn('⚠️ Failed to get hospital click stats:', statsError);
-    }
-
-    if (response.surgeTriggered) {
-      showToast({
-        title: '🚨 SURGE TRIGGERED!',
-        message: `Your click helped trigger a surge alert for this hospital!`,
-        toastType: 'error',
-        duration: 10000
+    // Only send WebSocket click if we have user location
+    if (userLocation.value.lat && userLocation.value.lng) {
+      console.log('🚀 Sending hospital click with data:', {
+        hospitalId,
+        userLocation: userLocation.value,
+        hospitalName: hospital.hospitalName || hospital.name,
+        timestamp: new Date().toISOString()
       });
-    } else if (response.isValidLocation) {
-      showToast({
-        title: '✅ Click Registered',
-        message: `Click registered! ${5 - response.clickCount} more clicks needed for surge.`,
-        toastType: 'success',
-        duration: 6000
-      });
+
+      const response = await sendHospitalClick(hospitalId, userLocation.value);
+      console.log('✅ Hospital click response:', response);
+
+      try {
+        await subscribeToHospitalClicks(hospitalId);
+        console.log('🔔 Subscribed to hospital click updates');
+      } catch (subscribeError) {
+        console.warn('⚠️ Failed to subscribe to hospital clicks:', subscribeError);
+      }
+
+      try {
+        const stats = await getHospitalClickStats(hospitalId);
+        console.log('📊 Hospital click stats:', stats);
+      } catch (statsError) {
+        console.warn('⚠️ Failed to get hospital click stats:', statsError);
+      }
+
+      if (response.surgeTriggered) {
+        showToast({
+          title: '🚨 SURGE TRIGGERED!',
+          message: `Your click helped trigger a surge alert for this hospital!`,
+          toastType: 'error',
+          duration: 10000
+        });
+      } else if (response.isValidLocation) {
+        showToast({
+          title: '✅ Click Registered',
+          message: `Click registered! ${5 - response.clickCount} more clicks needed for surge.`,
+          toastType: 'success',
+          duration: 6000
+        });
+      }
     }
 
+    // Navigate to hospital details
     setTimeout(() => {
-      selectHospital(hospital);
+      navigateToHospitalDetails(hospital);
     }, 1000);
 
   } catch (error) {
     console.error('❌ Hospital click failed:', error);
-    
     showToast({
       title: 'Click Failed',
       message: error.message || 'Failed to register hospital click. Please try again.',
       toastType: 'error',
       duration: 5000
     });
+    // Still allow navigation
+    navigateToHospitalDetails(hospital);
   } finally {
     clickingHospital.value = null;
   }
+};
+
+// Navigate to hospital details
+const navigateToHospitalDetails = (hospital: any) => {
+  router.push({
+    path: "/hospital/details",
+    query: {
+      id: hospital.id,
+      name: hospital.hospitalName || hospital.name,
+      location: hospital.address || hospital.vicinity,
+      status: hospital.availability,
+      lat: hospital.latitude,
+      lon: hospital.longitude,
+      isCodeRed: hospital.isCodeRed ? 'true' : 'false'
+    },
+  });
 };
 
 // Watch for surge events
@@ -400,7 +464,6 @@ watch(surgeEvents, (newEvents) => {
   if (newEvents.length > 0) {
     const latestEvent = newEvents[newEvents.length - 1];
     console.log('🚨 New surge event detected:', latestEvent);
-    
     showToast({
       title: '🚨 SURGE ALERT!',
       message: `Surge triggered at hospital! Emergency response activated.`,
@@ -441,37 +504,13 @@ const mockHospitalType = () => {
 };
 
 const specialities = [
-  "Cardiology",
-  "Neurology",
-  "Orthopedics",
-  "Pediatrics",
-  "Emergency Medicine",
-  "Diabetes",
-  "Sickle cell crisis",
-  "Hypertensive related crisis",
-  "Asthma",
-  "Drug overdose",
-  "Mania",
-  "Panic attacks",
-  "Shortness of breath",
-  "Fainting/Syncope",
-  "Seizures/Epilepsy",
-  "Bleeding",
-  "Falls",
-  "Stomach ache",
-  "Headache",
-  "Chest pain",
-  "Fever",
-  "Cough",
-  "Fracture",
-  "Gun shot",
-  "Pregnancy",
-  "Labour pain",
-  "Newborn care",
-  "Car accidents",
-  "Workplace accidents",
-  "Pain",
-  "Swelling",
+  "Cardiology", "Neurology", "Orthopedics", "Pediatrics", "Emergency Medicine",
+  "Diabetes", "Sickle cell crisis", "Hypertensive related crisis", "Asthma",
+  "Drug overdose", "Mania", "Panic attacks", "Shortness of breath",
+  "Fainting/Syncope", "Seizures/Epilepsy", "Bleeding", "Falls", "Stomach ache",
+  "Headache", "Chest pain", "Fever", "Cough", "Fracture", "Gun shot",
+  "Pregnancy", "Labour pain", "Newborn care", "Car accidents",
+  "Workplace accidents", "Pain", "Swelling",
 ];
 
 const mockSpecialities = () => {
@@ -490,10 +529,10 @@ watch(nearbyHospitals, (newHospitals) => {
 
 // Combine API hospitals with Google hospitals
 const combinedHospitals = computed(() => {
+  let combined = [];
+  
   if (apiHospitals.value && apiHospitals.value.length > 0) {
-    const apiHospitalNames = new Map(
-      apiHospitals.value.map(h => [h.hospitalName.toLowerCase(), h])
-    );
+    const apiHospitalNames = new Map(apiHospitals.value.map(h => [h.hospitalName.toLowerCase(), h]));
     
     const googleHospitalsWithCodeRed = hospitals.value.map(h => {
       const name = (h.name || '').toLowerCase();
@@ -503,34 +542,53 @@ const combinedHospitals = computed(() => {
         isCodeRed
       };
     });
-    
-    return [
+
+    combined = [
       ...apiHospitals.value.map(h => ({
         ...h,
         isCodeRed: true,
-        availability: h.overallBedStatus?.toLowerCase() === 'available' 
-          ? 'available' 
-          : h.overallBedStatus?.toLowerCase() === 'limited' 
-            ? 'busy' 
-            : 'unavailable',
+        availability: h.overallBedStatus?.toLowerCase() === 'available' ? 'available' : 
+                     h.overallBedStatus?.toLowerCase() === 'limited' ? 'busy' : 'unavailable',
         place_id: h._id,
         lastUpdated: new Date().toISOString()
       })),
       ...googleHospitalsWithCodeRed.filter(h => !apiHospitalNames.has((h.name || '').toLowerCase()))
     ];
+  } else {
+    combined = hospitals.value;
   }
-  
-  return hospitals.value;
+
+  // Add distance if user location is available
+  if (userLocation.value.lat && userLocation.value.lng) {
+    combined = combined.map(hospital => {
+      const hospitalLat = hospital.latitude || (hospital.geometry?.location?.lat?.() || hospital.geometry?.location?.lat);
+      const hospitalLng = hospital.longitude || (hospital.geometry?.location?.lng?.() || hospital.geometry?.location?.lng);
+      
+      if (hospitalLat && hospitalLng) {
+        const distance = calculateDistance(
+          userLocation.value.lat,
+          userLocation.value.lng,
+          hospitalLat,
+          hospitalLng
+        );
+        return { ...hospital, distance };
+      }
+      return hospital;
+    });
+
+    // Sort by distance if available
+    combined.sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
+  }
+
+  return combined;
 });
 
 const displayedHospitals = computed(() => {
   let filteredHospitals = combinedHospitals.value;
-  
+
   if (selectedBedAvailability.value) {
     filteredHospitals = filteredHospitals.filter((hospital) => {
-      return (
-        hospital.availability === selectedBedAvailability.value?.toLowerCase()
-      );
+      return (hospital.availability === selectedBedAvailability.value?.toLowerCase());
     });
   }
 
@@ -539,10 +597,7 @@ const displayedHospitals = computed(() => {
 
 // Function to update a hospital when we receive a WebSocket update
 const updateHospital = (updatedHospital) => {
-  const index = apiHospitals.value.findIndex(h => 
-    h._id === updatedHospital._id || h.id === updatedHospital.id
-  );
-  
+  const index = apiHospitals.value.findIndex(h => h._id === updatedHospital._id || h.id === updatedHospital.id);
   if (index !== -1) {
     apiHospitals.value[index] = {
       ...apiHospitals.value[index],
@@ -554,7 +609,6 @@ const updateHospital = (updatedHospital) => {
       h.place_id === updatedHospital.place_id || 
       (h.name && updatedHospital.name && h.name.toLowerCase() === updatedHospital.name.toLowerCase())
     );
-    
     if (googleIndex !== -1) {
       hospitals.value[googleIndex] = {
         ...hospitals.value[googleIndex],
@@ -576,52 +630,16 @@ const applyFilters = (filters) => {
 };
 
 // Watchers for each filter
-watch(
-  [
-    selectedLocation,
-    selectedBedAvailability,
-    selectedSpeciality,
-    selectedHospitalType,
-  ],
-  ([newLocation, newAvailability, newSpecialities, newType]) => {
-    fetchHospitals();
-  },
-  { immediate: false, deep: false }
-);
+watch([
+  selectedLocation,
+  selectedBedAvailability,
+  selectedSpeciality,
+  selectedHospitalType,
+], ([newLocation, newAvailability, newSpecialities, newType]) => {
+  fetchHospitals();
+}, { immediate: false, deep: false });
 
-// Request location permission
-const requestLocationPermission = async () => {
-  locationLoading.value = true;
-  
-  try {
-    await getUserLocationWithPermission();
-    showLocationModal.value = false;
-  } catch (error) {
-    console.error('❌ Location permission denied or failed:', error);
-    showToast({
-      title: 'Location Access Denied',
-      message: 'You can still search for hospitals manually using the search bar.',
-      toastType: 'warning',
-      duration: 5000
-    });
-  } finally {
-    locationLoading.value = false;
-  }
-};
-
-// Use manual location entry
-const useManualLocation = () => {
-  showLocationModal.value = false;
-  manualLocationMode.value = true;
-  showToast({
-    title: 'Manual Location Mode',
-    message: 'Use the search bar to enter your location or hospital name.',
-    toastType: 'info',
-    duration: 4000
-  });
-};
-
-// Get user location with proper error handling
+// Get user location with proper error handling (silent, no modal)
 const getUserLocationWithPermission = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -634,9 +652,8 @@ const getUserLocationWithPermission = (): Promise<void> => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
         userLocation.value = { lat, lng };
-        
         console.log("📍 User coordinates:", userLocation.value);
-        
+
         // Cache the location
         cacheLocation(userLocation.value);
 
@@ -649,26 +666,17 @@ const getUserLocationWithPermission = (): Promise<void> => {
           }
 
           const geocoder = new google.maps.Geocoder();
-
           geocoder.geocode({ location: { lat, lng } }, (results, status) => {
             if (status === "OK" && results[0]?.formatted_address) {
               query.value = results[0].formatted_address;
               console.log("📍 User location (address):", query.value);
-
-              // Fetch nearby hospitals from API
-              fetchNearbyHospitalsFromAPI(lat, lng);
-              
-              // Also fetch from Google Maps as a backup
-              fetchHospitalsByLocation(lat, lng);
-              
-              resolve();
-            } else {
-              console.error("❌ Reverse geocoding failed:", status);
-              // Still resolve since we have coordinates
-              fetchNearbyHospitalsFromAPI(lat, lng);
-              fetchHospitalsByLocation(lat, lng);
-              resolve();
             }
+            
+            // Fetch nearby hospitals from API
+            fetchNearbyHospitalsFromAPI(lat, lng);
+            // Also fetch from Google Maps as a backup
+            fetchHospitalsByLocation(lat, lng);
+            resolve();
           });
         } catch (error) {
           console.error("❌ Error during reverse geocoding:", error);
@@ -681,7 +689,6 @@ const getUserLocationWithPermission = (): Promise<void> => {
       (error) => {
         console.error("❌ Error retrieving geolocation:", error);
         let errorMessage = 'Location access failed';
-        
         switch (error.code) {
           case error.PERMISSION_DENIED:
             errorMessage = 'Location access was denied by user';
@@ -693,7 +700,6 @@ const getUserLocationWithPermission = (): Promise<void> => {
             errorMessage = 'Location request timed out';
             break;
         }
-        
         reject(new Error(errorMessage));
       },
       {
@@ -705,28 +711,45 @@ const getUserLocationWithPermission = (): Promise<void> => {
   });
 };
 
-// Initialize location on mount
-const initializeLocation = async () => {
+// Initialize location silently (no modal)
+const initializeLocationSilently = async () => {
   // Check for cached location first
   const cachedLocation = getCachedLocation();
-  
   if (cachedLocation) {
     console.log('📍 Using cached location:', cachedLocation);
     userLocation.value = cachedLocation;
+    locationStatus.value = 'enabled';
     
     // Fetch hospitals with cached location
     fetchNearbyHospitalsFromAPI(cachedLocation.lat, cachedLocation.lng);
     fetchHospitalsByLocation(cachedLocation.lat, cachedLocation.lng);
-    
-    // Still try to get fresh location in background
-    try {
-      await getUserLocationWithPermission();
-    } catch (error) {
-      console.log('Background location update failed, using cached location');
-    }
-  } else {
-    // No cached location, show modal
-    showLocationModal.value = true;
+    return;
+  }
+
+  // Try to get location silently (no user prompt if denied)
+  try {
+    locationStatus.value = 'loading';
+    await getUserLocationWithPermission();
+    locationStatus.value = 'enabled';
+  } catch (error) {
+    console.log('Location not available, continuing without it');
+    locationStatus.value = 'disabled';
+    // Load some default hospitals or show search interface
+    loadDefaultHospitals();
+  }
+};
+
+// Load default hospitals when location is not available
+const loadDefaultHospitals = async () => {
+  // Use a default location (e.g., city center) to show some hospitals
+  const DEFAULT_LAT = 6.5568768; // Lagos coordinates as fallback
+  const DEFAULT_LNG = 3.325952;
+  
+  try {
+    await fetchNearbyHospitalsFromAPI(DEFAULT_LAT, DEFAULT_LNG);
+    fetchHospitalsByLocation(DEFAULT_LAT, DEFAULT_LNG);
+  } catch (error) {
+    console.error("❌ Error loading default hospitals:", error);
   }
 };
 
@@ -735,14 +758,8 @@ const fetchNearbyHospitalsFromAPI = async (lat: number, lng: number) => {
   loading.value = true;
   try {
     console.log(`🔍 Fetching nearby hospitals from API with coordinates: lat=${lat}, lng=${lng}, maxDistance=${MAX_DISTANCE}`);
-    
-    // Use hardcoded coordinates for testing as requested
-    const HARD_CODED_LAT = 6.5568768;
-    const HARD_CODED_LNG = 3.325952;
-    await fetchNearbyHospitals(HARD_CODED_LAT, HARD_CODED_LNG, MAX_DISTANCE);
-    
+    await fetchNearbyHospitals(lat, lng, MAX_DISTANCE);
     console.log("📊 Nearby hospitals after fetch:", nearbyHospitals.value);
-    
   } catch (error) {
     console.error("❌ Error fetching nearby hospitals from API:", error);
     showToast({
@@ -763,7 +780,6 @@ const fetchHospitalsByLocation = async (lat, lng) => {
 
   try {
     console.log("🔍 Fetching hospitals near coordinates:", { lat, lng });
-
     const google = await $loadGoogleMaps();
     if (!google) {
       console.error("❌ Google Maps API failed to load.");
@@ -775,11 +791,8 @@ const fetchHospitalsByLocation = async (lat, lng) => {
       });
       return;
     }
-    
-    const service = new google.maps.places.PlacesService(
-      document.createElement("div")
-    );
 
+    const service = new google.maps.places.PlacesService(document.createElement("div"));
     service.nearbySearch(
       {
         location: new google.maps.LatLng(lat, lng),
@@ -828,21 +841,6 @@ const selectHospital = (hospital) => {
   localStorage.setItem("selectedHospital", JSON.stringify(hospital));
   selectedHospital.value = hospital;
   showMap.value = true;
-  
-  const id = hospital.place_id || hospital._id;
-  
-  router.push({
-    path: "/hospital/details",
-    query: {
-      id: id,
-      name: hospital.hospitalName || hospital.name,
-      location: hospital.address || hospital.vicinity,
-      status: hospital.availability,
-      lat: hospital.latitude,
-      lon: hospital.longitude,
-      isCodeRed: hospital.isCodeRed ? 'true' : 'false'
-    },
-  });
 };
 
 // Cache for search results
@@ -850,13 +848,11 @@ const cache = ref<{ query: string; hospitals: any[]; timestamp: number } | null>
 const CACHE_EXPIRY_TIME = 10 * 60 * 1000; // Cache expiry time (10 minutes)
 
 const fetchHospitals = async () => {
-  if (
-    !query.value &&
-    !selectedLocation.value &&
-    !selectedBedAvailability.value &&
-    !selectedSpeciality.value &&
-    !selectedHospitalType.value
-  ) {
+  if (!query.value && 
+      !selectedLocation.value && 
+      !selectedBedAvailability.value && 
+      !selectedSpeciality.value && 
+      !selectedHospitalType.value) {
     showToast({
       title: "Error",
       message: "Please enter a location, hospital name, or select filters to search.",
@@ -866,12 +862,12 @@ const fetchHospitals = async () => {
     return;
   }
 
+  hasSearched.value = true;
+
   // Check if query exists in cache and is still valid
-  if (
-    cache.value &&
-    cache.value.query === query.value &&
-    Date.now() - cache.value.timestamp < CACHE_EXPIRY_TIME
-  ) {
+  if (cache.value && 
+      cache.value.query === query.value && 
+      Date.now() - cache.value.timestamp < CACHE_EXPIRY_TIME) {
     console.log("📦 Serving hospitals from cache:", cache.value.hospitals);
     hospitals.value = cache.value.hospitals;
     return;
@@ -886,7 +882,6 @@ const fetchHospitals = async () => {
     }
 
     console.log("🔍 Searching for hospitals with query:", query.value);
-
     const google = await $loadGoogleMaps();
     if (!google) {
       console.error("❌ Google Maps API failed to load.");
@@ -898,11 +893,8 @@ const fetchHospitals = async () => {
       });
       return;
     }
-    
-    const service = new google.maps.places.PlacesService(
-      document.createElement("div")
-    );
 
+    const service = new google.maps.places.PlacesService(document.createElement("div"));
     service.textSearch(
       { query: query.value || "", type: "hospital" },
       (results, status) => {
@@ -921,10 +913,8 @@ const fetchHospitals = async () => {
 
           // Apply additional filters
           if (selectedBedAvailability.value) {
-            fetchedHospitals = fetchedHospitals.filter(
-              (hospital) =>
-                hospital.availability.toLowerCase() ===
-                selectedBedAvailability.value.toLowerCase()
+            fetchedHospitals = fetchedHospitals.filter((hospital) =>
+              hospital.availability.toLowerCase() === selectedBedAvailability.value.toLowerCase()
             );
           }
 
@@ -936,8 +926,8 @@ const fetchHospitals = async () => {
 
           if (selectedHospitalType.value) {
             console.log(selectedHospitalType.value, "here again");
-            fetchedHospitals = fetchedHospitals.filter(
-              (hospital) => hospital.hospitalType === selectedHospitalType.value
+            fetchedHospitals = fetchedHospitals.filter((hospital) => 
+              hospital.hospitalType === selectedHospitalType.value
             );
           }
 
@@ -988,7 +978,7 @@ const initializeAutocomplete = () => {
   });
 
   loader.load().then(() => {
-    const autocomplete = new google.maps.places.Autocomplete(inputRef.value!, {
+    const autocomplete = new window.google.maps.places.Autocomplete(inputRef.value!, {
       types: ["geocode"],
       // Removed country restriction as requested
     });
@@ -999,10 +989,10 @@ const initializeAutocomplete = () => {
         userLocation.value.lat = place.geometry.location.lat();
         userLocation.value.lng = place.geometry.location.lng();
         query.value = place.formatted_address || place.name || "";
+        locationStatus.value = 'enabled';
         
         // Cache the new location
         cacheLocation(userLocation.value);
-        
         fetchHospitals();
       }
     });
@@ -1017,31 +1007,15 @@ onMounted(async () => {
   enableDebugMode();
   
   loading.value = true;
-  
-  // Initialize location (will check cache first)
-  await initializeLocation();
-  
-  // Also fetch with hardcoded coordinates to ensure we have data
-  const HARD_CODED_LAT = 6.5568768;
-  const HARD_CODED_LNG = 3.325952;
-  
-  // Directly fetch nearby hospitals on mount to ensure we have data
-  try {
-    await fetchNearbyHospitals(HARD_CODED_LAT, HARD_CODED_LNG, MAX_DISTANCE);
-    console.log("✅ Initial nearby hospitals fetch complete");
-    
-    if (nearbyHospitals.value && nearbyHospitals.value.length > 0) {
-      apiHospitals.value = nearbyHospitals.value;
-    }
-  } catch (error) {
-    console.error("❌ Error in initial nearby hospitals fetch:", error);
-  }
+
+  // Initialize location silently (no forced modal)
+  await initializeLocationSilently();
 
   // Initialize autocomplete
   if (inputRef.value) {
     initializeAutocomplete();
   }
-  
+
   loading.value = false;
 });
 </script>
@@ -1080,13 +1054,18 @@ onMounted(async () => {
   margin: 0 auto;
 }
 
+.spinner-tiny {
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  animation: spin 1s linear infinite;
+}
+
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .custom-scrollbar {
