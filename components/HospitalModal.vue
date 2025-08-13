@@ -84,7 +84,7 @@
           </div>
 
           <!-- Hospital Information -->
-          <div class="px-6 pb-6">
+          <div v-if="hospital.rating || hospital.phone || hospital.website" class="px-6 pb-6">
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h3 class="text-lg font-bold text-gray-900 mb-4">Hospital Information</h3>
               

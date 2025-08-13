@@ -75,7 +75,7 @@ const statusClass = computed(() => {
 
     <!-- Availability Badge -->
     <div class="flex justify-end items-end">
-      <span class="text-xs px-2 py-1 rounded" :class="availabilityBadgeClass">
+      <span class="text-xs px-2 py-1 rounded-full" :class="availabilityBadgeClass">
         {{ hospital.availability || 'Unknown' }}
       </span>
     </div>

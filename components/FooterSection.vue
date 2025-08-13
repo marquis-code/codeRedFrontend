@@ -24,7 +24,6 @@
              </div>
            </div>
  
-           <!-- Office -->
            <div class="flex items-start gap-4">
              <div class="text-[#3B82F6] mt-1">
                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,8 +34,8 @@
              </div>
              <div>
                <h3 class="font-medium text-[#E8E8E8] mb-1">Office</h3>
-               <p class="text-[#00BFFF] text-sm">Mushin Idi-araba,</p>
-               <p class="text-[#00BFFF] text-sm">Lagos, Nigeria</p>
+               <p class="text-[#00BFFF] text-sm">Mushin Idi-araba, Lagos, Nigeria</p>
+               <!-- <p class="text-[#00BFFF] text-sm">Lagos, Nigeria</p> -->
              </div>
            </div>
  
@@ -57,7 +56,7 @@
          </div>
  
          <!-- Social Links -->
-         <div class="flex justify-between items-center gap-4 mt-12">
+         <!-- <div class="flex justify-between items-center gap-4 mt-12">
            <a href="https://www.linkedin.com/posts/code-red-nigeria_introducing-code-red-revolutionizing-activity-7264257307880943620-fXv5/" class="text-gray-400 hover:text-white transition-colors">
              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                <path
@@ -70,7 +69,7 @@
                  d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
              </svg>
            </a>
-         </div>
+         </div> -->
        </div>
      </div>
      <div class="bg-[#161616] lg:col-span-2 py-16 flex justify-center items-center">
@@ -172,10 +171,9 @@
          </form>
      </div>
    </div>
-   <div class="max-w-7xl mx-auto flex justify-between py-6 items-center px-5 lg:px-0">
-         <!-- <NuxtLink to="/privacy-policy" class="text-[#222222] font-bold">Privacy Policy</NuxtLink> -->
+   <!-- <div class="max-w-7xl mx-auto flex justify-between py-6 items-center px-5 lg:px-0">
          <p class="text-[#222222] font-bold">© 2025 CodeRed</p>
-       </div>
+       </div> -->
  
        <CoreBaseModal :show="showModal" @update:show="showModal = $event">
              <section class="max-w-2xl px-3 py-6 mx-auto">
@@ -317,54 +315,6 @@
    const cleanPhone = phoneInput.value.replace(/\D/g, '');
    return `${selectedCountry.value.dialCode}${cleanPhone}`;
  };
- 
-//  async function handleSubmit() {
-//    if (!isFormValid.value) return;
-   
-//    processing.value = true;
-//    const url = 'https://buildr-backend.onrender.com/api/auth/signup';
-   
-//    try {
-//      const submissionData = {
-//        ...formData.value,
-//        phoneNumber: formatPhoneForSubmission(),
-//        countryCode: selectedCountry.value.code
-//      };
- 
-//      const response = await fetch(url, {
-//        method: 'POST',
-//        headers: {
-//          'Content-Type': 'application/json'
-//        },
-//        body: JSON.stringify(submissionData)
-//      });
- 
-//      if (!response.ok) {
-//        throw new Error('Network response was not ok');
-//      }
- 
-//      const result = await response.json();
-//      showModal.value = true;
-     
-//      // Reset form
-//      formData.value = {
-//        firstName: '',
-//        lastName: '',
-//        email: '',
-//        phoneNumber: '',
-//        message: ''
-//      };
-//      phoneInput.value = '';
-//      form.value.privacyPolicy = false;
-     
-//    } catch (error) {
-//      if (process.client) {
-//        useNuxtApp().$toast('Error submitting form');
-//      }
-//    } finally {
-//      processing.value = false;
-//    }
-//  }
  
  const capitalizeFirstLetter = (string: string) => {
      if (!string) return string;

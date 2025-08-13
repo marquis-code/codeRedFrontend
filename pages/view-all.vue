@@ -1,10 +1,10 @@
 <template>
     <main>
-      <section class="border-b border-gray-400 lg:h-24 sticky top-0 bg-gray-100 z-[9999999]">
+      <section class="border-b z-[9999] border-gray-400 lg:h-24 sticky top-0 bg-gray-100">
         <NavigationBar :isMobile="isMobile" @close="isMobile = false" @open="isMobile = true" />
       </section>
   
-      <ViewAll id="filter" class="pt-16 z-10" />
+      <ViewAll id="filter" class="mt-[80px] z-10" />
   
       <!-- Scroll Buttons -->
       <div class="fixed bottom-10 space-x-2 right-10 space-y-2">
