@@ -1,9 +1,6 @@
 <template>
     <main>
       <div class="container mx-auto">
-        <!-- <p>Hello</p>
-        {{ selectedHospital }} -->
-        <!-- Search Section -->
         <section class="p-3 lg:p-6 bg-[#FFF9F9CC] max-w-7xl mx-auto">
           <div class="flex items-center border-2 border-red-600 rounded-lg bg-white p-3 shadow-lg">
             <!-- Simplified search icon -->
