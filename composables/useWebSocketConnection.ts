@@ -725,7 +725,7 @@ export function useWebSocketConnection() {
         return
       }
 
-      if (!hospitalId || !userLocation.lat || !userLocation.lng) {
+      if (!hospitalId || !userLocation?.lat || !userLocation?.lng) {
         const error = "Missing required data: hospitalId, latitude, or longitude"
         console.error("❌ Cannot send hospital click:", error)
         reject(new Error(error))

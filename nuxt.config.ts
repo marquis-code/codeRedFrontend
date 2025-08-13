@@ -1,7 +1,12 @@
 export default {
   ssr: false,
   target: "static",
-
+  runtimeConfig: {
+    public: {
+      googleMapsKey: process.env.GOOGLE_MAPS_KEY,
+      googleGeocodeKey: process.env.GOOGLE_GEOCODE_KEY,
+    },
+  },
   app: {
     head: {
       title: "CodeRed | Home",
@@ -14,11 +19,18 @@ export default {
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
       script: [
         {
-          src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg&libraries=places",
+          src: `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_KEY}&libraries=places,geometry`,
           async: true,
           defer: true,
         },
       ],
+      // script: [
+      //   {
+      //     src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg&libraries=places",
+      //     async: true,
+      //     defer: true,
+      //   },
+      // ],
     },
   },
 
