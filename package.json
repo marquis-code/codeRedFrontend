@@ -20,7 +20,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^44.3.0",
     "@ckeditor/ckeditor5-vue": "^7.3.0",
-    "@googlemaps/js-api-loader": "^1.16.8",
+    "@googlemaps/js-api-loader": "^1.16.2",
     "@headlessui/vue": "^1.7.22",
     "@nuxt/typescript-build": "^3.0.2",
     "@nuxtjs/google-fonts": "^3.2.0",
