@@ -170,16 +170,16 @@
       <div class="bg-white py-20">
     <div class="mx-auto max-w-7xl px-6 text-center lg:px-8">
       <div class="mx-auto max-w-2xl">
-        <h2 class="text-34l text-balance font-semibold tracking-tight text-gray-900 sm:text-5xl">Meet our leadership</h2>
+        <h2 class="text-[34px] text-balance font-semibold tracking-tight text-[#CC1100] sm:text-5xl">Meet our leadership</h2>
         <p class="mt-6 text-lg/8 text-gray-600">We’re a dynamic group of individuals who are passionate about what we do and dedicated to delivering the best results.</p>
       </div>
       <ul role="list" class="mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
         <li v-for="member in teamMembers"
         :key="member.name">
-          <img class="mx-auto size-56 rounded-full" :src="member.image" alt="">
-          <h3 class="mt-6 text-base/7 font-semibold tracking-tight text-gray-900">{{ member.name }}</h3>
-          <p class="text-sm/6 text-gray-600">{{ member.role }}</p>
-          <ul role="list" class="mt-6 flex justify-center gap-x-6">
+          <img class="mx-auto size-96 rounded-2xl" :src="member.image" alt="">
+          <h3 class="mt-6 flex justify-start items-start pl-10 text-base/7 font-semibold tracking-tight text-gray-900">{{ member.name }}</h3>
+          <p class="text-sm/6 flex justify-start font-bold items-start pl-10 text-[#CC1100]">{{ member.role }}</p>
+          <ul role="list" class="mt-2 flex justify-start items-start pl-10 gap-x-6">
             <li>
               <a :href="member.social" class="text-gray-400 hover:text-gray-500">
                 <span class="sr-only">LinkedIn</span>
@@ -197,6 +197,8 @@
 
 
   <FooterSection />
+
+  <AppFooter />
 
   </main>
 </template>
