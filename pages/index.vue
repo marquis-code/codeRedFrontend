@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <BedspaceAvailability />
+    <BedspaceAvailabilityUpdated />
 
     <div class="flex items-start space-x-4 p-4 px-10 max-w-7xl mx-auto">
       <span class="material-icons text-red-600 text-2xl">
