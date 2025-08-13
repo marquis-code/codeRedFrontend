@@ -741,15 +741,17 @@ export function useWebSocketConnection() {
 
       const clickData: HospitalClickData = {
         hospitalId,
-        latitude: userLocation.lat,
-        longitude: userLocation.lng,
+        latitude: userLocation?.lat,
+        longitude: userLocation?.lng,
         userAgent: navigator.userAgent,
       }
+
+      console.log(clickData, 'click dadta here', userLocation, hospitalId)
 
       // Send the hospital click event
       socket.value.emit("hospital-click", clickData, (response: HospitalClickResponse) => {
         clickInProgress.value = false
-
+        console.log("✅ Hospital click successful here:", response)
         if (response.success) {
           console.log("✅ Hospital click successful:", response)
           lastClickResponse.value = response

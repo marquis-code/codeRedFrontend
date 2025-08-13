@@ -1,10 +1,9 @@
-<template>
+<!-- <template>
   <div class="fixed inset-0 z-[9999999] bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center">
     <div class="bg-white z-[9999999] rounded-lg shadow-lg z-50 m-4 max-w-lg w-full max-h-[90vh] overflow-hidden">
       <div class="overflow-y-auto custom-scrollbar">
         <h2 class="text-lg font-bold mb-4 px-6 pt-6">Filter by</h2>
 
-        <!-- Location Filter -->
         <h3 class="text-sm text-[#CC1100] border-b font-semibold mb-2 px-6 pb-2">Location</h3>
         <div class="flex flex-wrap gap-3 my-4 px-6 pb-4">
           <label
@@ -27,7 +26,6 @@
           </label>
         </div>
 
-        <!-- Availability Filter -->
         <h3 class="text-sm text-[#CC1100] border-b font-semibold mb-2 px-6 pb-2">Bed Availability</h3>
         <div class="flex flex-wrap gap-3 mb-4 px-6 pb-4">
           <label
@@ -50,7 +48,6 @@
           </label>
         </div>
 
-        <!-- Hospital Type Filter -->
         <h3 class="text-sm text-[#CC1100] border-b font-semibold mb-2 px-6 pb-2">Hospital Type</h3>
         <div class="flex flex-wrap gap-3 mb-4 px-6 pb-4">
           <label
@@ -73,7 +70,6 @@
           </label>
         </div>
 
-        <!-- Specialities Filter -->
         <h3 class="text-sm font-semibold border-b text-[#CC1100] mb-2 px-6 pb-2">Specialities</h3>
         <div class="flex flex-wrap gap-3 px-6 pb-4">
           <label
@@ -190,4 +186,99 @@ const applyFilters = () => {
 .custom-scrollbar::-webkit-scrollbar {
   display: none;
 }
-</style>
+</style> -->
+
+
+<template>
+  <div class="fixed inset-0 z-40 overflow-y-auto bg-black bg-opacity-50" @click.self="$emit('close')">
+    <div class="flex items-center justify-center min-h-screen px-4">
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">Filter Hospitals</h3>
+          <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Bed Availability</label>
+            <select v-model="localFilters.bedAvailability" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+              <option value="">All</option>
+              <option value="available">Available</option>
+              <option value="busy">Limited</option>
+              <option value="unavailable">Unavailable</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Hospital Type</label>
+            <select v-model="localFilters.hospitalType" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+              <option value="">All Types</option>
+              <option value="government">Government</option>
+              <option value="private">Private</option>
+              <option value="specialty">Specialty</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Speciality</label>
+            <select v-model="localFilters.speciality" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+              <option value="">All Specialities</option>
+              <option value="emergency">Emergency</option>
+              <option value="cardiology">Cardiology</option>
+              <option value="neurology">Neurology</option>
+              <option value="orthopedics">Orthopedics</option>
+              <option value="pediatrics">Pediatrics</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button 
+            @click="resetFilters"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Reset
+          </button>
+          <button 
+            @click="applyFilters"
+            class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+
+interface Props {
+  filters: any
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits(['close', 'apply'])
+
+// All reactive state at top level
+const localFilters = ref({ ...props.filters })
+
+const resetFilters = () => {
+  localFilters.value = {
+    hospitalType: '',
+    speciality: '',
+    bedAvailability: '',
+    location: ''
+  }
+}
+
+const applyFilters = () => {
+  emit('apply', localFilters.value)
+  emit('close')
+}
+</script>
