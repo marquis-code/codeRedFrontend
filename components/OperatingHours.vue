@@ -13,51 +13,50 @@
       </div>
   
       <!-- Modal -->
-      <div
-        v-if="showModal"
-        class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
-      >
-        <div class="bg-white m-2 rounded-lg space-y-4 w-full max-w-lg">
-          <h2 class="text-lg font-semibold px-6 py-4 mb-4 border-b-[0.5px] border-gray-100">Add Operating Hours</h2>
-          <div class="mb-6 px-6 ">
-            <label for="day" class="block text-sm mb-2 font-semibold">Day</label>
-            <select
-              id="day"
-              v-model="newOperatingHour.day"
-              class="input-field text-sm py-0"
-            >
-              <option value="" disabled>Select Day</option>
-              <option v-for="day in days" :key="day" :value="day">{{ day }}</option>
-            </select>
-          </div>
-          <div class="mb-4 px-6 ">
-            <label for="timeRange" class="block mb-2 text-sm font-semibold">Time Range</label>
-            <VueDatePicker
-              v-model="newOperatingHour.time"
-              :is-24="false"
-              time-picker
-              disable-time-range-validation
-              range
-              placeholder="Select Time Range"
-              class="w-full"
-            />
-          </div>
-          <div class="flex justify-end pt-6 p-6  gap-4 w-full">
-            <button
-              @click="showModal = false"
-              class="bg-gray-500 py-3 w-full text-sm text-white px-4 py-2 rounded-lg"
-            >
-              Cancel
-            </button>
-            <button
-              @click="addOperatingHour"
-              class="bg-black py-3 w-full text-sm text-white px-4 py-2 rounded-lg"
-            >
-              Save
-            </button>
+      <Teleport to="body">
+        <div
+          v-if="showModal"
+          class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
+        >
+          <div class="bg-white m-2 rounded-lg space-y-4 w-full max-w-lg">
+            <h2 class="text-lg font-semibold px-6 py-4 mb-4 border-b-[0.5px] border-gray-100">Add Operating Hours</h2>
+            <div class="mb-6 px-6 ">
+              <SelectInput
+                v-model="newOperatingHour.day"
+                label="Day"
+                :options="dayOptions"
+                position="standalone"
+              />
+            </div>
+            <div class="mb-4 px-6 ">
+              <label for="timeRange" class="block mb-2 text-sm font-semibold">Time Range</label>
+              <VueDatePicker
+                v-model="newOperatingHour.time"
+                :is-24="false"
+                time-picker
+                disable-time-range-validation
+                range
+                placeholder="Select Time Range"
+                class="custom-input"
+              />
+            </div>
+            <div class="flex justify-end pt-6 p-6  gap-4 w-full">
+              <button
+                @click="showModal = false"
+                class="bg-gray-500 py-3 w-full text-sm text-white px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                @click="addOperatingHour"
+                class="bg-black py-3 w-full text-sm text-white px-4 py-2 rounded-lg"
+              >
+                Save
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </Teleport>
   
       <!-- Display Operating Hours -->
      <!-- Display Operating Hours -->
@@ -103,10 +102,11 @@
     </div>
   </template>
   
-  <script lang="ts" setup>
-  import { ref } from 'vue';
+  <!-- <script lang="ts" setup>
+  import { ref, computed } from 'vue';
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css';
+  import SelectInput from '@/components/ui/SelectInput.vue';
   
   interface OperatingHour {
     day: string;
@@ -129,6 +129,10 @@
     'Saturday',
     'Sunday',
   ];
+
+  const dayOptions = computed(() => {
+    return days.map(day => ({ label: day, value: day }));
+  });
 
   // Utility function to format time
 const formatTime = (date: Date) => {
@@ -181,9 +185,100 @@ const emit = defineEmits<{
     const end = new Intl.DateTimeFormat('en-US', options).format(time.end);
     return `${start} - ${end}`;
   };
-  </script>
+  </script> -->
   
+  <script lang="ts" setup>
+import { ref, computed } from 'vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import SelectInput from '@/components/ui/SelectInput.vue';
+
+interface OperatingHour {
+  day: string;
+  time: { start: Date; end: Date } | null;
+}
+
+const showModal = ref(false);
+const operatingHours = ref<OperatingHour[]>([]);
+const newOperatingHour = ref<OperatingHour>({
+  day: '',
+  time: null,
+});
+
+const days = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+
+const dayOptions = computed(() => {
+  return days.map(day => ({ label: day, value: day }));
+});
+
+// Utility function to format time to 24-hour format (HH:MM)
+const formatTime24Hour = (date: Date) => {
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
+};
+
+// Utility function to format time for display (12-hour format)
+const formatTime = (date: Date) => {
+  const options: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' };
+  return new Intl.DateTimeFormat('en-US', options).format(date);
+};
+
+// Emit event to parent with correct field names
+const emit = defineEmits<{
+  (e: 'update-operating-hours', hours: { day: string; open: string; close: string; is24Hours: boolean }[]): void;
+}>();
+
+const addOperatingHour = () => {
+  if (newOperatingHour.value.day && newOperatingHour.value.time) {
+    operatingHours.value.push({ ...newOperatingHour.value });
+    
+    // Emit updated operating hours in the correct format
+    const formattedHours = operatingHours.value.map((hour) => ({
+      day: hour.day,
+      open: formatTime24Hour(hour.time!.start),   // Use "open" instead of "startTime"
+      close: formatTime24Hour(hour.time!.end),    // Use "close" instead of "endTime"
+      is24Hours: false                             // Add is24Hours field
+    }));
+
+    emit('update-operating-hours', formattedHours);
+    newOperatingHour.value = { day: '', time: null };
+    showModal.value = false;
+  } else {
+    alert('Please select both day and time range.');
+  }
+};
+
+const removeOperatingHour = (index: number) => {
+  operatingHours.value.splice(index, 1);
+  
+  // Emit updated operating hours in the correct format
+  const formattedHours = operatingHours.value.map((hour) => ({
+    day: hour.day,
+    open: formatTime24Hour(hour.time!.start),
+    close: formatTime24Hour(hour.time!.end),
+    is24Hours: false
+  }));
+
+  emit('update-operating-hours', formattedHours);
+};
+
+const formatTimeRange = (time: { start: Date; end: Date } | null) => {
+  if (!time) return '';
+  const start = formatTime(time.start);
+  const end = formatTime(time.end);
+  return `${start} - ${end}`;
+};
+</script>
+
   <style>
   /* Add any custom styles if needed */
   </style>
-  

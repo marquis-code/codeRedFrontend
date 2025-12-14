@@ -7,7 +7,7 @@
           v-model="newSpecialty"
           type="text"
           id="industry"
-          class="input-field"
+          class="custom-input"
           placeholder="Enter a specialty (e.g., Cardiology)"
         />
         <div
@@ -29,7 +29,7 @@
             v-if="editableIndex === index"
             v-model="editableSpecialty"
             type="text"
-            class="input-field w-full mr-2"
+            class="custom-input"
           />
           <span v-else class="flex-1 text-gray-700 text-sm">{{ specialty }}</span>
           <button

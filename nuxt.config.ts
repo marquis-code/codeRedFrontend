@@ -19,38 +19,14 @@ export default {
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
       script: [
         {
-          src: `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_KEY}&libraries=places,geometry`,
+          src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa0Rx0TJ9BGkQ9NC23BZc51zCql_Xrhs0&libraries=places,geometry`,
           async: true,
           defer: true,
         },
       ],
-      // script: [
-      //   {
-      //     src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg&libraries=places",
-      //     async: true,
-      //     defer: true,
-      //   },
-      // ],
     },
   },
 
-  //   modules: ["@nuxtjs/tailwindcss", ['@nuxtjs/google-fonts', {
-  //     families: {
-  //       Roboto: true,
-  //       Inter: [400, 700],
-  //       'Josefin+Sans': true,
-  //       Lato: [100, 300],
-  //       Raleway: {
-  //         wght: [100, 400],
-  //         ital: [100]
-  //       },
-  //       Inter: '200..700',
-  //       'Crimson Pro': {
-  //         wght: '200..900',
-  //         ital: '200..700',
-  //       }
-  //     }
-  // }],],
   modules: ["@nuxtjs/tailwindcss", '@nuxtjs/google-fonts'],
 
   googleFonts: {

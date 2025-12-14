@@ -74,7 +74,7 @@ const newEquipmentName = ref("");
             type="checkbox"
             id="option.name"
             v-model="option.value"
-            class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            class="custom-checkbox"
           />
           <label
             :for="option.name"
@@ -107,7 +107,7 @@ const newEquipmentName = ref("");
             type="text"
             v-model="equipment.details"
             @input="emit('update', emergencyEquipment)"
-            class="w-full px-4 py-2 border-none outline-none input-field rounded-md text-gray-700"
+            class="custom-input"
             :placeholder="'Enter details for ' + equipment.name"
           />
         </div>
@@ -122,7 +122,7 @@ const newEquipmentName = ref("");
           type="text"
           v-model="newEquipmentName"
           placeholder="Enter equipment name"
-          class="w-full px-4 py-2 border rounded-md text-gray-700 focus:ring focus:ring-blue-300 focus:border-blue-500"
+          class="custom-input"
         />
         <div
           @click="addEmergencyEquipment(newEquipmentName); newEquipmentName = ''"

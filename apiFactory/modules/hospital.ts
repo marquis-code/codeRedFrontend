@@ -14,4 +14,8 @@ export const hospital_apis = {
     const url = '/hospitals/${id}'
     return GATEWAY_ENDPOINT.get(url);
   },
+  $_create_company(payload: any) {
+    const url = '/hospitals'
+    return GATEWAY_ENDPOINT.post(url, payload);
+  },
 };
