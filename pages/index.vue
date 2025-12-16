@@ -16,12 +16,14 @@
         <img
           src="@/assets/img/animation.png"
           alt="Superhero"
-          class="w-full max-w-xs md:max-w-md"
+          class="w-full max-w-xs mr-24  md:max-w-md"
         />
       </div>
         <p class="text-gray-600 font-light lg:text-lg leading-tight lg:leading-7">
           Get real-time updates on hospital bed availability, essential first aid tips, and access to ambulance services when you need them most.
         </p>
+
+          <EmergencyButton />
 
         <div class="relative mt-4 w-full">
               <a href="#filter"
@@ -43,7 +45,7 @@
         <img
           src="@/assets/img/animation.png"
           alt="Superhero"
-          class="w-full max-w-xs md:max-w-md"
+          class="w-full max-w-xs mr-24 md:max-w-md"
         />
       </div>
     </div>
@@ -63,138 +65,7 @@
         access the emergency hotlines, and get short illustrative videos during emergencies!
       </p>
     </div>
-    
-      <div class="flex flex-col items-center justify-center bg-[#FFF9F9CC] p-5">
-        <div class="text-center">
-          <div class="flex justify-center items-center">
-            <button data-aos="flip-left"
-              class="text-sm font-semibold mb-4 bg-[#FFD5D5] rounded-full px-4 py-2.5 text-[#FF2020]"
-            >
-              Our Mission
-            </button>
-          </div>
-          <h1 data-aos="flip-left" class="text-2xl sm:text-3xl md:text-5xl font-medium max-w-xl text-center mb-6">
-            Transforming Emergency Healthcare in Nigeria
-          </h1>
-          <div data-aos="flip-left" class="bg-white py-6 lg:py-10 lg:px-10">
-            <p class="text-gray-700 mb-6 text-lg font-light lg:max-w-xl font-light leading-relaxed">
-              Our mission is to revolutionize emergency healthcare in Nigeria with real-time hospital bed updates, bridging the gap between patients and care facilities.
-            </p>
-            <NuxtLink to="/about-us" data-aos="flip-left"
-              class="text-[#CC1100] border-[#CC1100] border text-sm lg:text-base font-bold py-3.5 px-4"
-            >
-              About CODE-RED
-            </NuxtLink>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-5 max-w-6xl mx-auto">
-        <div class="text-center mb-10">
-          <div class="flex justify-center items-center">
-            <button data-aos="fade-up"
-              class="text-sm font-semibold mb-4 bg-[#FFD5D5] rounded-full px-4 py-2.5 text-[#FF2020]"
-            >
-              Our Services
-            </button>
-          </div>
-          <div class="flex justify-center items-center">
-            <h2 data-aos="fade-up"
-              class="text-2xl lg:text-3xl md:text-3xl font-medium max-w-xl text-center mb-6"
-            >
-              Streamlining Emergency Response for Better Care
-            </h2>
-          </div>
-        </div>
-        <div data-aos="fade-up" id="services" class="grid grid-cols-1 md:grid-cols-2 gap-5 px-1 lg:px-5">
-          <ServiceFeatureCard data-aos="fade-up"
-            title="Real Time Bed space availability"
-            description="Access up-to-the-minute information on hospital bed availability to make informed decisions quickly during emergencies."
-            :imageSrc="service1"
-          />
-          <ServiceFeatureCard data-aos="fade-up"
-            title="Emergency Ambulance Connections"
-            description="Instantly connect with ambulance services to ensure swift transportation and immediate medical attention when it's needed most."
-            :imageSrc="service2"
-          />
-          <ServiceFeatureCard data-aos="fade-up"
-            title="Interactive Hospital Navigation"
-            description="Use our integrated map feature to locate and navigate to the nearest hospitals with available beds and specific medical services."
-            :imageSrc="service3"
-          />
-          <ServiceFeatureCard data-aos="fade-up"
-            title="Comprehensive First Aid Tips"
-            description="Access a library of short, illustrative videos and guides that provide essential first aid information for common emergencies, helping you act confidently and effectively."
-            :imageSrc="service4"
-          />
-        </div>
-      </div>
-
-      <div class="bg-white py-16 sm:py-24">
-        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 ">
-          <div
-            class="relative isolate overflow-hidden bg-[url('@/assets/img/red-bg.png')] bg-gray-900 px-6 py-24 shadow-2xl sm:rounded-3xl sm:px-24 xl:py-32"
-          >
-            <h2 data-aos="fade-down"
-              class="mx-auto max-w-2xl text-center text-3xl font-bold tracking-tight text-white sm:text-4xl"
-            >
-              Health Insights and Expert Articles
-            </h2>
-            <p data-aos="fade-down"
-              class="mx-auto mt-2 max-w-xl text-center text-lg leading-8 text-white"
-            >
-              Stay Informed with the Latest Health Advice and News
-            </p>
-            <form data-aos="fade-down" class="mx-auto mt-10 flex max-w-md border rounded-lg">
-              <label for="email-address" class="sr-only">Email address</label>
-              <input data-aos="fade-down"
-                id="email-address"
-                name="email"
-                type="email"
-                autocomplete="email"
-                required
-                class="min-w-0 flex-auto placeholder:text-white border-0 bg-white/5 px-3.5 py-2 outline-none rounded-l-lg text-white shadow-sm sm:text-sm sm:leading-6"
-                placeholder="Enter your email"
-              />
-              <button data-aos="fade-down"
-                type="submit"
-                class="flex-none rounded-r-md text-white outline-none px-3.5 py-2.5 text-sm font-semibold shadow-sm bg-[#0FB259]"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white py-20">
-    <div class="mx-auto max-w-7xl px-6 text-center lg:px-8">
-      <div class="mx-auto max-w-2xl">
-        <h2 class="text-[34px] text-balance font-semibold tracking-tight text-[#CC1100] sm:text-5xl">Meet our leadership</h2>
-        <p class="mt-6 text-lg/8 text-gray-600">We’re a dynamic group of individuals who are passionate about what we do and dedicated to delivering the best results.</p>
-      </div>
-      <ul role="list" class="mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-        <li v-for="member in teamMembers"
-        :key="member.name">
-          <img class="mx-auto size-96 rounded-2xl" :src="member.image" alt="">
-          <h3 class="mt-6 flex justify-start items-start pl-10 text-base/7 font-semibold tracking-tight text-gray-900">{{ member.name }}</h3>
-          <p class="text-sm/6 flex justify-start font-bold items-start pl-10 text-[#CC1100]">{{ member.role }}</p>
-          <ul role="list" class="mt-2 flex justify-start items-start pl-10 gap-x-6">
-            <li>
-              <a :href="member.social" class="text-gray-400 hover:text-gray-500">
-                <span class="sr-only">LinkedIn</span>
-                <svg class="size-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z" clip-rule="evenodd" />
-                </svg>
-              </a>
-            </li>
-          </ul>
-        </li>
-
-      </ul>
-    </div>
-      </div>
-
+  
 
   <FooterSection />
 
