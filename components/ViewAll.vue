@@ -262,11 +262,11 @@
   </template>
   
   <script lang="ts" setup>
-  import { Loader } from '@googlemaps/js-api-loader';
   import { useCustomToast } from '@/composables/core/useCustomToast'
   const { showToast } = useCustomToast();
   import { ref, onMounted, computed } from 'vue'
-  import { useNuxtApp } from '#app'
+  import { useNuxtApp, useRuntimeConfig } from '#app'
+  import { useMapboxAutocomplete } from "@/composables/core/useMapboxAutocomplete"
   
   const location = ref('')
   const hospitals = ref([])
@@ -277,7 +277,7 @@
   const selectedHospital = ref(null)
   const userLocation = ref({ lat: null, lng: null })
   
-  const { $loadGoogleMaps } = useNuxtApp()
+  const config = useRuntimeConfig()
   const forceLocationModal = ref(false); 
   const inputRef = ref<HTMLInputElement | null>(null);
   
@@ -563,30 +563,24 @@
   
           // Step 2: Reverse geocode to get the address
           try {
-            const google = await $loadGoogleMaps();
-            const geocoder = new google.maps.Geocoder();
-  
-            geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-              if (
-                status === google.maps.GeocoderStatus.OK &&
-                results[0]?.formatted_address
-              ) {
-                // Step 3: Prefill input field with the address
-                query.value = results[0].formatted_address;
-                console.log("User location (address):", query.value);
-  
-                // Step 4: Fetch hospitals near the user's location
-                fetchHospitalsByLocation(lat, lng);
-              } else {
-                console.error("Reverse geocoding failed:", status);
-                showToast({
-                  title: "Error",
-                  message: "Could not determine your location.",
-                  toastType: "error",
-                  duration: 3000,
-                });
-              }
-            });
+            const mapboxToken = config.public.mapboxAccessToken;
+            const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?country=ng&access_token=${mapboxToken}`);
+            const results = await response.json();
+
+            if (results.features && results.features.length > 0) {
+              query.value = results.features[0].place_name;
+              console.log("User location (address):", query.value);
+              
+              fetchHospitalsByLocation(lat, lng);
+            } else {
+              console.error("Reverse geocoding failed.");
+              showToast({
+                title: "Error",
+                message: "Could not determine your location.",
+                toastType: "error",
+                duration: 3000,
+              });
+            }
           } catch (error) {
             console.error("Error during reverse geocoding:", error);
           }
@@ -639,44 +633,34 @@
     try {
       console.log('Fetching hospitals near coordinates:', { lat, lng })
   
-      // Load Google Maps SDK
-      const google = await $loadGoogleMaps()
-      const service = new google.maps.places.PlacesService(
-        document.createElement('div')
-      )
+      const mapboxToken = config.public.mapboxAccessToken
+      const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?country=ng&proximity=${lng},${lat}&access_token=${mapboxToken}`)
+      const data = await response.json()
   
-      // Use PlacesService for Nearby Search
-      service.nearbySearch(
-        {
-          location: new google.maps.LatLng(lat, lng),
-          rankBy: google.maps.places.RankBy.DISTANCE,
-          // radius: 5000, // Search within 5km radius
-          type: 'hospital',
-        },
-        (results, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            hospitals.value = results.map((hospital) => ({
-              ...hospital,
-              availability: mockAvailability(),
-              pricing: mockPricing(),
-              specialities: mockSpecialities(),
-              hospitalType: mockHospitalType(),
-              latitude: hospital.geometry.location.lat(),
-              longitude: hospital.geometry.location.lng(),
-            }))
-            console.log('Hospitals found near location:', hospitals.value)
-          } else {
-            console.error('No hospitals found nearby. Status:', status)
-            showToast({
-              title: 'Error',
-              message: 'No hospitals found near your location.',
-              toastType: 'error',
-              duration: 3000,
-            })
-          }
-          loading.value = false
-        }
-      )
+      if (data.features && data.features.length > 0) {
+        hospitals.value = data.features.map((hospital) => ({
+          ...hospital,
+          place_id: hospital.id,
+          name: hospital.text,
+          vicinity: hospital.place_name,
+          availability: mockAvailability(),
+          pricing: mockPricing(),
+          specialities: mockSpecialities(),
+          hospitalType: mockHospitalType(),
+          latitude: hospital.center[1],
+          longitude: hospital.center[0],
+        }))
+        console.log('Hospitals found near location:', hospitals.value)
+      } else {
+        console.error('No hospitals found nearby.')
+        showToast({
+          title: 'Error',
+          message: 'No hospitals found near your location.',
+          toastType: 'error',
+          duration: 3000,
+        })
+      }
+      loading.value = false
     } catch (error) {
       console.error('Error fetching hospitals near location:', error)
       showToast({
@@ -920,67 +904,78 @@
       }
   
       console.log('Searching for hospitals with query:', query.value)
-  
-      // Load Google Maps SDK
-      const google = await $loadGoogleMaps()
-      const service = new google.maps.places.PlacesService(
-        document.createElement('div')
-      )
-  
-      // Use PlacesService's textSearch
-      service.textSearch(
-        { query: query.value || '', type: 'hospital' },
-        (results, status) => {
-          if (status === google.maps.places.PlacesServiceStatus.OK) {
-            // Map and augment results
-            let fetchedHospitals = results.map((hospital) => ({
-              ...hospital,
-              name: hospital.name,
-              vicinity: hospital.vicinity || hospital.formatted_address,
-              availability: mockAvailability(),
-              pricing: mockPricing(),
-              specialities: mockSpecialities(),
-              hospitalType: mockHospitalType(),
-              latitude: hospital.geometry.location.lat(),
-              longitude: hospital.geometry.location.lng(),
-            }))
-  
-            // Apply additional filters
-            if (selectedBedAvailability.value) {
-                fetchedHospitals = fetchedHospitals.filter(
-                  (hospital) =>
-                    hospital.availability.toLowerCase() === selectedBedAvailability.value.toLowerCase()
-                )
-              }
-  
-  
-            if (selectedSpeciality.value) {
-              fetchedHospitals = fetchedHospitals.filter((hospital) =>
-                hospital.specialities.includes(selectedSpeciality.value)
-              )
-            }
-  
-            if (selectedHospitalType.value) {
-              console.log(selectedHospitalType.value, 'here ahgain')
-              fetchedHospitals = fetchedHospitals.filter(
-                (hospital) => hospital.hospitalType === selectedHospitalType.value
-              )
-            }
-  
-            hospitals.value = fetchedHospitals
-            console.log('Filtered hospitals:', hospitals.value)
-          } else {
-            console.error(`Google Places textSearch error: ${status}`)
-            showToast({
-              title: 'Error',
-              message: `Search failed with status: ${status}`,
-              toastType: 'error',
-              duration: 3000,
-            })
-          }
-          loading.value = false
+
+      let searchLng = userLocation.value?.lng
+      let searchLat = userLocation.value?.lat
+      const mapboxToken = config.public.mapboxAccessToken
+
+      if (query.value && (!searchLng || !searchLat)) {
+        const geocodeRes = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query.value)}.json?country=ng&access_token=${mapboxToken}`)
+        const geocodeData = await geocodeRes.json()
+        if (geocodeData.features && geocodeData.features.length > 0) {
+          searchLng = geocodeData.features[0].center[0]
+          searchLat = geocodeData.features[0].center[1]
         }
-      )
+      }
+      
+      let apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?country=ng&access_token=${mapboxToken}`
+      if (searchLng && searchLat) {
+        apiUrl += `&proximity=${searchLng},${searchLat}`
+      } else {
+        apiUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query.value + " hospital")}.json?country=ng&access_token=${mapboxToken}`
+      }
+
+      const response = await fetch(apiUrl)
+      const data = await response.json()
+  
+      if (data.features && data.features.length > 0) {
+        // Map and augment results
+        let fetchedHospitals = data.features.map((hospital) => ({
+          ...hospital,
+          place_id: hospital.id,
+          name: hospital.text,
+          vicinity: hospital.place_name,
+          availability: mockAvailability(),
+          pricing: mockPricing(),
+          specialities: mockSpecialities(),
+          hospitalType: mockHospitalType(),
+          latitude: hospital.center[1],
+          longitude: hospital.center[0],
+        }))
+  
+        // Apply additional filters
+        if (selectedBedAvailability.value) {
+            fetchedHospitals = fetchedHospitals.filter(
+              (hospital) =>
+                hospital.availability.toLowerCase() === selectedBedAvailability.value.toLowerCase()
+            )
+          }
+  
+        if (selectedSpeciality.value) {
+          fetchedHospitals = fetchedHospitals.filter((hospital) =>
+            hospital.specialities.includes(selectedSpeciality.value)
+          )
+        }
+  
+        if (selectedHospitalType.value) {
+          console.log(selectedHospitalType.value, 'here ahgain')
+          fetchedHospitals = fetchedHospitals.filter(
+            (hospital) => hospital.hospitalType === selectedHospitalType.value
+          )
+        }
+  
+        hospitals.value = fetchedHospitals
+        console.log('Filtered hospitals:', hospitals.value)
+      } else {
+        console.error('No hospitals found.')
+        showToast({
+          title: 'Error',
+          message: 'No hospitals found.',
+          toastType: 'error',
+          duration: 3000,
+        })
+      }
+      loading.value = false
     } catch (error) {
       console.error('Error fetching hospitals:', error)
       showToast({
@@ -1123,29 +1118,12 @@ const handleEnter = () => {
   fetchHospitals()
 }
 
+const { initializeAutocomplete: initAutocomplete } = useMapboxAutocomplete({ address: '', latitude: 0, longitude: 0 });
+
 const initializeAutocomplete = () => {
-  const loader = new Loader({
-    apiKey: 'AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg',
-    version: 'weekly',
-    libraries: ['places'],
-  });
-
-  loader.load().then(() => {
-    const autocomplete = new google.maps.places.Autocomplete(inputRef.value!, {
-      types: ['geocode'],
-      componentRestrictions: { country: 'NG' },
-    });
-
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      if (place.geometry) {
-        userLocation.value.lat = place.geometry.location.lat()
-        userLocation.value.lng = place.geometry.location.lng()
-        query.value = place.formatted_address || place.name || ''
-        fetchHospitals()
-      }
-    });
-  });
+  if (inputRef.value) {
+    initAutocomplete(inputRef.value);
+  }
 };
   
   </script>

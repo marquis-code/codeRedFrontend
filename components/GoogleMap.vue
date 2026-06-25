@@ -48,14 +48,14 @@
   
   <script setup lang="ts">
   import { ref, onMounted, watch } from 'vue'
-  import { useGoogleMaps } from '@/composables/useGoogleMaps' // Import the useGoogleMaps hook
+  import { useMapbox } from '@/composables/useMapbox' // Import the useMapbox hook
   
   interface Props {
     userLocation: { lat: number; lng: number } | null
   }
   
   const props = defineProps<Props>()
-  const { map, isLoaded, facilities, initializeMap, clearSelection } = useGoogleMaps() // Use the hook at the top level
+  const { map, isLoaded, facilities, initializeMap, clearSelection } = useMapbox() // Use the hook at the top level
   
   const mapContainer = ref<HTMLElement | null>(null)
   

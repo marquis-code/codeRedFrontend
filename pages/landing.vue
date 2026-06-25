@@ -166,11 +166,11 @@
   <script setup lang="ts">
   import { ref, onMounted, watch } from 'vue'
   import { useGeolocation } from '@/composables/useGeolocation'
-  import { useGoogleMaps } from '@/composables/useGoogleMaps'
+  import { useMapbox } from '@/composables/useMapbox'
   
   // All imports and composables at the top level
   const { location: userLocation, error: locationError, isLoading: isLoadingLocation, getCurrentLocation } = useGeolocation()
-  const { facilities, selectedFacility, initializeMap, selectFacility: selectMapFacility, getFacilityAvailability } = useGoogleMaps()
+  const { facilities, selectedFacility, initializeMap, selectFacility: selectMapFacility, getFacilityAvailability } = useMapbox()
   
   // All reactive refs at the top level
   const mapElement = ref<HTMLElement | null>(null)

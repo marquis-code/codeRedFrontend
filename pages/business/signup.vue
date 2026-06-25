@@ -71,10 +71,9 @@
                     @update:modelValue="updateLocation"
                   /> -->
                   <AddressAutocomplete 
-    :modelValue="payloadObj"
-    apiKey="AIzaSyCa0Rx0TJ9BGkQ9NC23BZc51zCql_Xrhs0"
-    @update:modelValue="updateLocation"
-  />
+                    :modelValue="payloadObj"
+                    @update:modelValue="updateLocation"
+                  />
                 </div>
                 
                 <AnimatedInput

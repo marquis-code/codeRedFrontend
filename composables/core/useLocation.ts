@@ -59,17 +59,17 @@ export function useGoogleLocation() {
   
     const getLocationText = async (latitude: number, longitude: number): Promise<string | null> => {
       try {
-        const apiKey = 'AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg' // Replace with your Google API key
+        const apiKey = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
         const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?country=ng&access_token=${apiKey}`
         );
   
         const data = await response.json();
   
-        if (data.status === 'OK' && data.results.length > 0) {
-          return data.results[0].formatted_address; // Get the formatted address
+        if (data.features && data.features.length > 0) {
+          return data.features[0].place_name; // Get the formatted address
         } else {
-          throw new Error(data.error_message || 'No location data found.');
+          throw new Error('No location data found.');
         }
       } catch (err: any) {
         throw new Error(err.message || 'Failed to fetch location.');

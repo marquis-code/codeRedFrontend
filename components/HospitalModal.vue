@@ -33,152 +33,131 @@
         </div>
 
         <!-- Desktop Details Content -->
-        <div class="desktop-details-content">
-          <!-- Status Banner -->
-          <div class="px-6 py-4">
-            <div class="flex items-center justify-between p-4 rounded-2xl transition-all duration-300" :class="statusBannerClasses">
-              <div class="flex items-center gap-3">
-                <div class="w-3 h-3 rounded-full" :class="statusDotClasses"></div>
-                <span class="font-semibold text-lg">{{ availabilityText }}</span>
+        <div class="desktop-details-content px-6 py-6 flex flex-col gap-6">
+          
+          <!-- Unified Stats & Status -->
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold border" :class="statusBannerClasses">
+                <div class="w-2.5 h-2.5 rounded-full" :class="statusDotClasses"></div>
+                <span>{{ availabilityText }}</span>
               </div>
-              <div v-if="hospital.isCodeRed" class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse">
-                CODE RED
+              <div v-if="hospital.isCodeRed" class="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full animate-pulse shadow-md">
+                CODE RED ACTIVE
+              </div>
+            </div>
+
+            <!-- ETA and Distance Row -->
+            <div class="flex gap-4">
+              <div class="flex-1 bg-white rounded-2xl p-4 border border-gray-100 flex items-center gap-4">
+                <div class="bg-red-50 p-3 rounded-full text-red-500">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">ETA</div>
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-2xl font-bold text-gray-900">{{ estimatedTimeValue }}</span>
+                    <span class="text-sm font-medium text-gray-500">mins</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex-1 bg-white rounded-2xl p-4 border border-gray-100 flex items-center gap-4">
+                <div class="bg-red-50 p-3 rounded-full text-red-500">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-500 uppercase tracking-wider">Distance</div>
+                  <div class="flex items-baseline gap-1">
+                    <span class="text-2xl font-bold text-gray-900">{{ distanceValue }}</span>
+                    <span class="text-sm font-medium text-gray-500">km</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Quick Stats -->
-          <div class="px-6 pb-6">
-            <div class="grid grid-cols-2 gap-4">
-              <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
-                <div class="text-sm text-gray-600 mb-1">From your location</div>
-                <div class="text-3xl font-bold text-red-500 mb-1">
-                  {{ estimatedTimeValue }}
-                  <span class="text-sm font-normal text-gray-500">mins</span>
-                </div>
-                <div class="text-sm text-gray-600">Estimated Time Of Arrival</div>
-              </div>
-
-              <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transform transition-all duration-300 hover:scale-105">
-                <div class="text-sm text-gray-600 mb-1">From your location</div>
-                <div class="text-3xl font-bold text-red-500 mb-1">
-                  {{ distanceValue }}
-                  <span class="text-sm font-normal text-gray-500">km</span>
-                </div>
-                <div class="text-sm text-gray-600">Distance</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Emergency Call Button -->
-          <div class="px-6 pb-6">
+          <!-- Primary Action Buttons -->
+          <div class="grid grid-cols-2 gap-4">
             <button 
               @click="callEmergency"
-              class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
+              class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 transform active:scale-95 shadow-md"
             >
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
               </svg>
-              CALL EMERGENCY
+              Call Emergency
+            </button>
+            <button 
+              @click="getDirections"
+              :disabled="directionsDisabled"
+              class="w-full bg-white border-2 border-red-500 text-red-600 hover:bg-red-50 font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"/>
+              </svg>
+              Directions
             </button>
           </div>
 
-          <!-- Hospital Information -->
-          <div v-if="hospital.rating || hospital.phone || hospital.website" class="px-6 pb-6">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 class="text-lg font-bold text-gray-900 mb-4">Hospital Information</h3>
-              
+          <!-- Extra Info Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Information -->
+            <div v-if="hospital.rating || hospital.phone || hospital.website" class="bg-white rounded-2xl p-5 border border-gray-100">
+              <h3 class="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wider">Information</h3>
               <div class="space-y-4">
                 <div v-if="hospital.rating" class="flex items-center justify-between">
-                  <span class="text-gray-600">Rating</span>
-                  <div class="flex items-center gap-2">
-                    <div class="flex items-center">
-                      <svg v-for="i in 5" :key="i" class="w-4 h-4" :class="getStarClass(i)" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                      </svg>
-                    </div>
-                    <span class="font-semibold">{{ hospital.rating }}</span>
-                    <span v-if="hospital.user_ratings_total" class="text-sm text-gray-500">({{ hospital.user_ratings_total }})</span>
+                  <span class="text-gray-600 text-sm">Rating</span>
+                  <div class="flex items-center gap-1">
+                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    <span class="font-semibold text-sm">{{ hospital.rating }}</span>
                   </div>
                 </div>
-
                 <div v-if="hospital.phone" class="flex items-center justify-between">
-                  <span class="text-gray-600">Phone</span>
-                  <a :href="phoneLink" class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                    {{ hospital.phone }}
-                  </a>
+                  <span class="text-gray-600 text-sm">Phone</span>
+                  <a :href="phoneLink" class="text-blue-600 hover:text-blue-700 font-medium transition-colors text-sm">{{ hospital.phone }}</a>
                 </div>
-
                 <div v-if="hospital.website" class="flex items-center justify-between">
-                  <span class="text-gray-600">Website</span>
-                  <a :href="hospital.website" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-colors">
-                    Visit Website
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                    </svg>
-                  </a>
+                  <span class="text-gray-600 text-sm">Website</span>
+                  <a :href="hospital.website" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium text-sm">Visit Site</a>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- Bed Availability -->
-          <div v-if="hospital.bedAvailability" class="px-6 pb-6">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 class="text-lg font-bold text-gray-900 mb-4">Bed Availability</h3>
-              <div class="grid grid-cols-2 gap-4">
-                <div v-for="(count, type) in hospital.bedAvailability" :key="type" class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <span class="text-sm font-medium text-gray-700">{{ formatBedType(type) }}</span>
-                  <span class="text-lg font-bold text-gray-900">{{ count }}</span>
+            
+            <!-- Bed Availability -->
+            <div v-if="hospital.bedAvailability" class="bg-white rounded-2xl p-5 border border-gray-100">
+              <h3 class="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wider">Bed Availability</h3>
+              <div class="space-y-3">
+                <div v-for="(count, type) in hospital.bedAvailability" :key="type" class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-gray-600">{{ formatBedType(type) }}</span>
+                  <span class="text-sm font-bold text-gray-900">{{ count }}</span>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Specialities -->
-          <div v-if="hasSpecialities" class="px-6 pb-6">
-            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 class="text-lg font-bold text-gray-900 mb-4">Specialities</h3>
-              <div class="flex flex-wrap gap-2">
-                <span 
-                  v-for="speciality in hospital.specialities" 
-                  :key="speciality"
-                  class="px-3 py-2 bg-blue-50 text-blue-700 text-sm font-medium rounded-xl border border-blue-100 transition-all hover:bg-blue-100"
-                >
-                  {{ speciality }}
-                </span>
-              </div>
+          <div v-if="hasSpecialities" class="bg-white rounded-2xl p-5 border border-gray-100 mb-6">
+            <h3 class="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wider">Specialities</h3>
+            <div class="flex flex-wrap gap-2">
+              <span 
+                v-for="speciality in hospital.specialities" 
+                :key="speciality"
+                class="px-3 py-1.5 bg-blue-50 text-blue-700 text-xs font-semibold rounded-lg border border-blue-100"
+              >
+                {{ speciality }}
+              </span>
             </div>
           </div>
 
-          <!-- Get Directions Button -->
-          <div class="px-6 pb-8">
-            <button 
-              @click="getDirections"
-              :disabled="directionsDisabled"
-              class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-2xl flex items-center justify-center gap-3 transition-all duration-300 transform hover:scale-[1.02] shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              <svg v-if="loadingDirections" class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
-              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m0 0L9 7"/>
-              </svg>
-              GET DIRECTIONS
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-              </svg>
-            </button>
-          </div>
         </div>
       </div>
 
       <!-- Right Panel - Map -->
-      <div class="w-1/2 relative">
+      <div class="hidden md:block w-1/2 relative h-full bg-gray-100">
         <div 
-          ref="mapContainer" 
-          class="w-full h-full"
-          :class="{ 'block': true }"
+          ref="desktopMapContainer" 
+          class="absolute inset-0"
         ></div>
         <!-- Map Controls Overlay -->
         <div class="absolute top-6 right-6 flex flex-col gap-3">
@@ -288,19 +267,22 @@
             <div class="px-4 pb-4">
               <div class="grid grid-cols-1 gap-4">
                 <!-- Time Card -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                  <div class="flex items-center justify-between">
+                <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 transform transition-all duration-300">
+                  <div class="flex flex-col gap-4">
                     <div>
-                      <div class="text-sm text-gray-600 mb-1">From your location</div>
-                      <div class="text-lg font-bold text-gray-900 mb-1">Estimated Time Of Arrival</div>
-                      <div class="text-4xl font-bold text-red-500">
-                        {{ estimatedTimeValue }}
-                        <span class="text-lg font-normal text-gray-500">mins</span>
+                      <div class="flex items-center gap-2 mb-2 text-gray-500">
+                        <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="text-sm font-medium tracking-wide">ETA</span>
                       </div>
+                      <div class="flex items-baseline gap-1 mb-1">
+                        <span class="text-4xl font-extrabold text-gray-900 tracking-tight">{{ estimatedTimeValue }}</span>
+                        <span class="text-lg font-medium text-gray-500">mins</span>
+                      </div>
+                      <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mt-2">From your location</div>
                     </div>
                     <button 
                       @click="callEmergency"
-                      class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-2xl flex items-center gap-2 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                      class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-2xl flex items-center justify-center gap-2 transition-all duration-300 transform active:scale-95 shadow-lg w-full"
                     >
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
@@ -311,13 +293,16 @@
                 </div>
 
                 <!-- Distance Card -->
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                  <div class="text-sm text-gray-600 mb-1">From your location</div>
-                  <div class="text-lg font-bold text-gray-900 mb-1">Distance</div>
-                  <div class="text-4xl font-bold text-red-500">
-                    {{ distanceValue }}
-                    <span class="text-lg font-normal text-gray-500">km</span>
+                <div class="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)] border border-gray-100 transform transition-all duration-300">
+                  <div class="flex items-center gap-2 mb-2 text-gray-500">
+                    <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    <span class="text-sm font-medium tracking-wide">DISTANCE</span>
                   </div>
+                  <div class="flex items-baseline gap-1 mb-1">
+                    <span class="text-4xl font-extrabold text-gray-900 tracking-tight">{{ distanceValue }}</span>
+                    <span class="text-lg font-medium text-gray-500">km</span>
+                  </div>
+                  <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mt-2">From your location</div>
                 </div>
               </div>
             </div>
@@ -381,12 +366,12 @@
         <!-- Map View -->
         <div 
           v-show="currentMobileView === 'map'"
-          class="absolute inset-0 transition-opacity duration-300"
+          class="absolute inset-0 transition-opacity duration-300 bg-gray-100"
           :class="{ 'opacity-100': currentMobileView === 'map', 'opacity-0': currentMobileView !== 'map' }"
         >
           <!-- Added the missing map container div for mobile -->
           <div 
-            ref="mapContainer" 
+            ref="mobileMapContainer" 
             class="w-full h-full"
           ></div>
 
@@ -499,8 +484,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue'
-import { useNuxtApp, useRouter, useRoute } from '#app'
+import { useNuxtApp, useRouter, useRoute, useRuntimeConfig } from '#app'
 import { useCustomToast } from '@/composables/core/useCustomToast'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 interface Props {
   hospital: any
@@ -510,7 +497,7 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits(['close'])
 
-const { $loadGoogleMaps } = useNuxtApp()
+const config = useRuntimeConfig()
 const { showToast } = useCustomToast()
 const router = useRouter()
 const route = useRoute()
@@ -518,15 +505,15 @@ const route = useRoute()
 const urlView = computed(() => route.query.view as string || 'details')
 const currentMobileView = ref<'details' | 'map'>(urlView.value as 'details' | 'map' || 'details')
 
-const mapContainer = ref<HTMLDivElement | null>(null)
+const desktopMapContainer = ref<HTMLDivElement | null>(null)
+const mobileMapContainer = ref<HTMLDivElement | null>(null)
 const mapLoaded = ref(false)
 const loadingDirections = ref(false)
 const directions = ref([])
 const routeInfo = ref(null)
 
-let map: any = null
-let directionsService: any = null
-let directionsRenderer: any = null
+let map: mapboxgl.Map | null = null
+let markers: mapboxgl.Marker[] = []
 
 const hospitalName = computed(() => props.hospital.hospitalName || props.hospital.name)
 const hospitalAddress = computed(() => props.hospital.address || props.hospital.vicinity)
@@ -589,15 +576,15 @@ const switchToMapView = async () => {
     
     await nextTick()
     
-    if (map && mapLoaded.value && mapContainer.value) {
-      window.google.maps.event.trigger(map, 'resize')
+    if (map && mapLoaded.value) {
+      map.resize()
       
       // Center the map on hospital location
       const hospitalLat = props.hospital.latitude || props.hospital.geometry?.location?.lat?.() || props.hospital.geometry?.location?.lat
       const hospitalLng = props.hospital.geometry?.location?.lng?.() || props.hospital.geometry?.location?.lng
       
       if (hospitalLat && hospitalLng) {
-        map.setCenter({ lat: hospitalLat, lng: hospitalLng })
+        map.setCenter([hospitalLng, hospitalLat])
       }
       
       await getDirections()
@@ -634,122 +621,94 @@ const callEmergency = () => {
 }
 
 const centerMap = () => {
-  const activeMap = window.innerWidth >= 768 ? map : map
-  if (!activeMap) return
+  if (!map) return
   
   const hospitalLat = props.hospital.latitude || props.hospital.geometry?.location?.lat?.() || props.hospital.geometry?.location?.lat
   const hospitalLng = props.hospital.geometry?.location?.lng?.() || props.hospital.geometry?.location?.lng
 
   if (hospitalLat && hospitalLng && props.userLocation.lat && props.userLocation.lng) {
-    const bounds = new window.google.maps.LatLngBounds()
-    bounds.extend({ lat: hospitalLat, lng: hospitalLng })
-    bounds.extend({ lat: props.userLocation.lat, lng: props.userLocation.lng })
-    activeMap.fitBounds(bounds)
+    const bounds = new mapboxgl.LngLatBounds()
+    bounds.extend([hospitalLng, hospitalLat])
+    bounds.extend([props.userLocation.lng, props.userLocation.lat])
+    map.fitBounds(bounds, { padding: 50 })
   }
 }
 
 const initializeMap = async () => {
   try {
-    const google = await $loadGoogleMaps()
-    if (!google || !mapContainer.value) {
-      return
-    }
+    const activeContainer = window.innerWidth >= 768 ? desktopMapContainer.value : mobileMapContainer.value
+    if (!activeContainer) return
 
     const hospitalLat = props.hospital.latitude || props.hospital.geometry?.location?.lat?.() || props.hospital.geometry?.location?.lat
-    const hospitalLng = props.hospital.geometry?.location?.lng?.() || props.hospital.geometry?.location?.lng
+    const hospitalLng = props.hospital.longitude || props.hospital.geometry?.location?.lng?.() || props.hospital.geometry?.location?.lng
 
-    if (!hospitalLat || !hospitalLng) {
-      return
-    }
+    if (!hospitalLat || !hospitalLng) return
 
-    map = new window.google.maps.Map(mapContainer.value, {
-      center: { lat: hospitalLat, lng: hospitalLng },
-      zoom: 15,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-      styles: [
-        {
-          featureType: 'poi.medical',
-          elementType: 'geometry',
-          stylers: [{ color: '#ffeaa7' }]
-        },
-        {
-          featureType: 'poi.medical',
-          elementType: 'labels.text.fill',
-          stylers: [{ color: '#dc2626' }]
-        }
-      ]
+    mapboxgl.accessToken = config.public.mapboxAccessToken || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
+    map = new mapboxgl.Map({
+      container: activeContainer,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [hospitalLng, hospitalLat],
+      zoom: 15
     })
 
-    addMarkersToMap(map, google)
-    setupDirectionsService(google)
-    mapLoaded.value = true
+    // Force a resize after a short delay to ensure the modal animation finishes and container has dimensions
+    setTimeout(() => {
+      if (map) {
+        map.resize()
+        centerMap()
+      }
+    }, 600)
+
+    map.on('load', () => {
+      addMarkersToMap()
+      mapLoaded.value = true
+    })
   } catch (error) {
     console.error('Error initializing map:', error)
   }
 }
 
-const addMarkersToMap = (mapInstance: any, google: any) => {
-  if (!mapInstance || !google) return
+const addMarkersToMap = () => {
+  if (!map) return
   
   const hospitalLat = props.hospital.latitude || props.hospital.geometry?.location?.lat?.() || props.hospital.geometry?.location?.lat
   const hospitalLng = props.hospital.geometry?.location?.lng?.() || props.hospital.geometry?.location?.lng
 
   if (hospitalLat && hospitalLng) {
-    new window.google.maps.Marker({
-      position: { lat: hospitalLat, lng: hospitalLng },
-      map: mapInstance,
-      title: props.hospital.hospitalName || props.hospital.name,
-      icon: {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="20" cy="20" r="20" fill="#dc2626"/>
-            <circle cx="20" cy="20" r="16" fill="#ffffff" fill-opacity="0.2"/>
-            <path d="M20 10v20M10 20h20M10 20h20" stroke="white" stroke-width="3" stroke-linecap="round"/>
-          </svg>
-        `),
-        scaledSize: new window.google.maps.Size(40, 40)
-      }
-    })
+    const el = document.createElement('div')
+    el.innerHTML = `
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" fill="#dc2626"/>
+        <circle cx="20" cy="20" r="16" fill="#ffffff" fill-opacity="0.2"/>
+        <path d="M20 10v20M10 20h20M10 20h20" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    `
+    const marker = new mapboxgl.Marker(el)
+      .setLngLat([hospitalLng, hospitalLat])
+      .addTo(map)
+    markers.push(marker)
   }
 
   if (props.userLocation.lat && props.userLocation.lng) {
-    new window.google.maps.Marker({
-      position: { lat: props.userLocation.lat, lng: props.userLocation.lng },
-      map: mapInstance,
-      title: 'Your Location',
-      icon: {
-        url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="15" cy="15" r="15" fill="#2563eb"/>
-            <circle cx="15" cy="15" r="10" fill="#ffffff" fill-opacity="0.3"/>
-            <circle cx="15" cy="15" r="5" fill="white"/>
-          </svg>
-        `),
-        scaledSize: new window.google.maps.Size(30, 30)
-      }
-    })
+    const el = document.createElement('div')
+    el.innerHTML = `
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15" cy="15" r="15" fill="#2563eb"/>
+        <circle cx="15" cy="15" r="10" fill="#ffffff" fill-opacity="0.3"/>
+        <circle cx="15" cy="15" r="5" fill="white"/>
+      </svg>
+    `
+    const marker = new mapboxgl.Marker(el)
+      .setLngLat([props.userLocation.lng, props.userLocation.lat])
+      .addTo(map)
+    markers.push(marker)
 
-    const bounds = new window.google.maps.LatLngBounds()
-    bounds.extend({ lat: hospitalLat, lng: hospitalLng })
-    bounds.extend({ lat: props.userLocation.lat, lng: props.userLocation.lng })
-    mapInstance.fitBounds(bounds)
+    const bounds = new mapboxgl.LngLatBounds()
+    bounds.extend([hospitalLng, hospitalLat])
+    bounds.extend([props.userLocation.lng, props.userLocation.lat])
+    map.fitBounds(bounds, { padding: 50 })
   }
-}
-
-const setupDirectionsService = (google: any) => {
-  if (!google) return
-  
-  directionsService = new window.google.maps.DirectionsService()
-  directionsRenderer = new window.google.maps.DirectionsRenderer({
-    suppressMarkers: true,
-    polylineOptions: {
-      strokeColor: '#dc2626',
-      strokeWeight: 6,
-      strokeOpacity: 0.8
-    }
-  })
 }
 
 const getDirections = async () => {
@@ -763,10 +722,7 @@ const getDirections = async () => {
     return
   }
 
-  if (!directionsService) {
-    console.error('Directions service not initialized')
-    return
-  }
+  if (!map) return
 
   loadingDirections.value = true
   directions.value = []
@@ -780,58 +736,64 @@ const getDirections = async () => {
       throw new Error('Hospital location not available')
     }
 
-    const request = {
-      origin: { lat: props.userLocation.lat, lng: props.userLocation.lng },
-      destination: { lat: hospitalLat, lng: hospitalLng },
-      travelMode: window.google.maps.TravelMode.DRIVING
-    }
+    const response = await fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${props.userLocation.lng},${props.userLocation.lat};${hospitalLng},${hospitalLat}?steps=true&geometries=geojson&access_token=${config.public.mapboxAccessToken}`
+    )
+    const data = await response.json()
 
-    directionsService.route(request, (result: any, status: any) => {
-      try {
-        if (status === 'OK' && result) {
-          const activeMap = window.innerWidth >= 768 ? map : map
-          const activeRenderer = directionsRenderer
-
-          if (activeRenderer && activeMap) {
-            activeRenderer.setDirections(result)
-            activeRenderer.setMap(activeMap)
-          }
-
-          const route = result.routes[0]
-          const leg = route.legs[0]
-          
-          directions.value = leg.steps.map((step: any) => ({
-            instructions: step.instructions,
-            distance: step.distance.text,
-            duration: step.duration.text
-          }))
-
-          routeInfo.value = {
-            distance: leg.distance.text,
-            duration: leg.duration.text
-          }
-
-          showToast({
-            title: 'Route Found',
-            message: `${leg.duration.text} via ${leg.distance.text}`,
-            toastType: 'success',
-            duration: 3000
-          })
-        } else {
-          throw new Error(`Directions request failed: ${status}`)
-        }
-      } catch (error) {
-        console.error('Error processing directions result:', error)
-        showToast({
-          title: 'Directions Error',
-          message: 'Unable to get directions. Please try again.',
-          toastType: 'error',
-          duration: 3000
-        })
-      } finally {
-        loadingDirections.value = false
+    if (data.routes && data.routes.length > 0) {
+      const route = data.routes[0]
+      
+      const geojson = {
+        type: 'Feature',
+        properties: {},
+        geometry: route.geometry
       }
-    })
+      
+      const mapSource = map.getSource('route')
+      if (mapSource && mapSource.type === 'geojson') {
+        mapSource.setData(geojson as any)
+      } else {
+        map.addSource('route', {
+          type: 'geojson',
+          data: geojson as any
+        })
+        map.addLayer({
+          id: 'route',
+          type: 'line',
+          source: 'route',
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#dc2626',
+            'line-width': 6,
+            'line-opacity': 0.8
+          }
+        })
+      }
+
+      directions.value = route.legs[0].steps.map((step: any) => ({
+        instructions: step.maneuver.instruction,
+        distance: (step.distance / 1000).toFixed(1) + ' km',
+        duration: Math.ceil(step.duration / 60) + ' min'
+      }))
+
+      routeInfo.value = {
+        distance: (route.distance / 1000).toFixed(1) + ' km',
+        duration: Math.ceil(route.duration / 60) + ' min'
+      }
+
+      showToast({
+        title: 'Route Found',
+        message: `${routeInfo.value.duration} via ${routeInfo.value.distance}`,
+        toastType: 'success',
+        duration: 3000
+      })
+    } else {
+      throw new Error('No directions found')
+    }
   } catch (error) {
     console.error('Error getting directions:', error)
     showToast({
@@ -840,6 +802,7 @@ const getDirections = async () => {
       toastType: 'error',
       duration: 3000
     })
+  } finally {
     loadingDirections.value = false
   }
 }
@@ -856,11 +819,8 @@ const openInGoogleMaps = () => {
 
 onUnmounted(() => {
   if (map) {
+    map.remove()
     map = null
-  }
-  if (directionsRenderer) {
-    directionsRenderer.setMap(null)
-    directionsRenderer = null
   }
 })
 
@@ -873,11 +833,11 @@ watch(urlView, (newView) => {
   
   if (newView === 'map' && map && mapLoaded.value) {
     nextTick(() => {
-      window.google.maps.event.trigger(map, 'resize')
-      map.setCenter({ 
-        lat: props.hospital.latitude || props.hospital.geometry?.location?.lat?.() || props.hospital.geometry?.location?.lat,
-        lng: props.hospital.geometry?.location?.lng?.() || props.hospital.geometry?.location?.lng
-      })
+      map?.resize()
+      map?.setCenter([
+        props.hospital.geometry?.location?.lng?.() || props.hospital.geometry?.location?.lng || props.hospital.longitude || 0,
+        props.hospital.latitude || props.hospital.geometry?.location?.lat?.() || props.hospital.geometry?.location?.lat || 0
+      ])
     })
   }
 }, { immediate: true })
@@ -885,7 +845,7 @@ watch(urlView, (newView) => {
 watch(currentMobileView, (newView) => {
   if (newView === 'map' && map && mapLoaded.value) {
     nextTick(() => {
-      window.google.maps.event.trigger(map, 'resize')
+      map?.resize()
     })
   }
 })

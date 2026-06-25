@@ -1,12 +1,3 @@
-<!--<template>-->
-<!--  <div class="relative w-full h-screen">-->
-<!--    <button @click="$emit('close')" class="absolute lg:hidden top-4 left-4 z-10 text-white bg-gray-800 p-2 rounded-full">-->
-<!--      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8l-4 4 4 4M16 12H9"/></svg>-->
-<!--    </button>-->
-<!--    <div id="map" class="w-full h-full"></div>-->
-<!--  </div>-->
-<!--</template>-->
-
 <template>
   <div class="relative w-full h-screen">
     <!-- Back Button -->
@@ -38,22 +29,14 @@
     </svg>
   </div>
 </section>
-<!--      <div class="flex items-center mt-2">-->
-<!--        <div class="w-8 h-8 flex justify-center items-center bg-green-100 rounded-full">-->
-<!--          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">-->
-<!--            <path d="M16.707 10.707a1 1 0 010-1.414l-4-4a1 1 0 00-1.414 1.414L13.586 9H3a1 1 0 100 2h10.586l-2.293 2.293a1 1 0 101.414 1.414l4-4z" />-->
-<!--          </svg>-->
-<!--        </div>-->
-<!--        <span class="ml-3 text-sm font-medium text-gray-800">Emergency Available</span>-->
-<!--      </div>-->
     </div>
   </div>
 </template>
 
-
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import { useNuxtApp } from '#app'
+import mapboxgl from 'mapbox-gl'
+import { useRuntimeConfig } from '#app'
 
 // Define types for user location and selected hospital
 interface Location {
@@ -77,7 +60,7 @@ interface Hospital {
 let userLocation: Location | null = null
 let selectedHospital: Hospital | null = null
 
-const { $loadGoogleMaps } = useNuxtApp()
+const config = useRuntimeConfig()
 
 onMounted(async () => {
   // Retrieve and parse values from local storage
@@ -94,44 +77,71 @@ onMounted(async () => {
     return
   }
 
-  const google = await $loadGoogleMaps()
-  const map = new google.maps.Map(document.getElementById('map'), {
-    center: userLocation,
+  mapboxgl.accessToken = config.public.mapboxAccessToken
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [userLocation.lng, userLocation.lat],
     zoom: 14,
   })
 
   // Add markers for user location and hospital
-  const userMarker = new google.maps.Marker({
-    position: userLocation,
-    map: map,
-    title: 'Your Location',
-  })
+  new mapboxgl.Marker({ color: 'green' })
+    .setLngLat([userLocation.lng, userLocation.lat])
+    .addTo(map)
 
-  const hospitalMarker = new google.maps.Marker({
-    position: { lat: selectedHospital.latitude, lng: selectedHospital.longitude },
-    map: map,
-    title: selectedHospital.name,
-  })
+  new mapboxgl.Marker({ color: 'red' })
+    .setLngLat([selectedHospital.longitude, selectedHospital.latitude])
+    .addTo(map)
 
   // Display directions from user location to hospital
-  const directionsService = new google.maps.DirectionsService()
-  const directionsRenderer = new google.maps.DirectionsRenderer()
-  directionsRenderer.setMap(map)
+  try {
+    const coords = `${userLocation.lng},${userLocation.lat};${selectedHospital.longitude},${selectedHospital.latitude}`
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${coords}?geometries=geojson&access_token=${config.public.mapboxAccessToken}`
+    
+    const response = await fetch(url)
+    const data = await response.json()
 
-  directionsService.route(
-      {
-        origin: userLocation,
-        destination: { lat: selectedHospital.latitude, lng: selectedHospital.longitude },
-        travelMode: google.maps.TravelMode.DRIVING,
-      },
-      (result, status) => {
-        if (status === google.maps.DirectionsStatus.OK) {
-          directionsRenderer.setDirections(result)
-        } else {
-          console.error('Error fetching directions', result)
-        }
-      }
-  )
+    if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+      const route = data.routes[0]
+
+      map.on('load', () => {
+        map.addSource('route', {
+          type: 'geojson',
+          data: route.geometry
+        })
+
+        map.addLayer({
+          id: 'route',
+          type: 'line',
+          source: 'route',
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#3b82f6',
+            'line-width': 5,
+            'line-opacity': 0.75
+          }
+        })
+        
+        // Fit map to route bounds
+        const coordinates = route.geometry.coordinates
+        const bounds = coordinates.reduce((b: mapboxgl.LngLatBounds, coord: any) => {
+          return b.extend(coord)
+        }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+
+        map.fitBounds(bounds, {
+          padding: 50
+        })
+      })
+    } else {
+      console.error('Error fetching directions', data)
+    }
+  } catch (error) {
+    console.error('Error loading route', error)
+  }
 })
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div class="relative w-full h-full">
-      <!-- Google Map Container -->
+      <!-- Mapbox Map Container -->
       <div ref="mapContainer" class="w-full h-full rounded-lg overflow-hidden"></div>
       
       <!-- Loading Overlay -->
@@ -32,7 +32,8 @@
   <script setup lang="ts">
   import { ref, onMounted, onUnmounted, watch } from 'vue'
   import { useSurgeWebSocket } from '@/composables/useSurgeWebSocket'
-  import * as google from 'googlemaps'
+  import mapboxgl from 'mapbox-gl'
+  import { useRuntimeConfig } from '#app'
   
   // Props
   const props = defineProps({
@@ -50,26 +51,17 @@
     mapOptions: {
       type: Object,
       default: () => ({
-        zoom: 14,
-        mapTypeId: 'roadmap',
-        disableDefaultUI: false,
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: true,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: true
+        zoom: 14
       })
     }
   })
   
   // Refs
   const mapContainer = ref<HTMLElement | null>(null)
-  const map = ref<google.maps.Map | null>(null)
-  const hospitalMarker = ref<google.maps.Marker | null>(null)
-  const surgeMarkers = ref<google.maps.Marker[]>([])
-  const heatmap = ref<google.maps.visualization.HeatmapLayer | null>(null)
+  const map = ref<mapboxgl.Map | null>(null)
+  const surgeMarkers = ref<mapboxgl.Marker[]>([])
   const loading = ref(true)
+  const config = useRuntimeConfig()
   
   // Use the surge websocket composable
   const { 
@@ -79,115 +71,118 @@
     subscribeToHospitalSurges 
   } = useSurgeWebSocket()
   
-  // Initialize Google Map
+  // Initialize Mapbox Map
   const initializeMap = () => {
     if (!mapContainer.value) return
     
+    mapboxgl.accessToken = config.public.mapboxAccessToken
     // Create the map
-    map.value = new google.maps.Map(mapContainer.value, {
-      center: props.hospitalLocation,
+    map.value = new mapboxgl.Map({
+      container: mapContainer.value,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [props.hospitalLocation.lng, props.hospitalLocation.lat],
       ...props.mapOptions
     })
     
-    // Add hospital marker
-    hospitalMarker.value = new google.maps.Marker({
-      position: props.hospitalLocation,
-      map: map.value,
-      title: 'Hospital Location',
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: '#3b82f6', // Blue
-        fillOpacity: 1,
-        strokeWeight: 2,
-        strokeColor: '#1d4ed8',
-        scale: 10
-      },
-      zIndex: 10
+    map.value.on('load', () => {
+      // Add hospital marker
+      new mapboxgl.Marker({ color: '#3b82f6' })
+        .setLngLat([props.hospitalLocation.lng, props.hospitalLocation.lat])
+        .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML('<h3>Hospital Location</h3>'))
+        .addTo(map.value!)
+
+      // Add heatmap source and layer
+      map.value!.addSource('surges', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: []
+        }
+      })
+
+      map.value!.addLayer({
+        id: 'surges-heat',
+        type: 'heatmap',
+        source: 'surges',
+        maxzoom: 15,
+        paint: {
+          'heatmap-weight': 1,
+          'heatmap-intensity': 1,
+          'heatmap-color': [
+            'interpolate',
+            ['linear'],
+            ['heatmap-density'],
+            0, 'rgba(0, 255, 255, 0)',
+            0.2, 'rgba(0, 255, 255, 1)',
+            0.4, 'rgba(0, 127, 255, 1)',
+            0.6, 'rgba(0, 0, 255, 1)',
+            0.8, 'rgba(63, 0, 91, 1)',
+            1, 'rgba(255, 0, 0, 1)'
+          ],
+          'heatmap-radius': 20,
+          'heatmap-opacity': 0.7
+        }
+      })
+
+      loading.value = false
     })
-    
-    // Initialize heatmap layer
-    heatmap.value = new google.maps.visualization.HeatmapLayer({
-      map: map.value,
-      data: [],
-      radius: 20,
-      opacity: 0.7,
-      gradient: [
-        'rgba(0, 255, 255, 0)',
-        'rgba(0, 255, 255, 1)',
-        'rgba(0, 191, 255, 1)',
-        'rgba(0, 127, 255, 1)',
-        'rgba(0, 63, 255, 1)',
-        'rgba(0, 0, 255, 1)',
-        'rgba(0, 0, 223, 1)',
-        'rgba(0, 0, 191, 1)',
-        'rgba(0, 0, 159, 1)',
-        'rgba(0, 0, 127, 1)',
-        'rgba(63, 0, 91, 1)',
-        'rgba(127, 0, 63, 1)',
-        'rgba(191, 0, 31, 1)',
-        'rgba(255, 0, 0, 1)'
-      ]
-    })
-    
-    loading.value = false
   }
   
   // Update surge markers on the map
   const updateSurgeMarkers = () => {
-    if (!map.value) return
+    if (!map.value || !map.value.getSource('surges')) return
     
     // Clear existing markers
-    surgeMarkers.value.forEach(marker => marker.setMap(null))
+    surgeMarkers.value.forEach(marker => marker.remove())
     surgeMarkers.value = []
     
     // Create heatmap data points
-    const heatmapData = surgeEvents.value.map(event => {
+    const features = surgeEvents.value.map(event => {
       const lat = event.surge.latitude || 0
       const lng = event.surge.longitude || 0
       
       // Create a new marker for each surge
-      const marker = new google.maps.Marker({
-        position: { lat, lng },
-        map: map.value!,
-        title: `Surge at ${new Date(event.timestamp).toLocaleString()}`,
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          fillColor: '#ef4444', // Red
-          fillOpacity: 0.8,
-          strokeWeight: 1,
-          strokeColor: '#b91c1c',
-          scale: 8
-        },
-        animation: google.maps.Animation.DROP,
-        zIndex: 5
-      })
+      const el = document.createElement('div')
+      el.className = 'surge-marker'
+      el.style.width = '16px'
+      el.style.height = '16px'
+      el.style.backgroundColor = '#ef4444'
+      el.style.borderRadius = '50%'
+      el.style.border = '1px solid #b91c1c'
+      el.style.opacity = '0.8'
+
+      const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+        <div class="p-2">
+          <h3 class="font-bold text-gray-900">Surge Event</h3>
+          <p class="text-sm text-gray-600">Time: ${new Date(event.timestamp).toLocaleString()}</p>
+          <p class="text-sm text-gray-600">Type: ${event.surge.emergencyType || 'Visit'}</p>
+          <p class="text-sm text-gray-600">Status: ${event.surge.status || 'pending'}</p>
+        </div>
+      `)
       
-      // Add click listener to show info window
-      const infoWindow = new google.maps.InfoWindow({
-        content: `
-          <div class="p-2">
-            <h3 class="font-bold text-gray-900">Surge Event</h3>
-            <p class="text-sm text-gray-600">Time: ${new Date(event.timestamp).toLocaleString()}</p>
-            <p class="text-sm text-gray-600">Type: ${event.surge.emergencyType || 'Visit'}</p>
-            <p class="text-sm text-gray-600">Status: ${event.surge.status || 'pending'}</p>
-          </div>
-        `
-      })
-      
-      marker.addListener('click', () => {
-        infoWindow.open(map.value!, marker)
-      })
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([lng, lat])
+        .setPopup(popup)
+        .addTo(map.value!)
       
       surgeMarkers.value.push(marker)
       
-      // Return heatmap data point
-      return new google.maps.LatLng(lat, lng)
+      return {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Point',
+          coordinates: [lng, lat]
+        }
+      }
     })
     
     // Update heatmap data
-    if (heatmap.value && heatmapData.length > 0) {
-      heatmap.value.setData(heatmapData)
-    }
+    const source = map.value.getSource('surges') as mapboxgl.GeoJSONSource
+    source.setData({
+      type: 'FeatureCollection',
+      features: features as any
+    })
   }
   
   // Connect to websocket and subscribe to hospital surges
@@ -228,28 +223,7 @@
   
   // Lifecycle hooks
   onMounted(() => {
-    // Initialize map when component is mounted
-    if (window.google && window.google.maps) {
-      initializeMap()
-    } else {
-      // Google Maps API not loaded yet, wait for it
-      const checkGoogleMaps = setInterval(() => {
-        if (window.google && window.google.maps) {
-          clearInterval(checkGoogleMaps)
-          initializeMap()
-        }
-      }, 100)
-      
-      // Timeout after 10 seconds
-      setTimeout(() => {
-        clearInterval(checkGoogleMaps)
-        if (!window.google || !window.google.maps) {
-          console.error('Google Maps API not loaded')
-          loading.value = false
-        }
-      }, 10000)
-    }
-    
+    initializeMap()
     // Connect to websocket and subscribe to hospital surges
     connectAndSubscribe()
   })
@@ -261,16 +235,8 @@
   
   // Clean up on unmount
   onUnmounted(() => {
-    // Clear markers
-    if (hospitalMarker.value) {
-      hospitalMarker.value.setMap(null)
-    }
-    
-    surgeMarkers.value.forEach(marker => marker.setMap(null))
-    
-    if (heatmap.value) {
-      heatmap.value.setMap(null)
-    }
+    surgeMarkers.value.forEach(marker => marker.remove())
+    if (map.value) map.value.remove()
   })
   </script>
   

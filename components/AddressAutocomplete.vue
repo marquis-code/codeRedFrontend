@@ -33,7 +33,7 @@
       >
         <button
           v-for="prediction in predictions"
-          :key="prediction.place_id"
+          :key="prediction.id"
           @click="selectAddress(prediction)"
           type="button"
           class="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 flex items-start gap-3"
@@ -44,10 +44,10 @@
           </svg>
           <div class="flex-1 min-w-0">
             <div class="text-sm font-medium text-gray-900">
-              {{ prediction.structured_formatting.main_text }}
+              {{ prediction.text }}
             </div>
             <div class="text-xs text-gray-500 truncate">
-              {{ prediction.structured_formatting.secondary_text }}
+              {{ prediction.place_name }}
             </div>
           </div>
         </button>
@@ -80,6 +80,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { useRuntimeConfig } from '#app';
 
 interface LocationData {
   address: string;
@@ -88,53 +89,35 @@ interface LocationData {
 }
 
 interface Prediction {
-  place_id: string;
-  description: string;
-  structured_formatting: {
-    main_text: string;
-    secondary_text: string;
-  };
+  id: string;
+  text: string;
+  place_name: string;
+  center: [number, number];
 }
 
 interface Props {
   modelValue: LocationData;
   placeholder?: string;
-  apiKey?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   placeholder: 'Enter your address',
-  apiKey: 'AIzaSyCa0Rx0TJ9BGkQ9NC23BZc51zCql_Xrhs0' // Replace with your actual API key
 });
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: LocationData): void;
 }>();
 
+const config = useRuntimeConfig();
 const address = ref(props.modelValue.address || '');
 const predictions = ref<Prediction[]>([]);
 const showSuggestions = ref(false);
 const isLoading = ref(false);
 const inputRef = ref<HTMLInputElement | null>(null);
 
-let autocompleteService: google.maps.places.AutocompleteService | null = null;
-let geocoder: google.maps.Geocoder | null = null;
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-// Initialize Google Maps API
 onMounted(() => {
-  if (window.google?.maps) {
-    initializeServices();
-  } else {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa0Rx0TJ9BGkQ9NC23BZc51zCql_Xrhs0&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.onload = initializeServices;
-    document.head.appendChild(script);
-  }
-
-  // Close suggestions when clicking outside
   document.addEventListener('click', handleClickOutside);
 });
 
@@ -145,20 +128,12 @@ onBeforeUnmount(() => {
   }
 });
 
-const initializeServices = () => {
-  if (window.google?.maps) {
-    autocompleteService = new google.maps.places.AutocompleteService();
-    geocoder = new google.maps.Geocoder();
-  }
-};
-
 const handleClickOutside = (e: MouseEvent) => {
   if (inputRef.value && !inputRef.value.contains(e.target as Node)) {
     showSuggestions.value = false;
   }
 };
 
-// Watch for address changes
 watch(address, (newValue) => {
   if (debounceTimer) {
     clearTimeout(debounceTimer);
@@ -175,48 +150,35 @@ watch(address, (newValue) => {
   }, 300);
 });
 
-const fetchPredictions = (input: string) => {
-  if (!autocompleteService) return;
-
-  autocompleteService.getPlacePredictions(
-    {
-      input,
-      types: ['address']
-    },
-    (results, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-        predictions.value = results as Prediction[];
-        showSuggestions.value = true;
-      } else {
-        predictions.value = [];
-        showSuggestions.value = false;
-      }
+const fetchPredictions = async (input: string) => {
+  isLoading.value = true;
+  try {
+    const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(input)}.json?country=ng&access_token=${config.public.mapboxAccessToken}`);
+    const data = await res.json();
+    if (data.features) {
+      predictions.value = data.features;
+      showSuggestions.value = true;
+    } else {
+      predictions.value = [];
+      showSuggestions.value = false;
     }
-  );
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const selectAddress = (prediction: Prediction) => {
-  address.value = prediction.description;
+  address.value = prediction.place_name;
   showSuggestions.value = false;
   predictions.value = [];
-  isLoading.value = true;
-
-  if (geocoder) {
-    geocoder.geocode(
-      { placeId: prediction.place_id },
-      (results, status) => {
-        isLoading.value = false;
-        if (status === 'OK' && results && results[0]) {
-          const location = results[0].geometry.location;
-          emit('update:modelValue', {
-            address: prediction.description,
-            latitude: location.lat(),
-            longitude: location.lng()
-          });
-        }
-      }
-    );
-  }
+  
+  emit('update:modelValue', {
+    address: prediction.place_name,
+    latitude: prediction.center[1],
+    longitude: prediction.center[0]
+  });
 };
 
 const onFocus = () => {
@@ -234,27 +196,30 @@ const useCurrentLocation = () => {
   isLoading.value = true;
 
   navigator.geolocation.getCurrentPosition(
-    (position) => {
+    async (position) => {
       const { latitude, longitude } = position.coords;
 
-      if (geocoder) {
-        geocoder.geocode(
-          { location: { lat: latitude, lng: longitude } },
-          (results, status) => {
-            isLoading.value = false;
-            if (status === 'OK' && results && results[0]) {
-              const formattedAddress = results[0].formatted_address;
-              address.value = formattedAddress;
-              emit('update:modelValue', {
-                address: formattedAddress,
-                latitude,
-                longitude
-              });
-            } else {
-              alert('Could not get your location address');
-            }
-          }
-        );
+      try {
+        const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?country=ng&access_token=${config.public.mapboxAccessToken}`);
+        const data = await res.json();
+        
+        isLoading.value = false;
+        
+        if (data.features && data.features.length > 0) {
+          const formattedAddress = data.features[0].place_name;
+          address.value = formattedAddress;
+          emit('update:modelValue', {
+            address: formattedAddress,
+            latitude,
+            longitude
+          });
+        } else {
+          alert('Could not get your location address');
+        }
+      } catch (error) {
+        isLoading.value = false;
+        alert('Unable to retrieve your location');
+        console.error(error);
       }
     },
     (error) => {

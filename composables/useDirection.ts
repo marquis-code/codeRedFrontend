@@ -1,8 +1,7 @@
 import { ref, computed } from "vue"
 import { useRuntimeConfig } from "#app"
-import type { MedicalFacility } from "./useGoogleMaps"
-import type { LocationData } from "./useGeolocation"
-import { google } from "googlemaps"
+import type { MedicalFacility } from "./useMapbox"
+import mapboxgl from "mapbox-gl"
 
 export interface DirectionStep {
   instruction: string
@@ -18,7 +17,8 @@ export interface RouteInfo {
   duration: string
   durationInTraffic?: string
   steps: DirectionStep[]
-  overview_polyline: string
+  overview_polyline: string // In Mapbox, we can store GeoJSON coordinates here or standard polyline
+  geometry: any // GeoJSON LineString
   warnings?: string[]
   copyrights?: string
 }
@@ -28,221 +28,165 @@ export interface DirectionsResult {
   status: string
   origin: { lat: number; lng: number }
   destination: { lat: number; lng: number }
-  travelMode: google.maps.TravelMode
+  travelMode: string
 }
 
 export const useDirections = () => {
   const config = useRuntimeConfig()
-  const directionsService = ref<google.maps.DirectionsService | null>(null)
-  const directionsRenderer = ref<google.maps.DirectionsRenderer | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const currentDirections = ref<DirectionsResult | null>(null)
   const selectedRouteIndex = ref(0)
-  const travelMode = ref<google.maps.TravelMode>(google.maps.TravelMode.DRIVING)
+  const travelMode = ref<string>('driving')
+  const mapRef = ref<mapboxgl.Map | null>(null)
 
-  // Initialize directions service
   const initializeDirections = () => {
-    if (window.google && window.google.maps) {
-      directionsService.value = new google.maps.DirectionsService()
-      directionsRenderer.value = new google.maps.DirectionsRenderer({
-        suppressMarkers: false,
-        draggable: false,
-        routeIndex: selectedRouteIndex.value,
-      })
-    }
+    // Mapbox doesn't require initializing a service like Google.
   }
 
-  // Get directions between two points
+  const formatDistance = (meters: number) => {
+    if (meters < 1000) return `${Math.round(meters)} m`
+    return `${(meters / 1000).toFixed(1)} km`
+  }
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.round(seconds / 60)
+    if (mins < 60) return `${mins} min`
+    const hours = Math.floor(mins / 60)
+    const remainingMins = mins % 60
+    return `${hours} h ${remainingMins} min`
+  }
+
   const getDirections = async (
-    origin: LocationData,
+    origin: { lat: number; lng: number },
     destination: MedicalFacility,
-    mode: google.maps.TravelMode = google.maps.TravelMode.DRIVING,
+    mode: string = 'driving'
   ): Promise<DirectionsResult> => {
-    if (!directionsService.value) {
-      initializeDirections()
-    }
-
-    if (!directionsService.value) {
-      throw new Error("Google Maps not loaded")
-    }
-
     isLoading.value = true
     error.value = null
     travelMode.value = mode
 
-    const request: google.maps.DirectionsRequest = {
-      origin: new google.maps.LatLng(origin.lat, origin.lng),
-      destination: new google.maps.LatLng(destination.location.lat, destination.location.lng),
-      travelMode: mode,
-      unitSystem: google.maps.UnitSystem.METRIC,
-      avoidHighways: false,
-      avoidTolls: false,
-      provideRouteAlternatives: true,
-    }
+    try {
+      const coords = `${origin.lng},${origin.lat};${destination.location.lng},${destination.location.lat}`
+      const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${coords}?geometries=geojson&steps=true&alternatives=true&access_token=${config.public.mapboxAccessToken}`
+      
+      const response = await fetch(url)
+      const data = await response.json()
 
-    return new Promise((resolve, reject) => {
-      directionsService.value!.route(request, (result, status) => {
-        isLoading.value = false
-
-        if (status === google.maps.DirectionsStatus.OK && result) {
-          const directionsResult: DirectionsResult = {
-            routes: result.routes.map((route) => ({
-              distance: route.legs[0].distance?.text || "",
-              duration: route.legs[0].duration?.text || "",
-              durationInTraffic: route.legs[0].duration_in_traffic?.text,
-              steps: route.legs[0].steps.map((step) => ({
-                instruction: step.instructions.replace(/<[^>]*>/g, ""), // Remove HTML tags
-                distance: step.distance?.text || "",
-                duration: step.duration?.text || "",
-                maneuver: step.maneuver,
-                startLocation: {
-                  lat: step.start_location.lat(),
-                  lng: step.start_location.lng(),
-                },
-                endLocation: {
-                  lat: step.end_location.lat(),
-                  lng: step.end_location.lng(),
-                },
-              })),
-              overview_polyline: route.overview_polyline,
-              warnings: route.warnings,
-              copyrights: route.copyrights,
+      if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+        const directionsResult: DirectionsResult = {
+          routes: data.routes.map((route: any) => ({
+            distance: formatDistance(route.distance),
+            duration: formatDuration(route.duration),
+            steps: route.legs[0].steps.map((step: any) => ({
+              instruction: step.maneuver.instruction,
+              distance: formatDistance(step.distance),
+              duration: formatDuration(step.duration),
+              maneuver: step.maneuver.type,
+              startLocation: {
+                lng: step.maneuver.location[0],
+                lat: step.maneuver.location[1],
+              },
+              endLocation: {
+                lng: step.maneuver.location[0],
+                lat: step.maneuver.location[1],
+              },
             })),
-            status,
-            origin: { lat: origin.lat, lng: origin.lng },
-            destination: { lat: destination.location.lat, lng: destination.location.lng },
-            travelMode: mode,
-          }
+            geometry: route.geometry,
+            overview_polyline: "",
+          })),
+          status: 'OK',
+          origin,
+          destination: destination.location,
+          travelMode: mode,
+        }
 
-          currentDirections.value = directionsResult
-          resolve(directionsResult)
-        } else {
-          const errorMessage = getDirectionsErrorMessage(status)
-          error.value = errorMessage
-          reject(new Error(errorMessage))
+        currentDirections.value = directionsResult
+        isLoading.value = false
+        return directionsResult
+      } else {
+        throw new Error(data.message || "Failed to fetch directions")
+      }
+    } catch (err: any) {
+      isLoading.value = false
+      error.value = err.message || "Unknown error"
+      throw err
+    }
+  }
+
+  const displayDirections = (map: mapboxgl.Map, routeIndex = 0) => {
+    if (!currentDirections.value || !currentDirections.value.routes[routeIndex]) return
+
+    mapRef.value = map
+    selectedRouteIndex.value = routeIndex
+
+    const route = currentDirections.value.routes[routeIndex]
+    
+    if (map.getSource('route')) {
+      (map.getSource('route') as mapboxgl.GeoJSONSource).setData(route.geometry)
+    } else {
+      map.addSource('route', {
+        type: 'geojson',
+        data: route.geometry
+      })
+      map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#3b82f6',
+          'line-width': 5,
+          'line-opacity': 0.75
         }
       })
-    })
-  }
-
-  // Display directions on map
-  const displayDirections = (map: google.maps.Map, routeIndex = 0) => {
-    if (!directionsRenderer.value || !currentDirections.value) return
-
-    selectedRouteIndex.value = routeIndex
-    directionsRenderer.value.setRouteIndex(routeIndex)
-    directionsRenderer.value.setMap(map)
-
-    // Create a new directions request to display
-    const request: google.maps.DirectionsRequest = {
-      origin: new google.maps.LatLng(currentDirections.value.origin.lat, currentDirections.value.origin.lng),
-      destination: new google.maps.LatLng(
-        currentDirections.value.destination.lat,
-        currentDirections.value.destination.lng,
-      ),
-      travelMode: currentDirections.value.travelMode,
-      unitSystem: google.maps.UnitSystem.METRIC,
-      provideRouteAlternatives: true,
     }
 
-    directionsService.value?.route(request, (result, status) => {
-      if (status === google.maps.DirectionsStatus.OK && result) {
-        directionsRenderer.value?.setDirections(result)
-      }
+    // Fit map to route bounds
+    const coordinates = route.geometry.coordinates
+    const bounds = coordinates.reduce((b: mapboxgl.LngLatBounds, coord: any) => {
+      return b.extend(coord)
+    }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
+
+    map.fitBounds(bounds, {
+      padding: 50
     })
   }
 
-  // Clear directions from map
   const clearDirections = () => {
-    if (directionsRenderer.value) {
-      directionsRenderer.value.setMap(null)
+    if (mapRef.value && mapRef.value.getSource('route')) {
+      mapRef.value.removeLayer('route')
+      mapRef.value.removeSource('route')
     }
     currentDirections.value = null
     selectedRouteIndex.value = 0
     error.value = null
   }
 
-  // Get error message for directions status
-  const getDirectionsErrorMessage = (status: google.maps.DirectionsStatus): string => {
-    switch (status) {
-      case google.maps.DirectionsStatus.NOT_FOUND:
-        return "One or more locations could not be found"
-      case google.maps.DirectionsStatus.ZERO_RESULTS:
-        return "No route could be found between the origin and destination"
-      case google.maps.DirectionsStatus.MAX_WAYPOINTS_EXCEEDED:
-        return "Too many waypoints were provided"
-      case google.maps.DirectionsStatus.INVALID_REQUEST:
-        return "Invalid directions request"
-      case google.maps.DirectionsStatus.OVER_QUERY_LIMIT:
-        return "Service has received too many requests"
-      case google.maps.DirectionsStatus.REQUEST_DENIED:
-        return "Service denied use of the directions service"
-      case google.maps.DirectionsStatus.UNKNOWN_ERROR:
-        return "Unknown error occurred"
-      default:
-        return "Failed to get directions"
-    }
-  }
-
-  // Get travel mode icon
-  const getTravelModeIcon = (mode: google.maps.TravelMode): string => {
+  const getTravelModeIcon = (mode: string): string => {
     switch (mode) {
-      case google.maps.TravelMode.DRIVING:
-        return "🚗"
-      case google.maps.TravelMode.WALKING:
-        return "🚶"
-      case google.maps.TravelMode.BICYCLING:
-        return "🚴"
-      case google.maps.TravelMode.TRANSIT:
-        return "🚌"
-      default:
-        return "📍"
+      case 'driving': return "🚗"
+      case 'walking': return "🚶"
+      case 'cycling': return "🚴"
+      default: return "📍"
     }
   }
 
-  // Get maneuver icon
   const getManeuverIcon = (maneuver?: string): string => {
     if (!maneuver) return "➡️"
-
     switch (maneuver.toLowerCase()) {
-      case "turn-left":
-        return "↪️"
-      case "turn-right":
-        return "↩️"
-      case "turn-slight-left":
-        return "↖️"
-      case "turn-slight-right":
-        return "↗️"
-      case "turn-sharp-left":
-        return "⬅️"
-      case "turn-sharp-right":
-        return "➡️"
-      case "uturn-left":
-      case "uturn-right":
-        return "🔄"
-      case "straight":
-        return "⬆️"
-      case "ramp-left":
-        return "🛣️"
-      case "ramp-right":
-        return "🛣️"
-      case "merge":
-        return "🔀"
-      case "fork-left":
-      case "fork-right":
-        return "🍴"
-      case "ferry":
-        return "⛴️"
-      case "roundabout-left":
-      case "roundabout-right":
-        return "🔄"
-      default:
-        return "➡️"
+      case "turn": return "↪️"
+      case "depart": return "⬆️"
+      case "arrive": return "📍"
+      case "merge": return "🔀"
+      case "roundabout": return "🔄"
+      default: return "➡️"
     }
   }
 
-  // Computed properties
   const selectedRoute = computed(() => {
     if (!currentDirections.value || !currentDirections.value.routes[selectedRouteIndex.value]) {
       return null
@@ -255,19 +199,13 @@ export const useDirections = () => {
   })
 
   return {
-    // State
     isLoading,
     error,
     currentDirections,
     selectedRouteIndex,
     travelMode,
-    directionsRenderer,
-
-    // Computed
     selectedRoute,
     hasAlternativeRoutes,
-
-    // Methods
     initializeDirections,
     getDirections,
     displayDirections,

@@ -1,5 +1,5 @@
 import { ref, computed, onUnmounted } from "vue"
-import type { MedicalFacility } from "./useGoogleMaps"
+import type { MedicalFacility } from "./useMapbox"
 
 export type AvailabilityStatus = "available" | "busy" | "emergency-only" | "closed" | "unknown"
 

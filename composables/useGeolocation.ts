@@ -75,26 +75,25 @@ export const useGeolocation = () => {
   // Geocode coordinates to address
   const geocodeLocation = async (lat: number, lng: number): Promise<Partial<LocationData>> => {
     try {
+      const mapboxToken = config.public.mapboxAccessToken
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${config.public.googleGeocodeKey}`,
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?country=ng&access_token=${mapboxToken}`,
       )
       const data = await response.json()
 
-      if (data.status === "OK" && data.results.length > 0) {
-        const result = data.results[0]
-        const addressComponents = result.address_components
+      if (data.features && data.features.length > 0) {
+        const result = data.features[0]
 
-        const getComponent = (types: string[]) => {
-          const component = addressComponents.find((comp: any) =>
-            comp.types.some((type: string) => types.includes(type)),
-          )
-          return component?.long_name || ""
+        const getComponent = (type: string) => {
+          const context = result.context || []
+          const component = context.find((c: any) => c.id.startsWith(type))
+          return component?.text || ""
         }
 
         return {
-          address: result.formatted_address,
-          city: getComponent(["locality", "administrative_area_level_2"]),
-          country: getComponent(["country"]),
+          address: result.place_name,
+          city: getComponent("place") || getComponent("locality"),
+          country: getComponent("country"),
         }
       }
     } catch (err) {
@@ -320,17 +319,18 @@ export const useGeolocation = () => {
   // Get location from address (geocoding)
   const getLocationFromAddress = async (address: string): Promise<LocationData> => {
     try {
+      const mapboxToken = config.public.mapboxAccessToken
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${config.public.googleGeocodeKey}`,
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?country=ng&access_token=${mapboxToken}`,
       )
       const data = await response.json()
 
-      if (data.status === "OK" && data.results.length > 0) {
-        const result = data.results[0]
+      if (data.features && data.features.length > 0) {
+        const result = data.features[0]
         const coords: LocationData = {
-          lat: result.geometry.location.lat,
-          lng: result.geometry.location.lng,
-          address: result.formatted_address,
+          lat: result.center[1],
+          lng: result.center[0],
+          address: result.place_name,
           timestamp: Date.now(),
         }
 

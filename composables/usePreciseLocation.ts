@@ -314,16 +314,16 @@ export function usePreciseLocation(options: Partial<LocationOptions> = {}) {
   // Get reverse geocoding data (address from coordinates)
   const getAddressFromCoordinates = async (lat: number, lng: number): Promise<string | null> => {
     try {
-      const apiKey = import.meta.VITE_GOOGLE_MAPS_API_KEY_UPDATED
+      const apiKey = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
       if (!apiKey) return null
       
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?country=ng&access_token=${apiKey}`
       )
       const data = await response.json()
       
-      if (data.results && data.results.length > 0) {
-        return data.results[0].formatted_address
+      if (data.features && data.features.length > 0) {
+        return data.features[0].place_name
       }
       
       return null

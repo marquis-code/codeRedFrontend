@@ -141,6 +141,13 @@
   
   <script setup lang="ts">
   import axios from 'axios'
+  import { ref, watch, onMounted } from 'vue'
+  import { useRuntimeConfig } from '#app'
+
+  const config = useRuntimeConfig()
+  const address = ref('')
+  const loading = ref(false)
+  const error = ref('')
   const hospitals = ref([])
   const searched = ref(false)
   const fetching = ref(false)
@@ -254,7 +261,6 @@
 
 
   const getCurrentLocation = async () => {
-    const apiKey = 'AIzaSyCTBVK36LVNlXs_qBOC4RywX_Ihf765lDg'
     loading.value = true
     error.value = ''
   
@@ -264,14 +270,14 @@
       })
   
       const { latitude, longitude } = position.coords
+      const mapboxToken = config.public.mapboxAccessToken
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?country=ng&access_token=${mapboxToken}`
       )
       const data = await response.json()
   
-      if (data.results[0]) {
-        address.value = data.results[0].formatted_address
-        // await fetchHospitals(data.results[0].formatted_address)
+      if (data.features && data.features.length > 0) {
+        address.value = data.features[0].place_name
       }
     } catch (err) {
       error.value = 'Failed to get location details'

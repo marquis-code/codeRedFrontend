@@ -485,20 +485,20 @@ onMounted(() => {
 
 <script lang="ts" setup>
 import { useCustomToast } from '@/composables/core/useCustomToast'
-const { showToast } = useCustomToast();
 import { ref, onMounted, computed } from 'vue'
-import { useNuxtApp } from '#app'
+import { useRuntimeConfig } from '#app'
+
+const { showToast } = useCustomToast()
+const config = useRuntimeConfig()
 
 const location = ref('')
-const hospitals = ref([])
+const hospitals = ref<any[]>([])
 const loading = ref(false)
 const viewAll = ref(false)
 const showFilterModal = ref(false)
 const showMap = ref(false)
-const selectedHospital = ref(null)
-const userLocation = ref({ lat: null, lng: null })
-
-const { $loadGoogleMaps } = useNuxtApp()
+const selectedHospital = ref<any>(null)
+const userLocation = ref<{ lat: number; lng: number } | null>(null)
 
 // Filtered hospitals based on view mode
 const displayedHospitals = computed(() => {
@@ -515,6 +515,18 @@ const closeFilterModal = () => {
   showFilterModal.value = false
 }
 
+// Haversine formula to calculate distance
+const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const R = 6371; // km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
 // Function to fetch closest hospital facilities
 const fetchHospitals = async () => {
   if (!location.value) return
@@ -524,46 +536,48 @@ const fetchHospitals = async () => {
 
   try {
     console.log("Fetching hospitals for location:", location.value) // Debug log
+    const mapboxToken = config.public.mapboxAccessToken
+    
+    // Convert location string to coords if needed, but since we already have userLocation from getUserLocation, 
+    // let's just use it directly to search near user.
+    let searchLng = userLocation.value?.lng
+    let searchLat = userLocation.value?.lat
 
-    // Load Google Maps SDK
-    const google = await $loadGoogleMaps()
-
-    // Use PlacesService for Nearby Search
-    const service = new google.maps.places.PlacesService(document.createElement('div'))
-    const geocoder = new google.maps.Geocoder()
-
-    // Retrieve latitude and longitude from input location
-    geocoder.geocode({ address: location.value }, (results, status) => {
-      if (status === google.maps.GeocoderStatus.OK && results[0].geometry.location) {
-        const locationLatLng = results[0].geometry.location
-
-        // Search for the closest hospitals, ordered by distance
-        service.nearbySearch(
-          {
-            location: locationLatLng,
-            rankBy: google.maps.places.RankBy.DISTANCE,
-            type: 'hospital',
-          },
-          (results, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-              hospitals.value = results.map((hospital) => ({
-                ...hospital,
-                availability: mockAvailability(), // Mocking availability status
-              }))
-              console.log("Hospitals found:", hospitals.value) // Debug log
-            } else {
-              console.error('No hospitals found nearby.')
-            }
-            loading.value = false
-          }
-        )
+    if (!searchLng || !searchLat) {
+      // Forward geocode the location string
+      const geocodeRes = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location.value)}.json?country=ng&access_token=${mapboxToken}`)
+      const geocodeData = await geocodeRes.json()
+      if (geocodeData.features && geocodeData.features.length > 0) {
+        searchLng = geocodeData.features[0].center[0]
+        searchLat = geocodeData.features[0].center[1]
       } else {
         console.error('Could not find location.')
         loading.value = false
+        return
       }
-    })
+    }
+
+    // Search nearby hospitals
+    const placesRes = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?country=ng&proximity=${searchLng},${searchLat}&access_token=${mapboxToken}`)
+    const placesData = await placesRes.json()
+
+    if (placesData.features && placesData.features.length > 0) {
+      hospitals.value = placesData.features.map((place: any) => ({
+        place_id: place.id,
+        name: place.text,
+        vicinity: place.place_name,
+        latitude: place.center[1],
+        longitude: place.center[0],
+        distance: calculateDistance(searchLat!, searchLng!, place.center[1], place.center[0]),
+        availability: mockAvailability(), // Mocking availability status
+      })).sort((a: any, b: any) => a.distance - b.distance)
+      console.log("Hospitals found:", hospitals.value)
+    } else {
+      console.error('No hospitals found nearby.')
+    }
   } catch (error) {
-    console.error('Error loading Google Maps:', error)
+    console.error('Error fetching Mapbox data:', error)
+  } finally {
     loading.value = false
   }
 }
@@ -585,24 +599,25 @@ const getUserLocation = () => {
         userLocation.value = { lat, lng }
         console.log("User coordinates:", userLocation.value) // Debug log
 
-        // Step 2: Load Google Maps SDK
-        const google = await $loadGoogleMaps()
-        const geocoder = new google.maps.Geocoder()
+        try {
+          const mapboxToken = config.public.mapboxAccessToken
+          const reverseRes = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?country=ng&access_token=${mapboxToken}`)
+          const reverseData = await reverseRes.json()
 
-        // Step 3: Reverse geocode to get the address
-        geocoder.geocode({ location: userLocation.value }, (results, status) => {
-          if (status === google.maps.GeocoderStatus.OK && results[0]) {
-            // Step 4: Set location value with the address
-            location.value = results[0].formatted_address
-            console.log("Reverse geocoded address:", location.value) // Debug log
-
-            // Step 5: Fetch hospitals after setting location
+          if (reverseData.features && reverseData.features.length > 0) {
+            location.value = reverseData.features[0].place_name
+            console.log("Reverse geocoded address:", location.value)
+            
+            // Fetch hospitals after setting location
             fetchHospitals()
           } else {
             console.error('Could not retrieve address.')
             loading.value = false
           }
-        })
+        } catch (error) {
+          console.error("Error reverse geocoding:", error)
+          loading.value = false
+        }
       },
       (error) => {
         showToast({
@@ -625,13 +640,13 @@ const getUserLocation = () => {
 }
 
 // Function to apply filters from the modal
-const applyFilters = (filters) => {
+const applyFilters = (filters: any) => {
   hospitals.value = hospitals.value.filter(hospital => filters.availability.includes(hospital.availability))
   closeFilterModal()
 }
 
 // Function to open map view
-const selectHospital = (hospital) => {
+const selectHospital = (hospital: any) => {
   selectedHospital.value = hospital
   showMap.value = true
 }

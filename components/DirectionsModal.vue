@@ -236,7 +236,7 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                     </svg>
-                    <span>Open in Google Maps</span>
+                    <span>Open in Maps</span>
                   </button>
                 </div>
               </div>
@@ -249,10 +249,11 @@
   
   <script setup lang="ts">
   import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
-  import { useDirections } from '@/composables/useDirections'
+  import { useDirections } from '@/composables/useDirection'
   import { useGeolocation } from '@/composables/useGeolocation'
-  import type { MedicalFacility } from '@/composables/useGoogleMaps'
-  import { google } from 'googlemaps'
+  import type { MedicalFacility } from '@/composables/useMapbox'
+  import mapboxgl from 'mapbox-gl'
+  import { useRuntimeConfig } from '#app'
   
   interface Props {
     isOpen: boolean
@@ -283,14 +284,14 @@
   
   // Local state
   const mapContainer = ref<HTMLElement | null>(null)
-  const map = ref<google.maps.Map | null>(null)
-  const selectedTravelMode = ref<google.maps.TravelMode>(google.maps.TravelMode.DRIVING)
+  const map = ref<mapboxgl.Map | null>(null)
+  const selectedTravelMode = ref<string>('driving')
+  const config = useRuntimeConfig()
   
   const travelModes = [
-    { value: google.maps.TravelMode.DRIVING, label: 'Drive', icon: '🚗' },
-    { value: google.maps.TravelMode.WALKING, label: 'Walk', icon: '🚶' },
-    { value: google.maps.TravelMode.TRANSIT, label: 'Transit', icon: '🚌' },
-    { value: google.maps.TravelMode.BICYCLING, label: 'Bike', icon: '🚴' },
+    { value: 'driving', label: 'Drive', icon: '🚗' },
+    { value: 'walking', label: 'Walk', icon: '🚶' },
+    { value: 'cycling', label: 'Bike', icon: '🚴' },
   ]
   
   // Initialize map when modal opens
@@ -307,25 +308,27 @@
   const initializeMap = () => {
     if (!mapContainer.value || !props.facility || !userLocation.value) return
   
-    const center = {
-      lat: (userLocation.value.lat + props.facility.location.lat) / 2,
-      lng: (userLocation.value.lng + props.facility.location.lng) / 2,
-    }
+    const center = [
+      (userLocation.value.lng + props.facility.location.lng) / 2,
+      (userLocation.value.lat + props.facility.location.lat) / 2,
+    ] as [number, number]
   
-    map.value = new google.maps.Map(mapContainer.value, {
+    mapboxgl.accessToken = config.public.mapboxAccessToken
+    map.value = new mapboxgl.Map({
+      container: mapContainer.value,
+      style: 'mapbox://styles/mapbox/streets-v11',
       center,
       zoom: 13,
-      mapTypeControl: true,
-      streetViewControl: true,
-      fullscreenControl: true,
-      styles: [
-        {
-          featureType: 'poi.medical',
-          elementType: 'geometry',
-          stylers: [{ color: '#10b981' }],
-        },
-      ],
     })
+
+    // Add markers for origin and destination
+    new mapboxgl.Marker({ color: 'green' })
+      .setLngLat([userLocation.value.lng, userLocation.value.lat])
+      .addTo(map.value)
+      
+    new mapboxgl.Marker({ color: 'red' })
+      .setLngLat([props.facility.location.lng, props.facility.location.lat])
+      .addTo(map.value)
   }
   
   const loadDirections = async () => {
@@ -341,7 +344,7 @@
     }
   }
   
-  const changeTravelMode = async (mode: google.maps.TravelMode) => {
+  const changeTravelMode = async (mode: string) => {
     selectedTravelMode.value = mode
     await loadDirections()
   }
@@ -372,14 +375,8 @@
   
     const origin = `${userLocation.value.lat},${userLocation.value.lng}`
     const destination = `${props.facility.location.lat},${props.facility.location.lng}`
-    const travelModeParam = selectedTravelMode.value.toLowerCase()
     
-    const url = `https://www.google.com/maps/dir/${origin}/${destination}/@${origin},15z/data=!3m1!4b1!4m2!4m1!3e${
-      selectedTravelMode.value === google.maps.TravelMode.DRIVING ? '0' :
-      selectedTravelMode.value === google.maps.TravelMode.WALKING ? '2' :
-      selectedTravelMode.value === google.maps.TravelMode.TRANSIT ? '3' :
-      selectedTravelMode.value === google.maps.TravelMode.BICYCLING ? '1' : '0'
-    }`
+    const url = `https://www.google.com/maps/dir/${origin}/${destination}`
     
     window.open(url, '_blank')
   }

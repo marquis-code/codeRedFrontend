@@ -131,7 +131,7 @@
   
   <script setup lang="ts">
   import { computed } from 'vue'
-  import type { MedicalFacility } from '@/composables/useGoogleMaps'
+  import type { MedicalFacility } from '@/composables/useMapbox'
   import { useAvailability } from '@/composables/useAvailability'
   
   interface Props {

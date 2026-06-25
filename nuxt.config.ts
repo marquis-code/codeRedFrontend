@@ -3,8 +3,7 @@ export default {
   target: "static",
   runtimeConfig: {
     public: {
-      googleMapsKey: process.env.GOOGLE_MAPS_KEY,
-      googleGeocodeKey: process.env.GOOGLE_GEOCODE_KEY,
+      mapboxAccessToken: process.env.VITE_MAPBOX_ACCESS_TOKEN,
     },
   },
   app: {
@@ -16,14 +15,12 @@ export default {
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         { name: "format-detection", content: "telephone=no" },
       ],
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
-      script: [
-        {
-          src: `https://maps.googleapis.com/maps/api/js?key=AIzaSyCa0Rx0TJ9BGkQ9NC23BZc51zCql_Xrhs0&libraries=places,geometry`,
-          async: true,
-          defer: true,
-        },
+      link: [
+        { rel: "icon", type: "image/x-icon", href: "/favicon.svg" },
+        { rel: "stylesheet", href: "https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" },
+        { rel: "stylesheet", href: "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css", type: "text/css" }
       ],
+      script: [],
     },
   },
 
@@ -36,7 +33,7 @@ export default {
     display: 'swap', // Adds display swap for faster loading
   },
 
-  plugins: ["~/plugins/aos.client.ts","~/plugins/googleMaps.client.ts"],
+  plugins: ["~/plugins/aos.client.ts"],
   css: ["/assets/css/main.css", '@/assets/css/custom.css'],
 
   tailwindcss: {
